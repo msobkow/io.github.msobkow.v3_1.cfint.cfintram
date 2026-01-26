@@ -72,14 +72,14 @@ public class CFIntRamServiceTypeTable
 		schema = argSchema;
 	}
 
-	public void createServiceType( ICFSecAuthorization Authorization,
+	public ICFSecServiceType createServiceType( ICFSecAuthorization Authorization,
 		ICFSecServiceType Buff )
 	{
 		final String S_ProcName = "createServiceType";
-		CFLibDbKeyHash256 pkey = schema.getFactoryServiceType().newPKey();
-		pkey.setRequiredServiceTypeId( schema.nextServiceTypeIdGen() );
-		Buff.setRequiredServiceTypeId( pkey.getRequiredServiceTypeId() );
-		CFSecBuffServiceTypeByUDescrIdxKey keyUDescrIdx = schema.getFactoryServiceType().newUDescrIdxKey();
+		CFLibDbKeyHash256 pkey;
+		pkey = schema.nextServiceTypeIdGen();
+		Buff.setRequiredServiceTypeId( pkey );
+		CFSecBuffServiceTypeByUDescrIdxKey keyUDescrIdx = (CFSecBuffServiceTypeByUDescrIdxKey)schema.getFactoryServiceType().newByUDescrIdxKey();
 		keyUDescrIdx.setRequiredDescription( Buff.getRequiredDescription() );
 
 		// Validate unique indexes
@@ -92,6 +92,7 @@ public class CFIntRamServiceTypeTable
 			throw new CFLibUniqueIndexViolationException( getClass(),
 				S_ProcName,
 				"ServiceTypeUDescrIdx",
+				"ServiceTypeUDescrIdx",
 				keyUDescrIdx );
 		}
 
@@ -103,6 +104,7 @@ public class CFIntRamServiceTypeTable
 
 		dictByUDescrIdx.put( keyUDescrIdx, Buff );
 
+		return( Buff );
 	}
 
 	public ICFSecServiceType readDerived( ICFSecAuthorization Authorization,
@@ -123,11 +125,9 @@ public class CFIntRamServiceTypeTable
 		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamServiceType.readDerived";
-		CFLibDbKeyHash256 key = schema.getFactoryServiceType().newPKey();
-		key.setRequiredServiceTypeId( PKey.getRequiredServiceTypeId() );
 		ICFSecServiceType buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
 		}
 		else {
 			buff = null;
@@ -150,7 +150,7 @@ public class CFIntRamServiceTypeTable
 		String Description )
 	{
 		final String S_ProcName = "CFIntRamServiceType.readDerivedByUDescrIdx";
-		CFSecBuffServiceTypeByUDescrIdxKey key = schema.getFactoryServiceType().newUDescrIdxKey();
+		CFSecBuffServiceTypeByUDescrIdxKey key = (CFSecBuffServiceTypeByUDescrIdxKey)schema.getFactoryServiceType().newByUDescrIdxKey();
 		key.setRequiredDescription( Description );
 
 		ICFSecServiceType buff;
@@ -167,12 +167,9 @@ public class CFIntRamServiceTypeTable
 		CFLibDbKeyHash256 ServiceTypeId )
 	{
 		final String S_ProcName = "CFIntRamServiceType.readDerivedByIdIdx() ";
-		CFLibDbKeyHash256 key = schema.getFactoryServiceType().newPKey();
-		key.setRequiredServiceTypeId( ServiceTypeId );
-
 		ICFSecServiceType buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
+		if( dictByPKey.containsKey( ServiceTypeId ) ) {
+			buff = dictByPKey.get( ServiceTypeId );
 		}
 		else {
 			buff = null;
@@ -185,7 +182,7 @@ public class CFIntRamServiceTypeTable
 	{
 		final String S_ProcName = "CFIntRamServiceType.readBuff";
 		ICFSecServiceType buff = readDerived( Authorization, PKey );
-		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a013" ) ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() != ICFSecServiceType.CLASS_CODE ) ) {
 			buff = null;
 		}
 		return( buff );
@@ -196,7 +193,7 @@ public class CFIntRamServiceTypeTable
 	{
 		final String S_ProcName = "lockBuff";
 		ICFSecServiceType buff = readDerived( Authorization, PKey );
-		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a013" ) ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() != ICFSecServiceType.CLASS_CODE ) ) {
 			buff = null;
 		}
 		return( buff );
@@ -210,7 +207,7 @@ public class CFIntRamServiceTypeTable
 		ICFSecServiceType[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
-			if( ( buff != null ) && buff.getClassCode().equals( "a013" ) ) {
+			if( ( buff != null ) && ( buff.getClassCode() == ICFSecServiceType.CLASS_CODE ) ) {
 				filteredList.add( buff );
 			}
 		}
@@ -223,7 +220,7 @@ public class CFIntRamServiceTypeTable
 		final String S_ProcName = "CFIntRamServiceType.readBuffByIdIdx() ";
 		ICFSecServiceType buff = readDerivedByIdIdx( Authorization,
 			ServiceTypeId );
-		if( ( buff != null ) && buff.getClassCode().equals( "a013" ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() == ICFSecServiceType.CLASS_CODE ) ) {
 			return( (ICFSecServiceType)buff );
 		}
 		else {
@@ -237,7 +234,7 @@ public class CFIntRamServiceTypeTable
 		final String S_ProcName = "CFIntRamServiceType.readBuffByUDescrIdx() ";
 		ICFSecServiceType buff = readDerivedByUDescrIdx( Authorization,
 			Description );
-		if( ( buff != null ) && buff.getClassCode().equals( "a013" ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() == ICFSecServiceType.CLASS_CODE ) ) {
 			return( (ICFSecServiceType)buff );
 		}
 		else {
@@ -245,11 +242,10 @@ public class CFIntRamServiceTypeTable
 		}
 	}
 
-	public void updateServiceType( ICFSecAuthorization Authorization,
+	public ICFSecServiceType updateServiceType( ICFSecAuthorization Authorization,
 		ICFSecServiceType Buff )
 	{
-		CFLibDbKeyHash256 pkey = schema.getFactoryServiceType().newPKey();
-		pkey.setRequiredServiceTypeId( Buff.getRequiredServiceTypeId() );
+		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		ICFSecServiceType existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
@@ -264,10 +260,10 @@ public class CFIntRamServiceTypeTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFSecBuffServiceTypeByUDescrIdxKey existingKeyUDescrIdx = schema.getFactoryServiceType().newUDescrIdxKey();
+		CFSecBuffServiceTypeByUDescrIdxKey existingKeyUDescrIdx = (CFSecBuffServiceTypeByUDescrIdxKey)schema.getFactoryServiceType().newByUDescrIdxKey();
 		existingKeyUDescrIdx.setRequiredDescription( existing.getRequiredDescription() );
 
-		CFSecBuffServiceTypeByUDescrIdxKey newKeyUDescrIdx = schema.getFactoryServiceType().newUDescrIdxKey();
+		CFSecBuffServiceTypeByUDescrIdxKey newKeyUDescrIdx = (CFSecBuffServiceTypeByUDescrIdxKey)schema.getFactoryServiceType().newByUDescrIdxKey();
 		newKeyUDescrIdx.setRequiredDescription( Buff.getRequiredDescription() );
 
 		// Check unique indexes
@@ -276,6 +272,7 @@ public class CFIntRamServiceTypeTable
 			if( dictByUDescrIdx.containsKey( newKeyUDescrIdx ) ) {
 				throw new CFLibUniqueIndexViolationException( getClass(),
 					"updateServiceType",
+					"ServiceTypeUDescrIdx",
 					"ServiceTypeUDescrIdx",
 					newKeyUDescrIdx );
 			}
@@ -293,6 +290,7 @@ public class CFIntRamServiceTypeTable
 		dictByUDescrIdx.remove( existingKeyUDescrIdx );
 		dictByUDescrIdx.put( newKeyUDescrIdx, Buff );
 
+		return(Buff);
 	}
 
 	public void deleteServiceType( ICFSecAuthorization Authorization,
@@ -319,7 +317,7 @@ public class CFIntRamServiceTypeTable
 			schema.getTableService().deleteServiceByTypeIdx( Authorization,
 						existing.getRequiredServiceTypeId() );
 		}
-		CFSecBuffServiceTypeByUDescrIdxKey keyUDescrIdx = schema.getFactoryServiceType().newUDescrIdxKey();
+		CFSecBuffServiceTypeByUDescrIdxKey keyUDescrIdx = (CFSecBuffServiceTypeByUDescrIdxKey)schema.getFactoryServiceType().newByUDescrIdxKey();
 		keyUDescrIdx.setRequiredDescription( existing.getRequiredDescription() );
 
 		// Validate reverse foreign keys
@@ -332,14 +330,6 @@ public class CFIntRamServiceTypeTable
 		dictByUDescrIdx.remove( keyUDescrIdx );
 
 	}
-	public void deleteServiceTypeByIdIdx( ICFSecAuthorization Authorization,
-		CFLibDbKeyHash256 argServiceTypeId )
-	{
-		CFLibDbKeyHash256 key = schema.getFactoryServiceType().newPKey();
-		key.setRequiredServiceTypeId( argServiceTypeId );
-		deleteServiceTypeByIdIdx( Authorization, key );
-	}
-
 	public void deleteServiceTypeByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
@@ -369,7 +359,7 @@ public class CFIntRamServiceTypeTable
 	public void deleteServiceTypeByUDescrIdx( ICFSecAuthorization Authorization,
 		String argDescription )
 	{
-		CFSecBuffServiceTypeByUDescrIdxKey key = schema.getFactoryServiceType().newUDescrIdxKey();
+		CFSecBuffServiceTypeByUDescrIdxKey key = (CFSecBuffServiceTypeByUDescrIdxKey)schema.getFactoryServiceType().newByUDescrIdxKey();
 		key.setRequiredDescription( argDescription );
 		deleteServiceTypeByUDescrIdx( Authorization, key );
 	}

@@ -78,17 +78,17 @@ public class CFIntRamTldTable
 		schema = argSchema;
 	}
 
-	public void createTld( ICFSecAuthorization Authorization,
+	public ICFIntTld createTld( ICFSecAuthorization Authorization,
 		ICFIntTld Buff )
 	{
 		final String S_ProcName = "createTld";
-		CFLibDbKeyHash256 pkey = schema.getFactoryTld().newPKey();
-		pkey.setRequiredId( schema.nextTldIdGen() );
-		Buff.setRequiredId( pkey.getRequiredId() );
-		CFIntBuffTldByTenantIdxKey keyTenantIdx = schema.getFactoryTld().newTenantIdxKey();
+		CFLibDbKeyHash256 pkey;
+		pkey = schema.nextTldIdGen();
+		Buff.setRequiredId( pkey );
+		CFIntBuffTldByTenantIdxKey keyTenantIdx = (CFIntBuffTldByTenantIdxKey)schema.getFactoryTld().newByTenantIdxKey();
 		keyTenantIdx.setRequiredTenantId( Buff.getRequiredTenantId() );
 
-		CFIntBuffTldByNameIdxKey keyNameIdx = schema.getFactoryTld().newNameIdxKey();
+		CFIntBuffTldByNameIdxKey keyNameIdx = (CFIntBuffTldByNameIdxKey)schema.getFactoryTld().newByNameIdxKey();
 		keyNameIdx.setRequiredName( Buff.getRequiredName() );
 
 		// Validate unique indexes
@@ -100,6 +100,7 @@ public class CFIntRamTldTable
 		if( dictByNameIdx.containsKey( keyNameIdx ) ) {
 			throw new CFLibUniqueIndexViolationException( getClass(),
 				S_ProcName,
+				"TldNameIdx",
 				"TldNameIdx",
 				keyNameIdx );
 		}
@@ -139,6 +140,7 @@ public class CFIntRamTldTable
 
 		dictByNameIdx.put( keyNameIdx, Buff );
 
+		return( Buff );
 	}
 
 	public ICFIntTld readDerived( ICFSecAuthorization Authorization,
@@ -159,11 +161,9 @@ public class CFIntRamTldTable
 		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamTld.readDerived";
-		CFLibDbKeyHash256 key = schema.getFactoryTld().newPKey();
-		key.setRequiredId( PKey.getRequiredId() );
 		ICFIntTld buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
 		}
 		else {
 			buff = null;
@@ -186,7 +186,7 @@ public class CFIntRamTldTable
 		CFLibDbKeyHash256 TenantId )
 	{
 		final String S_ProcName = "CFIntRamTld.readDerivedByTenantIdx";
-		CFIntBuffTldByTenantIdxKey key = schema.getFactoryTld().newTenantIdxKey();
+		CFIntBuffTldByTenantIdxKey key = (CFIntBuffTldByTenantIdxKey)schema.getFactoryTld().newByTenantIdxKey();
 		key.setRequiredTenantId( TenantId );
 
 		ICFIntTld[] recArray;
@@ -213,7 +213,7 @@ public class CFIntRamTldTable
 		String Name )
 	{
 		final String S_ProcName = "CFIntRamTld.readDerivedByNameIdx";
-		CFIntBuffTldByNameIdxKey key = schema.getFactoryTld().newNameIdxKey();
+		CFIntBuffTldByNameIdxKey key = (CFIntBuffTldByNameIdxKey)schema.getFactoryTld().newByNameIdxKey();
 		key.setRequiredName( Name );
 
 		ICFIntTld buff;
@@ -230,12 +230,9 @@ public class CFIntRamTldTable
 		CFLibDbKeyHash256 Id )
 	{
 		final String S_ProcName = "CFIntRamTld.readDerivedByIdIdx() ";
-		CFLibDbKeyHash256 key = schema.getFactoryTld().newPKey();
-		key.setRequiredId( Id );
-
 		ICFIntTld buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
+		if( dictByPKey.containsKey( Id ) ) {
+			buff = dictByPKey.get( Id );
 		}
 		else {
 			buff = null;
@@ -248,7 +245,7 @@ public class CFIntRamTldTable
 	{
 		final String S_ProcName = "CFIntRamTld.readBuff";
 		ICFIntTld buff = readDerived( Authorization, PKey );
-		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a106" ) ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() != ICFIntTld.CLASS_CODE ) ) {
 			buff = null;
 		}
 		return( buff );
@@ -259,7 +256,7 @@ public class CFIntRamTldTable
 	{
 		final String S_ProcName = "lockBuff";
 		ICFIntTld buff = readDerived( Authorization, PKey );
-		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a106" ) ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() != ICFIntTld.CLASS_CODE ) ) {
 			buff = null;
 		}
 		return( buff );
@@ -273,7 +270,7 @@ public class CFIntRamTldTable
 		ICFIntTld[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
-			if( ( buff != null ) && buff.getClassCode().equals( "a106" ) ) {
+			if( ( buff != null ) && ( buff.getClassCode() == ICFIntTld.CLASS_CODE ) ) {
 				filteredList.add( buff );
 			}
 		}
@@ -286,7 +283,7 @@ public class CFIntRamTldTable
 		final String S_ProcName = "CFIntRamTld.readBuffByIdIdx() ";
 		ICFIntTld buff = readDerivedByIdIdx( Authorization,
 			Id );
-		if( ( buff != null ) && buff.getClassCode().equals( "a106" ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() == ICFIntTld.CLASS_CODE ) ) {
 			return( (ICFIntTld)buff );
 		}
 		else {
@@ -304,7 +301,7 @@ public class CFIntRamTldTable
 			TenantId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
-			if( ( buff != null ) && buff.getClassCode().equals( "a106" ) ) {
+			if( ( buff != null ) && ( buff.getClassCode() == ICFIntTld.CLASS_CODE ) ) {
 				filteredList.add( (ICFIntTld)buff );
 			}
 		}
@@ -317,7 +314,7 @@ public class CFIntRamTldTable
 		final String S_ProcName = "CFIntRamTld.readBuffByNameIdx() ";
 		ICFIntTld buff = readDerivedByNameIdx( Authorization,
 			Name );
-		if( ( buff != null ) && buff.getClassCode().equals( "a106" ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() == ICFIntTld.CLASS_CODE ) ) {
 			return( (ICFIntTld)buff );
 		}
 		else {
@@ -325,11 +322,10 @@ public class CFIntRamTldTable
 		}
 	}
 
-	public void updateTld( ICFSecAuthorization Authorization,
+	public ICFIntTld updateTld( ICFSecAuthorization Authorization,
 		ICFIntTld Buff )
 	{
-		CFLibDbKeyHash256 pkey = schema.getFactoryTld().newPKey();
-		pkey.setRequiredId( Buff.getRequiredId() );
+		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		ICFIntTld existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
@@ -344,16 +340,16 @@ public class CFIntRamTldTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFIntBuffTldByTenantIdxKey existingKeyTenantIdx = schema.getFactoryTld().newTenantIdxKey();
+		CFIntBuffTldByTenantIdxKey existingKeyTenantIdx = (CFIntBuffTldByTenantIdxKey)schema.getFactoryTld().newByTenantIdxKey();
 		existingKeyTenantIdx.setRequiredTenantId( existing.getRequiredTenantId() );
 
-		CFIntBuffTldByTenantIdxKey newKeyTenantIdx = schema.getFactoryTld().newTenantIdxKey();
+		CFIntBuffTldByTenantIdxKey newKeyTenantIdx = (CFIntBuffTldByTenantIdxKey)schema.getFactoryTld().newByTenantIdxKey();
 		newKeyTenantIdx.setRequiredTenantId( Buff.getRequiredTenantId() );
 
-		CFIntBuffTldByNameIdxKey existingKeyNameIdx = schema.getFactoryTld().newNameIdxKey();
+		CFIntBuffTldByNameIdxKey existingKeyNameIdx = (CFIntBuffTldByNameIdxKey)schema.getFactoryTld().newByNameIdxKey();
 		existingKeyNameIdx.setRequiredName( existing.getRequiredName() );
 
-		CFIntBuffTldByNameIdxKey newKeyNameIdx = schema.getFactoryTld().newNameIdxKey();
+		CFIntBuffTldByNameIdxKey newKeyNameIdx = (CFIntBuffTldByNameIdxKey)schema.getFactoryTld().newByNameIdxKey();
 		newKeyNameIdx.setRequiredName( Buff.getRequiredName() );
 
 		// Check unique indexes
@@ -362,6 +358,7 @@ public class CFIntRamTldTable
 			if( dictByNameIdx.containsKey( newKeyNameIdx ) ) {
 				throw new CFLibUniqueIndexViolationException( getClass(),
 					"updateTld",
+					"TldNameIdx",
 					"TldNameIdx",
 					newKeyNameIdx );
 			}
@@ -409,6 +406,7 @@ public class CFIntRamTldTable
 		dictByNameIdx.remove( existingKeyNameIdx );
 		dictByNameIdx.put( newKeyNameIdx, Buff );
 
+		return(Buff);
 	}
 
 	public void deleteTld( ICFSecAuthorization Authorization,
@@ -430,10 +428,10 @@ public class CFIntRamTldTable
 		}
 					schema.getTableTopDomain().deleteTopDomainByTldIdx( Authorization,
 						existing.getRequiredId() );
-		CFIntBuffTldByTenantIdxKey keyTenantIdx = schema.getFactoryTld().newTenantIdxKey();
+		CFIntBuffTldByTenantIdxKey keyTenantIdx = (CFIntBuffTldByTenantIdxKey)schema.getFactoryTld().newByTenantIdxKey();
 		keyTenantIdx.setRequiredTenantId( existing.getRequiredTenantId() );
 
-		CFIntBuffTldByNameIdxKey keyNameIdx = schema.getFactoryTld().newNameIdxKey();
+		CFIntBuffTldByNameIdxKey keyNameIdx = (CFIntBuffTldByNameIdxKey)schema.getFactoryTld().newByNameIdxKey();
 		keyNameIdx.setRequiredName( existing.getRequiredName() );
 
 		// Validate reverse foreign keys
@@ -449,14 +447,6 @@ public class CFIntRamTldTable
 		dictByNameIdx.remove( keyNameIdx );
 
 	}
-	public void deleteTldByIdIdx( ICFSecAuthorization Authorization,
-		CFLibDbKeyHash256 argId )
-	{
-		CFLibDbKeyHash256 key = schema.getFactoryTld().newPKey();
-		key.setRequiredId( argId );
-		deleteTldByIdIdx( Authorization, key );
-	}
-
 	public void deleteTldByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
@@ -486,7 +476,7 @@ public class CFIntRamTldTable
 	public void deleteTldByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		CFIntBuffTldByTenantIdxKey key = schema.getFactoryTld().newTenantIdxKey();
+		CFIntBuffTldByTenantIdxKey key = (CFIntBuffTldByTenantIdxKey)schema.getFactoryTld().newByTenantIdxKey();
 		key.setRequiredTenantId( argTenantId );
 		deleteTldByTenantIdx( Authorization, key );
 	}
@@ -520,7 +510,7 @@ public class CFIntRamTldTable
 	public void deleteTldByNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		CFIntBuffTldByNameIdxKey key = schema.getFactoryTld().newNameIdxKey();
+		CFIntBuffTldByNameIdxKey key = (CFIntBuffTldByNameIdxKey)schema.getFactoryTld().newByNameIdxKey();
 		key.setRequiredName( argName );
 		deleteTldByNameIdx( Authorization, key );
 	}

@@ -74,14 +74,14 @@ public class CFIntRamSysClusterTable
 		schema = argSchema;
 	}
 
-	public void createSysCluster( ICFSecAuthorization Authorization,
+	public ICFSecSysCluster createSysCluster( ICFSecAuthorization Authorization,
 		ICFSecSysCluster Buff )
 	{
 		final String S_ProcName = "createSysCluster";
-		Integer pkey = schema.getFactorySysCluster().newPKey();
-		pkey.setRequiredSingletonId( Buff.getRequiredSingletonId() );
-		Buff.setRequiredSingletonId( pkey.getRequiredSingletonId() );
-		CFSecBuffSysClusterByClusterIdxKey keyClusterIdx = schema.getFactorySysCluster().newClusterIdxKey();
+		Integer pkey;
+		pkey = Buff.getRequiredSingletonId();
+		Buff.setRequiredSingletonId( pkey );
+		CFSecBuffSysClusterByClusterIdxKey keyClusterIdx = (CFSecBuffSysClusterByClusterIdxKey)schema.getFactorySysCluster().newByClusterIdxKey();
 		keyClusterIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 
 		// Validate unique indexes
@@ -123,6 +123,7 @@ public class CFIntRamSysClusterTable
 		}
 		subdictClusterIdx.put( pkey, Buff );
 
+		return( Buff );
 	}
 
 	public ICFSecSysCluster readDerived( ICFSecAuthorization Authorization,
@@ -143,11 +144,9 @@ public class CFIntRamSysClusterTable
 		Integer PKey )
 	{
 		final String S_ProcName = "CFIntRamSysCluster.readDerived";
-		Integer key = schema.getFactorySysCluster().newPKey();
-		key.setRequiredSingletonId( PKey.getRequiredSingletonId() );
 		ICFSecSysCluster buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
 		}
 		else {
 			buff = null;
@@ -170,7 +169,7 @@ public class CFIntRamSysClusterTable
 		long ClusterId )
 	{
 		final String S_ProcName = "CFIntRamSysCluster.readDerivedByClusterIdx";
-		CFSecBuffSysClusterByClusterIdxKey key = schema.getFactorySysCluster().newClusterIdxKey();
+		CFSecBuffSysClusterByClusterIdxKey key = (CFSecBuffSysClusterByClusterIdxKey)schema.getFactorySysCluster().newByClusterIdxKey();
 		key.setRequiredClusterId( ClusterId );
 
 		ICFSecSysCluster[] recArray;
@@ -197,12 +196,9 @@ public class CFIntRamSysClusterTable
 		int SingletonId )
 	{
 		final String S_ProcName = "CFIntRamSysCluster.readDerivedByIdIdx() ";
-		Integer key = schema.getFactorySysCluster().newPKey();
-		key.setRequiredSingletonId( SingletonId );
-
 		ICFSecSysCluster buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
+		if( dictByPKey.containsKey( SingletonId ) ) {
+			buff = dictByPKey.get( SingletonId );
 		}
 		else {
 			buff = null;
@@ -215,7 +211,7 @@ public class CFIntRamSysClusterTable
 	{
 		final String S_ProcName = "CFIntRamSysCluster.readBuff";
 		ICFSecSysCluster buff = readDerived( Authorization, PKey );
-		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a014" ) ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() != ICFSecSysCluster.CLASS_CODE ) ) {
 			buff = null;
 		}
 		return( buff );
@@ -226,7 +222,7 @@ public class CFIntRamSysClusterTable
 	{
 		final String S_ProcName = "lockBuff";
 		ICFSecSysCluster buff = readDerived( Authorization, PKey );
-		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a014" ) ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() != ICFSecSysCluster.CLASS_CODE ) ) {
 			buff = null;
 		}
 		return( buff );
@@ -240,7 +236,7 @@ public class CFIntRamSysClusterTable
 		ICFSecSysCluster[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
-			if( ( buff != null ) && buff.getClassCode().equals( "a014" ) ) {
+			if( ( buff != null ) && ( buff.getClassCode() == ICFSecSysCluster.CLASS_CODE ) ) {
 				filteredList.add( buff );
 			}
 		}
@@ -253,7 +249,7 @@ public class CFIntRamSysClusterTable
 		final String S_ProcName = "CFIntRamSysCluster.readBuffByIdIdx() ";
 		ICFSecSysCluster buff = readDerivedByIdIdx( Authorization,
 			SingletonId );
-		if( ( buff != null ) && buff.getClassCode().equals( "a014" ) ) {
+		if( ( buff != null ) && ( buff.getClassCode() == ICFSecSysCluster.CLASS_CODE ) ) {
 			return( (ICFSecSysCluster)buff );
 		}
 		else {
@@ -271,18 +267,17 @@ public class CFIntRamSysClusterTable
 			ClusterId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
-			if( ( buff != null ) && buff.getClassCode().equals( "a014" ) ) {
+			if( ( buff != null ) && ( buff.getClassCode() == ICFSecSysCluster.CLASS_CODE ) ) {
 				filteredList.add( (ICFSecSysCluster)buff );
 			}
 		}
 		return( filteredList.toArray( new ICFSecSysCluster[0] ) );
 	}
 
-	public void updateSysCluster( ICFSecAuthorization Authorization,
+	public ICFSecSysCluster updateSysCluster( ICFSecAuthorization Authorization,
 		ICFSecSysCluster Buff )
 	{
-		Integer pkey = schema.getFactorySysCluster().newPKey();
-		pkey.setRequiredSingletonId( Buff.getRequiredSingletonId() );
+		Integer pkey = Buff.getPKey();
 		ICFSecSysCluster existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
@@ -297,10 +292,10 @@ public class CFIntRamSysClusterTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFSecBuffSysClusterByClusterIdxKey existingKeyClusterIdx = schema.getFactorySysCluster().newClusterIdxKey();
+		CFSecBuffSysClusterByClusterIdxKey existingKeyClusterIdx = (CFSecBuffSysClusterByClusterIdxKey)schema.getFactorySysCluster().newByClusterIdxKey();
 		existingKeyClusterIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 
-		CFSecBuffSysClusterByClusterIdxKey newKeyClusterIdx = schema.getFactorySysCluster().newClusterIdxKey();
+		CFSecBuffSysClusterByClusterIdxKey newKeyClusterIdx = (CFSecBuffSysClusterByClusterIdxKey)schema.getFactorySysCluster().newByClusterIdxKey();
 		newKeyClusterIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 
 		// Check unique indexes
@@ -344,6 +339,7 @@ public class CFIntRamSysClusterTable
 		}
 		subdict.put( pkey, Buff );
 
+		return(Buff);
 	}
 
 	public void deleteSysCluster( ICFSecAuthorization Authorization,
@@ -363,7 +359,7 @@ public class CFIntRamSysClusterTable
 				"deleteSysCluster",
 				pkey );
 		}
-		CFSecBuffSysClusterByClusterIdxKey keyClusterIdx = schema.getFactorySysCluster().newClusterIdxKey();
+		CFSecBuffSysClusterByClusterIdxKey keyClusterIdx = (CFSecBuffSysClusterByClusterIdxKey)schema.getFactorySysCluster().newByClusterIdxKey();
 		keyClusterIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 
 		// Validate reverse foreign keys
@@ -377,14 +373,6 @@ public class CFIntRamSysClusterTable
 		subdict.remove( pkey );
 
 	}
-	public void deleteSysClusterByIdIdx( ICFSecAuthorization Authorization,
-		int argSingletonId )
-	{
-		Integer key = schema.getFactorySysCluster().newPKey();
-		key.setRequiredSingletonId( argSingletonId );
-		deleteSysClusterByIdIdx( Authorization, key );
-	}
-
 	public void deleteSysClusterByIdIdx( ICFSecAuthorization Authorization,
 		Integer argKey )
 	{
@@ -414,7 +402,7 @@ public class CFIntRamSysClusterTable
 	public void deleteSysClusterByClusterIdx( ICFSecAuthorization Authorization,
 		long argClusterId )
 	{
-		CFSecBuffSysClusterByClusterIdxKey key = schema.getFactorySysCluster().newClusterIdxKey();
+		CFSecBuffSysClusterByClusterIdxKey key = (CFSecBuffSysClusterByClusterIdxKey)schema.getFactorySysCluster().newByClusterIdxKey();
 		key.setRequiredClusterId( argClusterId );
 		deleteSysClusterByClusterIdx( Authorization, key );
 	}
