@@ -38,6 +38,7 @@ package io.github.msobkow.v3_1.cfint.cfintram;
 import java.math.*;
 import java.sql.*;
 import java.text.*;
+import java.time.*;
 import java.util.*;
 import org.apache.commons.codec.binary.Base64;
 import io.github.msobkow.v3_1.cflib.*;
@@ -45,7 +46,8 @@ import io.github.msobkow.v3_1.cflib.dbutil.*;
 
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
-import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfsec.cfsec.buff.*;
+import io.github.msobkow.v3_1.cfint.cfint.buff.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
 
@@ -57,36 +59,36 @@ public class CFIntRamTenantTable
 	implements ICFIntTenantTable
 {
 	private ICFIntSchema schema;
-	private Map< CFSecTenantPKey,
-				CFSecTenantBuff > dictByPKey
-		= new HashMap< CFSecTenantPKey,
-				CFSecTenantBuff >();
-	private Map< CFSecTenantByClusterIdxKey,
-				Map< CFSecTenantPKey,
-					CFSecTenantBuff >> dictByClusterIdx
-		= new HashMap< CFSecTenantByClusterIdxKey,
-				Map< CFSecTenantPKey,
-					CFSecTenantBuff >>();
-	private Map< CFSecTenantByUNameIdxKey,
-			CFSecTenantBuff > dictByUNameIdx
-		= new HashMap< CFSecTenantByUNameIdxKey,
-			CFSecTenantBuff >();
+	private Map< CFLibDbKeyHash256,
+				CFSecBuffTenant > dictByPKey
+		= new HashMap< CFLibDbKeyHash256,
+				CFSecBuffTenant >();
+	private Map< CFSecBuffTenantByClusterIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffTenant >> dictByClusterIdx
+		= new HashMap< CFSecBuffTenantByClusterIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffTenant >>();
+	private Map< CFSecBuffTenantByUNameIdxKey,
+			CFSecBuffTenant > dictByUNameIdx
+		= new HashMap< CFSecBuffTenantByUNameIdxKey,
+			CFSecBuffTenant >();
 
 	public CFIntRamTenantTable( ICFIntSchema argSchema ) {
 		schema = argSchema;
 	}
 
-	public void createTenant( CFSecAuthorization Authorization,
-		CFSecTenantBuff Buff )
+	public void createTenant( ICFSecAuthorization Authorization,
+		ICFSecTenant Buff )
 	{
 		final String S_ProcName = "createTenant";
-		CFSecTenantPKey pkey = schema.getFactoryTenant().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactoryTenant().newPKey();
 		pkey.setRequiredId( schema.nextTenantIdGen() );
 		Buff.setRequiredId( pkey.getRequiredId() );
-		CFSecTenantByClusterIdxKey keyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
+		CFSecBuffTenantByClusterIdxKey keyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
 		keyClusterIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 
-		CFSecTenantByUNameIdxKey keyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
+		CFSecBuffTenantByUNameIdxKey keyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
 		keyUNameIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 		keyUNameIdx.setRequiredTenantName( Buff.getRequiredTenantName() );
 
@@ -126,12 +128,12 @@ public class CFIntRamTenantTable
 
 		dictByPKey.put( pkey, Buff );
 
-		Map< CFSecTenantPKey, CFSecTenantBuff > subdictClusterIdx;
+		Map< CFLibDbKeyHash256, CFSecBuffTenant > subdictClusterIdx;
 		if( dictByClusterIdx.containsKey( keyClusterIdx ) ) {
 			subdictClusterIdx = dictByClusterIdx.get( keyClusterIdx );
 		}
 		else {
-			subdictClusterIdx = new HashMap< CFSecTenantPKey, CFSecTenantBuff >();
+			subdictClusterIdx = new HashMap< CFLibDbKeyHash256, CFSecBuffTenant >();
 			dictByClusterIdx.put( keyClusterIdx, subdictClusterIdx );
 		}
 		subdictClusterIdx.put( pkey, Buff );
@@ -140,13 +142,27 @@ public class CFIntRamTenantTable
 
 	}
 
-	public CFSecTenantBuff readDerived( CFSecAuthorization Authorization,
-		CFSecTenantPKey PKey )
+	public ICFSecTenant readDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamTenant.readDerived";
-		CFSecTenantPKey key = schema.getFactoryTenant().newPKey();
+		ICFSecTenant buff;
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
+		}
+		else {
+			buff = null;
+		}
+		return( buff );
+	}
+
+	public ICFSecTenant lockDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
+	{
+		final String S_ProcName = "CFIntRamTenant.readDerived";
+		CFLibDbKeyHash256 key = schema.getFactoryTenant().newPKey();
 		key.setRequiredId( PKey.getRequiredId() );
-		CFSecTenantBuff buff;
+		ICFSecTenant buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -156,26 +172,10 @@ public class CFIntRamTenantTable
 		return( buff );
 	}
 
-	public CFSecTenantBuff lockDerived( CFSecAuthorization Authorization,
-		CFSecTenantPKey PKey )
-	{
-		final String S_ProcName = "CFIntRamTenant.readDerived";
-		CFSecTenantPKey key = schema.getFactoryTenant().newPKey();
-		key.setRequiredId( PKey.getRequiredId() );
-		CFSecTenantBuff buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
-		}
-		else {
-			buff = null;
-		}
-		return( buff );
-	}
-
-	public CFSecTenantBuff[] readAllDerived( CFSecAuthorization Authorization ) {
+	public ICFSecTenant[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamTenant.readAllDerived";
-		CFSecTenantBuff[] retList = new CFSecTenantBuff[ dictByPKey.values().size() ];
-		Iterator< CFSecTenantBuff > iter = dictByPKey.values().iterator();
+		ICFSecTenant[] retList = new ICFSecTenant[ dictByPKey.values().size() ];
+		Iterator< ICFSecTenant > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -183,43 +183,43 @@ public class CFIntRamTenantTable
 		return( retList );
 	}
 
-	public CFSecTenantBuff[] readDerivedByClusterIdx( CFSecAuthorization Authorization,
+	public ICFSecTenant[] readDerivedByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId )
 	{
 		final String S_ProcName = "CFIntRamTenant.readDerivedByClusterIdx";
-		CFSecTenantByClusterIdxKey key = schema.getFactoryTenant().newClusterIdxKey();
+		CFSecBuffTenantByClusterIdxKey key = schema.getFactoryTenant().newClusterIdxKey();
 		key.setRequiredClusterId( ClusterId );
 
-		CFSecTenantBuff[] recArray;
+		ICFSecTenant[] recArray;
 		if( dictByClusterIdx.containsKey( key ) ) {
-			Map< CFSecTenantPKey, CFSecTenantBuff > subdictClusterIdx
+			Map< CFLibDbKeyHash256, CFSecBuffTenant > subdictClusterIdx
 				= dictByClusterIdx.get( key );
-			recArray = new CFSecTenantBuff[ subdictClusterIdx.size() ];
-			Iterator< CFSecTenantBuff > iter = subdictClusterIdx.values().iterator();
+			recArray = new ICFSecTenant[ subdictClusterIdx.size() ];
+			Iterator< ICFSecTenant > iter = subdictClusterIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFSecTenantPKey, CFSecTenantBuff > subdictClusterIdx
-				= new HashMap< CFSecTenantPKey, CFSecTenantBuff >();
+			Map< CFLibDbKeyHash256, CFSecBuffTenant > subdictClusterIdx
+				= new HashMap< CFLibDbKeyHash256, CFSecBuffTenant >();
 			dictByClusterIdx.put( key, subdictClusterIdx );
-			recArray = new CFSecTenantBuff[0];
+			recArray = new ICFSecTenant[0];
 		}
 		return( recArray );
 	}
 
-	public CFSecTenantBuff readDerivedByUNameIdx( CFSecAuthorization Authorization,
+	public ICFSecTenant readDerivedByUNameIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		String TenantName )
 	{
 		final String S_ProcName = "CFIntRamTenant.readDerivedByUNameIdx";
-		CFSecTenantByUNameIdxKey key = schema.getFactoryTenant().newUNameIdxKey();
+		CFSecBuffTenantByUNameIdxKey key = schema.getFactoryTenant().newUNameIdxKey();
 		key.setRequiredClusterId( ClusterId );
 		key.setRequiredTenantName( TenantName );
 
-		CFSecTenantBuff buff;
+		ICFSecTenant buff;
 		if( dictByUNameIdx.containsKey( key ) ) {
 			buff = dictByUNameIdx.get( key );
 		}
@@ -229,14 +229,14 @@ public class CFIntRamTenantTable
 		return( buff );
 	}
 
-	public CFSecTenantBuff readDerivedByIdIdx( CFSecAuthorization Authorization,
+	public ICFSecTenant readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
 		final String S_ProcName = "CFIntRamTenant.readDerivedByIdIdx() ";
-		CFSecTenantPKey key = schema.getFactoryTenant().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactoryTenant().newPKey();
 		key.setRequiredId( Id );
 
-		CFSecTenantBuff buff;
+		ICFSecTenant buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -246,41 +246,41 @@ public class CFIntRamTenantTable
 		return( buff );
 	}
 
-	public CFSecTenantBuff readBuff( CFSecAuthorization Authorization,
-		CFSecTenantPKey PKey )
+	public ICFSecTenant readBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamTenant.readBuff";
-		CFSecTenantBuff buff = readDerived( Authorization, PKey );
+		ICFSecTenant buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a015" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFSecTenantBuff lockBuff( CFSecAuthorization Authorization,
-		CFSecTenantPKey PKey )
+	public ICFSecTenant lockBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "lockBuff";
-		CFSecTenantBuff buff = readDerived( Authorization, PKey );
+		ICFSecTenant buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a015" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFSecTenantBuff[] readAllBuff( CFSecAuthorization Authorization )
+	public ICFSecTenant[] readAllBuff( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamTenant.readAllBuff";
-		CFSecTenantBuff buff;
-		ArrayList<CFSecTenantBuff> filteredList = new ArrayList<CFSecTenantBuff>();
-		CFSecTenantBuff[] buffList = readAllDerived( Authorization );
+		ICFSecTenant buff;
+		ArrayList<ICFSecTenant> filteredList = new ArrayList<ICFSecTenant>();
+		ICFSecTenant[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a015" ) ) {
 				filteredList.add( buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecTenantBuff[0] ) );
+		return( filteredList.toArray( new ICFSecTenant[0] ) );
 	}
 
 	/**
@@ -290,54 +290,54 @@ public class CFIntRamTenantTable
 	 *
 	 *	@return All the specific Tenant instances in the database accessible for the Authorization.
 	 */
-	public CFSecTenantBuff[] pageAllBuff( CFSecAuthorization Authorization,
+	public ICFSecTenant[] pageAllBuff( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 priorId )
 	{
 		final String S_ProcName = "pageAllBuff";
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 
-	public CFSecTenantBuff readBuffByIdIdx( CFSecAuthorization Authorization,
+	public ICFSecTenant readBuffByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
 		final String S_ProcName = "CFIntRamTenant.readBuffByIdIdx() ";
-		CFSecTenantBuff buff = readDerivedByIdIdx( Authorization,
+		ICFSecTenant buff = readDerivedByIdIdx( Authorization,
 			Id );
 		if( ( buff != null ) && buff.getClassCode().equals( "a015" ) ) {
-			return( (CFSecTenantBuff)buff );
+			return( (ICFSecTenant)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public CFSecTenantBuff[] readBuffByClusterIdx( CFSecAuthorization Authorization,
+	public ICFSecTenant[] readBuffByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId )
 	{
 		final String S_ProcName = "CFIntRamTenant.readBuffByClusterIdx() ";
-		CFSecTenantBuff buff;
-		ArrayList<CFSecTenantBuff> filteredList = new ArrayList<CFSecTenantBuff>();
-		CFSecTenantBuff[] buffList = readDerivedByClusterIdx( Authorization,
+		ICFSecTenant buff;
+		ArrayList<ICFSecTenant> filteredList = new ArrayList<ICFSecTenant>();
+		ICFSecTenant[] buffList = readDerivedByClusterIdx( Authorization,
 			ClusterId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a015" ) ) {
-				filteredList.add( (CFSecTenantBuff)buff );
+				filteredList.add( (ICFSecTenant)buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecTenantBuff[0] ) );
+		return( filteredList.toArray( new ICFSecTenant[0] ) );
 	}
 
-	public CFSecTenantBuff readBuffByUNameIdx( CFSecAuthorization Authorization,
+	public ICFSecTenant readBuffByUNameIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		String TenantName )
 	{
 		final String S_ProcName = "CFIntRamTenant.readBuffByUNameIdx() ";
-		CFSecTenantBuff buff = readDerivedByUNameIdx( Authorization,
+		ICFSecTenant buff = readDerivedByUNameIdx( Authorization,
 			ClusterId,
 			TenantName );
 		if( ( buff != null ) && buff.getClassCode().equals( "a015" ) ) {
-			return( (CFSecTenantBuff)buff );
+			return( (ICFSecTenant)buff );
 		}
 		else {
 			return( null );
@@ -355,7 +355,7 @@ public class CFIntRamTenantTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public CFSecTenantBuff[] pageBuffByClusterIdx( CFSecAuthorization Authorization,
+	public ICFSecTenant[] pageBuffByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		CFLibDbKeyHash256 priorId )
 	{
@@ -363,12 +363,12 @@ public class CFIntRamTenantTable
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 
-	public void updateTenant( CFSecAuthorization Authorization,
-		CFSecTenantBuff Buff )
+	public void updateTenant( ICFSecAuthorization Authorization,
+		ICFSecTenant Buff )
 	{
-		CFSecTenantPKey pkey = schema.getFactoryTenant().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactoryTenant().newPKey();
 		pkey.setRequiredId( Buff.getRequiredId() );
-		CFSecTenantBuff existing = dictByPKey.get( pkey );
+		ICFSecTenant existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateTenant",
@@ -382,17 +382,17 @@ public class CFIntRamTenantTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFSecTenantByClusterIdxKey existingKeyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
+		CFSecBuffTenantByClusterIdxKey existingKeyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
 		existingKeyClusterIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 
-		CFSecTenantByClusterIdxKey newKeyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
+		CFSecBuffTenantByClusterIdxKey newKeyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
 		newKeyClusterIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 
-		CFSecTenantByUNameIdxKey existingKeyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
+		CFSecBuffTenantByUNameIdxKey existingKeyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
 		existingKeyUNameIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 		existingKeyUNameIdx.setRequiredTenantName( existing.getRequiredTenantName() );
 
-		CFSecTenantByUNameIdxKey newKeyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
+		CFSecBuffTenantByUNameIdxKey newKeyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
 		newKeyUNameIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 		newKeyUNameIdx.setRequiredTenantName( Buff.getRequiredTenantName() );
 
@@ -428,7 +428,7 @@ public class CFIntRamTenantTable
 
 		// Update is valid
 
-		Map< CFSecTenantPKey, CFSecTenantBuff > subdict;
+		Map< CFLibDbKeyHash256, CFSecBuffTenant > subdict;
 
 		dictByPKey.remove( pkey );
 		dictByPKey.put( pkey, Buff );
@@ -441,7 +441,7 @@ public class CFIntRamTenantTable
 			subdict = dictByClusterIdx.get( newKeyClusterIdx );
 		}
 		else {
-			subdict = new HashMap< CFSecTenantPKey, CFSecTenantBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFSecBuffTenant >();
 			dictByClusterIdx.put( newKeyClusterIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -451,14 +451,14 @@ public class CFIntRamTenantTable
 
 	}
 
-	public void deleteTenant( CFSecAuthorization Authorization,
-		CFSecTenantBuff Buff )
+	public void deleteTenant( ICFSecAuthorization Authorization,
+		ICFSecTenant Buff )
 	{
 		final String S_ProcName = "CFIntRamTenantTable.deleteTenant() ";
 		String classCode;
-		CFSecTenantPKey pkey = schema.getFactoryTenant().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactoryTenant().newPKey();
 		pkey.setRequiredId( Buff.getRequiredId() );
-		CFSecTenantBuff existing = dictByPKey.get( pkey );
+		ICFSecTenant existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}
@@ -496,17 +496,17 @@ public class CFIntRamTenantTable
 		}
 					schema.getTableTSecGroup().deleteTSecGroupByTenantIdx( Authorization,
 						existing.getRequiredId() );
-		CFSecTenantByClusterIdxKey keyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
+		CFSecBuffTenantByClusterIdxKey keyClusterIdx = schema.getFactoryTenant().newClusterIdxKey();
 		keyClusterIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 
-		CFSecTenantByUNameIdxKey keyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
+		CFSecBuffTenantByUNameIdxKey keyUNameIdx = schema.getFactoryTenant().newUNameIdxKey();
 		keyUNameIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 		keyUNameIdx.setRequiredTenantName( existing.getRequiredTenantName() );
 
 		// Validate reverse foreign keys
 
 		// Delete is valid
-		Map< CFSecTenantPKey, CFSecTenantBuff > subdict;
+		Map< CFLibDbKeyHash256, CFSecBuffTenant > subdict;
 
 		dictByPKey.remove( pkey );
 
@@ -516,32 +516,32 @@ public class CFIntRamTenantTable
 		dictByUNameIdx.remove( keyUNameIdx );
 
 	}
-	public void deleteTenantByIdIdx( CFSecAuthorization Authorization,
+	public void deleteTenantByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		CFSecTenantPKey key = schema.getFactoryTenant().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactoryTenant().newPKey();
 		key.setRequiredId( argId );
 		deleteTenantByIdIdx( Authorization, key );
 	}
 
-	public void deleteTenantByIdIdx( CFSecAuthorization Authorization,
-		CFSecTenantPKey argKey )
+	public void deleteTenantByIdIdx( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 argKey )
 	{
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		CFSecTenantBuff cur;
-		LinkedList<CFSecTenantBuff> matchSet = new LinkedList<CFSecTenantBuff>();
-		Iterator<CFSecTenantBuff> values = dictByPKey.values().iterator();
+		ICFSecTenant cur;
+		LinkedList<ICFSecTenant> matchSet = new LinkedList<ICFSecTenant>();
+		Iterator<ICFSecTenant> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecTenantBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecTenant> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableTenant().readDerivedByIdIdx( Authorization,
@@ -550,32 +550,32 @@ public class CFIntRamTenantTable
 		}
 	}
 
-	public void deleteTenantByClusterIdx( CFSecAuthorization Authorization,
+	public void deleteTenantByClusterIdx( ICFSecAuthorization Authorization,
 		long argClusterId )
 	{
-		CFSecTenantByClusterIdxKey key = schema.getFactoryTenant().newClusterIdxKey();
+		CFSecBuffTenantByClusterIdxKey key = schema.getFactoryTenant().newClusterIdxKey();
 		key.setRequiredClusterId( argClusterId );
 		deleteTenantByClusterIdx( Authorization, key );
 	}
 
-	public void deleteTenantByClusterIdx( CFSecAuthorization Authorization,
-		CFSecTenantByClusterIdxKey argKey )
+	public void deleteTenantByClusterIdx( ICFSecAuthorization Authorization,
+		ICFSecTenantByClusterIdxKey argKey )
 	{
-		CFSecTenantBuff cur;
+		ICFSecTenant cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecTenantBuff> matchSet = new LinkedList<CFSecTenantBuff>();
-		Iterator<CFSecTenantBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecTenant> matchSet = new LinkedList<ICFSecTenant>();
+		Iterator<ICFSecTenant> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecTenantBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecTenant> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableTenant().readDerivedByIdIdx( Authorization,
@@ -584,35 +584,35 @@ public class CFIntRamTenantTable
 		}
 	}
 
-	public void deleteTenantByUNameIdx( CFSecAuthorization Authorization,
+	public void deleteTenantByUNameIdx( ICFSecAuthorization Authorization,
 		long argClusterId,
 		String argTenantName )
 	{
-		CFSecTenantByUNameIdxKey key = schema.getFactoryTenant().newUNameIdxKey();
+		CFSecBuffTenantByUNameIdxKey key = schema.getFactoryTenant().newUNameIdxKey();
 		key.setRequiredClusterId( argClusterId );
 		key.setRequiredTenantName( argTenantName );
 		deleteTenantByUNameIdx( Authorization, key );
 	}
 
-	public void deleteTenantByUNameIdx( CFSecAuthorization Authorization,
-		CFSecTenantByUNameIdxKey argKey )
+	public void deleteTenantByUNameIdx( ICFSecAuthorization Authorization,
+		ICFSecTenantByUNameIdxKey argKey )
 	{
-		CFSecTenantBuff cur;
+		ICFSecTenant cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecTenantBuff> matchSet = new LinkedList<CFSecTenantBuff>();
-		Iterator<CFSecTenantBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecTenant> matchSet = new LinkedList<ICFSecTenant>();
+		Iterator<ICFSecTenant> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecTenantBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecTenant> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableTenant().readDerivedByIdIdx( Authorization,

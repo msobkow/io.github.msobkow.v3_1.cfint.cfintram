@@ -38,6 +38,7 @@ package io.github.msobkow.v3_1.cfint.cfintram;
 import java.math.*;
 import java.sql.*;
 import java.text.*;
+import java.time.*;
 import java.util.*;
 import org.apache.commons.codec.binary.Base64;
 import io.github.msobkow.v3_1.cflib.*;
@@ -45,7 +46,8 @@ import io.github.msobkow.v3_1.cflib.dbutil.*;
 
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
-import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfsec.cfsec.buff.*;
+import io.github.msobkow.v3_1.cfint.cfint.buff.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
 
@@ -57,54 +59,54 @@ public class CFIntRamSecUserTable
 	implements ICFIntSecUserTable
 {
 	private ICFIntSchema schema;
-	private Map< CFSecSecUserPKey,
-				CFSecSecUserBuff > dictByPKey
-		= new HashMap< CFSecSecUserPKey,
-				CFSecSecUserBuff >();
-	private Map< CFSecSecUserByULoginIdxKey,
-			CFSecSecUserBuff > dictByULoginIdx
-		= new HashMap< CFSecSecUserByULoginIdxKey,
-			CFSecSecUserBuff >();
-	private Map< CFSecSecUserByEMConfIdxKey,
-				Map< CFSecSecUserPKey,
-					CFSecSecUserBuff >> dictByEMConfIdx
-		= new HashMap< CFSecSecUserByEMConfIdxKey,
-				Map< CFSecSecUserPKey,
-					CFSecSecUserBuff >>();
-	private Map< CFSecSecUserByPwdResetIdxKey,
-				Map< CFSecSecUserPKey,
-					CFSecSecUserBuff >> dictByPwdResetIdx
-		= new HashMap< CFSecSecUserByPwdResetIdxKey,
-				Map< CFSecSecUserPKey,
-					CFSecSecUserBuff >>();
-	private Map< CFSecSecUserByDefDevIdxKey,
-				Map< CFSecSecUserPKey,
-					CFSecSecUserBuff >> dictByDefDevIdx
-		= new HashMap< CFSecSecUserByDefDevIdxKey,
-				Map< CFSecSecUserPKey,
-					CFSecSecUserBuff >>();
+	private Map< CFLibDbKeyHash256,
+				CFSecBuffSecUser > dictByPKey
+		= new HashMap< CFLibDbKeyHash256,
+				CFSecBuffSecUser >();
+	private Map< CFSecBuffSecUserByULoginIdxKey,
+			CFSecBuffSecUser > dictByULoginIdx
+		= new HashMap< CFSecBuffSecUserByULoginIdxKey,
+			CFSecBuffSecUser >();
+	private Map< CFSecBuffSecUserByEMConfIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecUser >> dictByEMConfIdx
+		= new HashMap< CFSecBuffSecUserByEMConfIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecUser >>();
+	private Map< CFSecBuffSecUserByPwdResetIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecUser >> dictByPwdResetIdx
+		= new HashMap< CFSecBuffSecUserByPwdResetIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecUser >>();
+	private Map< CFSecBuffSecUserByDefDevIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecUser >> dictByDefDevIdx
+		= new HashMap< CFSecBuffSecUserByDefDevIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecUser >>();
 
 	public CFIntRamSecUserTable( ICFIntSchema argSchema ) {
 		schema = argSchema;
 	}
 
-	public void createSecUser( CFSecAuthorization Authorization,
-		CFSecSecUserBuff Buff )
+	public void createSecUser( ICFSecAuthorization Authorization,
+		ICFSecSecUser Buff )
 	{
 		final String S_ProcName = "createSecUser";
-		CFSecSecUserPKey pkey = schema.getFactorySecUser().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySecUser().newPKey();
 		pkey.setRequiredSecUserId( schema.nextSecUserIdGen() );
 		Buff.setRequiredSecUserId( pkey.getRequiredSecUserId() );
-		CFSecSecUserByULoginIdxKey keyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
+		CFSecBuffSecUserByULoginIdxKey keyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
 		keyULoginIdx.setRequiredLoginId( Buff.getRequiredLoginId() );
 
-		CFSecSecUserByEMConfIdxKey keyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
+		CFSecBuffSecUserByEMConfIdxKey keyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
 		keyEMConfIdx.setOptionalEMailConfirmUuid6( Buff.getOptionalEMailConfirmUuid6() );
 
-		CFSecSecUserByPwdResetIdxKey keyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
+		CFSecBuffSecUserByPwdResetIdxKey keyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
 		keyPwdResetIdx.setOptionalPasswordResetUuid6( Buff.getOptionalPasswordResetUuid6() );
 
-		CFSecSecUserByDefDevIdxKey keyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
+		CFSecBuffSecUserByDefDevIdxKey keyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
 		keyDefDevIdx.setOptionalDfltDevUserId( Buff.getOptionalDfltDevUserId() );
 		keyDefDevIdx.setOptionalDfltDevName( Buff.getOptionalDfltDevName() );
 
@@ -129,45 +131,59 @@ public class CFIntRamSecUserTable
 
 		dictByULoginIdx.put( keyULoginIdx, Buff );
 
-		Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictEMConfIdx;
+		Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictEMConfIdx;
 		if( dictByEMConfIdx.containsKey( keyEMConfIdx ) ) {
 			subdictEMConfIdx = dictByEMConfIdx.get( keyEMConfIdx );
 		}
 		else {
-			subdictEMConfIdx = new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			subdictEMConfIdx = new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByEMConfIdx.put( keyEMConfIdx, subdictEMConfIdx );
 		}
 		subdictEMConfIdx.put( pkey, Buff );
 
-		Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictPwdResetIdx;
+		Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictPwdResetIdx;
 		if( dictByPwdResetIdx.containsKey( keyPwdResetIdx ) ) {
 			subdictPwdResetIdx = dictByPwdResetIdx.get( keyPwdResetIdx );
 		}
 		else {
-			subdictPwdResetIdx = new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			subdictPwdResetIdx = new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByPwdResetIdx.put( keyPwdResetIdx, subdictPwdResetIdx );
 		}
 		subdictPwdResetIdx.put( pkey, Buff );
 
-		Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictDefDevIdx;
+		Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictDefDevIdx;
 		if( dictByDefDevIdx.containsKey( keyDefDevIdx ) ) {
 			subdictDefDevIdx = dictByDefDevIdx.get( keyDefDevIdx );
 		}
 		else {
-			subdictDefDevIdx = new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			subdictDefDevIdx = new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByDefDevIdx.put( keyDefDevIdx, subdictDefDevIdx );
 		}
 		subdictDefDevIdx.put( pkey, Buff );
 
 	}
 
-	public CFSecSecUserBuff readDerived( CFSecAuthorization Authorization,
-		CFSecSecUserPKey PKey )
+	public ICFSecSecUser readDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readDerived";
-		CFSecSecUserPKey key = schema.getFactorySecUser().newPKey();
+		ICFSecSecUser buff;
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
+		}
+		else {
+			buff = null;
+		}
+		return( buff );
+	}
+
+	public ICFSecSecUser lockDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
+	{
+		final String S_ProcName = "CFIntRamSecUser.readDerived";
+		CFLibDbKeyHash256 key = schema.getFactorySecUser().newPKey();
 		key.setRequiredSecUserId( PKey.getRequiredSecUserId() );
-		CFSecSecUserBuff buff;
+		ICFSecSecUser buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -177,26 +193,10 @@ public class CFIntRamSecUserTable
 		return( buff );
 	}
 
-	public CFSecSecUserBuff lockDerived( CFSecAuthorization Authorization,
-		CFSecSecUserPKey PKey )
-	{
-		final String S_ProcName = "CFIntRamSecUser.readDerived";
-		CFSecSecUserPKey key = schema.getFactorySecUser().newPKey();
-		key.setRequiredSecUserId( PKey.getRequiredSecUserId() );
-		CFSecSecUserBuff buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
-		}
-		else {
-			buff = null;
-		}
-		return( buff );
-	}
-
-	public CFSecSecUserBuff[] readAllDerived( CFSecAuthorization Authorization ) {
+	public ICFSecSecUser[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamSecUser.readAllDerived";
-		CFSecSecUserBuff[] retList = new CFSecSecUserBuff[ dictByPKey.values().size() ];
-		Iterator< CFSecSecUserBuff > iter = dictByPKey.values().iterator();
+		ICFSecSecUser[] retList = new ICFSecSecUser[ dictByPKey.values().size() ];
+		Iterator< ICFSecSecUser > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -204,14 +204,14 @@ public class CFIntRamSecUserTable
 		return( retList );
 	}
 
-	public CFSecSecUserBuff readDerivedByULoginIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser readDerivedByULoginIdx( ICFSecAuthorization Authorization,
 		String LoginId )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readDerivedByULoginIdx";
-		CFSecSecUserByULoginIdxKey key = schema.getFactorySecUser().newULoginIdxKey();
+		CFSecBuffSecUserByULoginIdxKey key = schema.getFactorySecUser().newULoginIdxKey();
 		key.setRequiredLoginId( LoginId );
 
-		CFSecSecUserBuff buff;
+		ICFSecSecUser buff;
 		if( dictByULoginIdx.containsKey( key ) ) {
 			buff = dictByULoginIdx.get( key );
 		}
@@ -221,97 +221,97 @@ public class CFIntRamSecUserTable
 		return( buff );
 	}
 
-	public CFSecSecUserBuff[] readDerivedByEMConfIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] readDerivedByEMConfIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 EMailConfirmUuid6 )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readDerivedByEMConfIdx";
-		CFSecSecUserByEMConfIdxKey key = schema.getFactorySecUser().newEMConfIdxKey();
+		CFSecBuffSecUserByEMConfIdxKey key = schema.getFactorySecUser().newEMConfIdxKey();
 		key.setOptionalEMailConfirmUuid6( EMailConfirmUuid6 );
 
-		CFSecSecUserBuff[] recArray;
+		ICFSecSecUser[] recArray;
 		if( dictByEMConfIdx.containsKey( key ) ) {
-			Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictEMConfIdx
+			Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictEMConfIdx
 				= dictByEMConfIdx.get( key );
-			recArray = new CFSecSecUserBuff[ subdictEMConfIdx.size() ];
-			Iterator< CFSecSecUserBuff > iter = subdictEMConfIdx.values().iterator();
+			recArray = new ICFSecSecUser[ subdictEMConfIdx.size() ];
+			Iterator< ICFSecSecUser > iter = subdictEMConfIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictEMConfIdx
-				= new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictEMConfIdx
+				= new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByEMConfIdx.put( key, subdictEMConfIdx );
-			recArray = new CFSecSecUserBuff[0];
+			recArray = new ICFSecSecUser[0];
 		}
 		return( recArray );
 	}
 
-	public CFSecSecUserBuff[] readDerivedByPwdResetIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] readDerivedByPwdResetIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 PasswordResetUuid6 )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readDerivedByPwdResetIdx";
-		CFSecSecUserByPwdResetIdxKey key = schema.getFactorySecUser().newPwdResetIdxKey();
+		CFSecBuffSecUserByPwdResetIdxKey key = schema.getFactorySecUser().newPwdResetIdxKey();
 		key.setOptionalPasswordResetUuid6( PasswordResetUuid6 );
 
-		CFSecSecUserBuff[] recArray;
+		ICFSecSecUser[] recArray;
 		if( dictByPwdResetIdx.containsKey( key ) ) {
-			Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictPwdResetIdx
+			Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictPwdResetIdx
 				= dictByPwdResetIdx.get( key );
-			recArray = new CFSecSecUserBuff[ subdictPwdResetIdx.size() ];
-			Iterator< CFSecSecUserBuff > iter = subdictPwdResetIdx.values().iterator();
+			recArray = new ICFSecSecUser[ subdictPwdResetIdx.size() ];
+			Iterator< ICFSecSecUser > iter = subdictPwdResetIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictPwdResetIdx
-				= new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictPwdResetIdx
+				= new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByPwdResetIdx.put( key, subdictPwdResetIdx );
-			recArray = new CFSecSecUserBuff[0];
+			recArray = new ICFSecSecUser[0];
 		}
 		return( recArray );
 	}
 
-	public CFSecSecUserBuff[] readDerivedByDefDevIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] readDerivedByDefDevIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 DfltDevUserId,
 		String DfltDevName )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readDerivedByDefDevIdx";
-		CFSecSecUserByDefDevIdxKey key = schema.getFactorySecUser().newDefDevIdxKey();
+		CFSecBuffSecUserByDefDevIdxKey key = schema.getFactorySecUser().newDefDevIdxKey();
 		key.setOptionalDfltDevUserId( DfltDevUserId );
 		key.setOptionalDfltDevName( DfltDevName );
 
-		CFSecSecUserBuff[] recArray;
+		ICFSecSecUser[] recArray;
 		if( dictByDefDevIdx.containsKey( key ) ) {
-			Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictDefDevIdx
+			Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictDefDevIdx
 				= dictByDefDevIdx.get( key );
-			recArray = new CFSecSecUserBuff[ subdictDefDevIdx.size() ];
-			Iterator< CFSecSecUserBuff > iter = subdictDefDevIdx.values().iterator();
+			recArray = new ICFSecSecUser[ subdictDefDevIdx.size() ];
+			Iterator< ICFSecSecUser > iter = subdictDefDevIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFSecSecUserPKey, CFSecSecUserBuff > subdictDefDevIdx
-				= new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdictDefDevIdx
+				= new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByDefDevIdx.put( key, subdictDefDevIdx );
-			recArray = new CFSecSecUserBuff[0];
+			recArray = new ICFSecSecUser[0];
 		}
 		return( recArray );
 	}
 
-	public CFSecSecUserBuff readDerivedByIdIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecUserId )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readDerivedByIdIdx() ";
-		CFSecSecUserPKey key = schema.getFactorySecUser().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactorySecUser().newPKey();
 		key.setRequiredSecUserId( SecUserId );
 
-		CFSecSecUserBuff buff;
+		ICFSecSecUser buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -321,41 +321,41 @@ public class CFIntRamSecUserTable
 		return( buff );
 	}
 
-	public CFSecSecUserBuff readBuff( CFSecAuthorization Authorization,
-		CFSecSecUserPKey PKey )
+	public ICFSecSecUser readBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readBuff";
-		CFSecSecUserBuff buff = readDerived( Authorization, PKey );
+		ICFSecSecUser buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a011" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFSecSecUserBuff lockBuff( CFSecAuthorization Authorization,
-		CFSecSecUserPKey PKey )
+	public ICFSecSecUser lockBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "lockBuff";
-		CFSecSecUserBuff buff = readDerived( Authorization, PKey );
+		ICFSecSecUser buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a011" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFSecSecUserBuff[] readAllBuff( CFSecAuthorization Authorization )
+	public ICFSecSecUser[] readAllBuff( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readAllBuff";
-		CFSecSecUserBuff buff;
-		ArrayList<CFSecSecUserBuff> filteredList = new ArrayList<CFSecSecUserBuff>();
-		CFSecSecUserBuff[] buffList = readAllDerived( Authorization );
+		ICFSecSecUser buff;
+		ArrayList<ICFSecSecUser> filteredList = new ArrayList<ICFSecSecUser>();
+		ICFSecSecUser[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a011" ) ) {
 				filteredList.add( buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecUserBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecUser[0] ) );
 	}
 
 	/**
@@ -365,92 +365,92 @@ public class CFIntRamSecUserTable
 	 *
 	 *	@return All the specific SecUser instances in the database accessible for the Authorization.
 	 */
-	public CFSecSecUserBuff[] pageAllBuff( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] pageAllBuff( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 priorSecUserId )
 	{
 		final String S_ProcName = "pageAllBuff";
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 
-	public CFSecSecUserBuff readBuffByIdIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser readBuffByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecUserId )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readBuffByIdIdx() ";
-		CFSecSecUserBuff buff = readDerivedByIdIdx( Authorization,
+		ICFSecSecUser buff = readDerivedByIdIdx( Authorization,
 			SecUserId );
 		if( ( buff != null ) && buff.getClassCode().equals( "a011" ) ) {
-			return( (CFSecSecUserBuff)buff );
+			return( (ICFSecSecUser)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public CFSecSecUserBuff readBuffByULoginIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser readBuffByULoginIdx( ICFSecAuthorization Authorization,
 		String LoginId )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readBuffByULoginIdx() ";
-		CFSecSecUserBuff buff = readDerivedByULoginIdx( Authorization,
+		ICFSecSecUser buff = readDerivedByULoginIdx( Authorization,
 			LoginId );
 		if( ( buff != null ) && buff.getClassCode().equals( "a011" ) ) {
-			return( (CFSecSecUserBuff)buff );
+			return( (ICFSecSecUser)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public CFSecSecUserBuff[] readBuffByEMConfIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] readBuffByEMConfIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 EMailConfirmUuid6 )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readBuffByEMConfIdx() ";
-		CFSecSecUserBuff buff;
-		ArrayList<CFSecSecUserBuff> filteredList = new ArrayList<CFSecSecUserBuff>();
-		CFSecSecUserBuff[] buffList = readDerivedByEMConfIdx( Authorization,
+		ICFSecSecUser buff;
+		ArrayList<ICFSecSecUser> filteredList = new ArrayList<ICFSecSecUser>();
+		ICFSecSecUser[] buffList = readDerivedByEMConfIdx( Authorization,
 			EMailConfirmUuid6 );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a011" ) ) {
-				filteredList.add( (CFSecSecUserBuff)buff );
+				filteredList.add( (ICFSecSecUser)buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecUserBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecUser[0] ) );
 	}
 
-	public CFSecSecUserBuff[] readBuffByPwdResetIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] readBuffByPwdResetIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 PasswordResetUuid6 )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readBuffByPwdResetIdx() ";
-		CFSecSecUserBuff buff;
-		ArrayList<CFSecSecUserBuff> filteredList = new ArrayList<CFSecSecUserBuff>();
-		CFSecSecUserBuff[] buffList = readDerivedByPwdResetIdx( Authorization,
+		ICFSecSecUser buff;
+		ArrayList<ICFSecSecUser> filteredList = new ArrayList<ICFSecSecUser>();
+		ICFSecSecUser[] buffList = readDerivedByPwdResetIdx( Authorization,
 			PasswordResetUuid6 );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a011" ) ) {
-				filteredList.add( (CFSecSecUserBuff)buff );
+				filteredList.add( (ICFSecSecUser)buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecUserBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecUser[0] ) );
 	}
 
-	public CFSecSecUserBuff[] readBuffByDefDevIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] readBuffByDefDevIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 DfltDevUserId,
 		String DfltDevName )
 	{
 		final String S_ProcName = "CFIntRamSecUser.readBuffByDefDevIdx() ";
-		CFSecSecUserBuff buff;
-		ArrayList<CFSecSecUserBuff> filteredList = new ArrayList<CFSecSecUserBuff>();
-		CFSecSecUserBuff[] buffList = readDerivedByDefDevIdx( Authorization,
+		ICFSecSecUser buff;
+		ArrayList<ICFSecSecUser> filteredList = new ArrayList<ICFSecSecUser>();
+		ICFSecSecUser[] buffList = readDerivedByDefDevIdx( Authorization,
 			DfltDevUserId,
 			DfltDevName );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a011" ) ) {
-				filteredList.add( (CFSecSecUserBuff)buff );
+				filteredList.add( (ICFSecSecUser)buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecUserBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecUser[0] ) );
 	}
 
 	/**
@@ -464,7 +464,7 @@ public class CFIntRamSecUserTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public CFSecSecUserBuff[] pageBuffByEMConfIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] pageBuffByEMConfIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 EMailConfirmUuid6,
 		CFLibDbKeyHash256 priorSecUserId )
 	{
@@ -483,7 +483,7 @@ public class CFIntRamSecUserTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public CFSecSecUserBuff[] pageBuffByPwdResetIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] pageBuffByPwdResetIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 PasswordResetUuid6,
 		CFLibDbKeyHash256 priorSecUserId )
 	{
@@ -504,7 +504,7 @@ public class CFIntRamSecUserTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public CFSecSecUserBuff[] pageBuffByDefDevIdx( CFSecAuthorization Authorization,
+	public ICFSecSecUser[] pageBuffByDefDevIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 DfltDevUserId,
 		String DfltDevName,
 		CFLibDbKeyHash256 priorSecUserId )
@@ -513,12 +513,12 @@ public class CFIntRamSecUserTable
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 
-	public void updateSecUser( CFSecAuthorization Authorization,
-		CFSecSecUserBuff Buff )
+	public void updateSecUser( ICFSecAuthorization Authorization,
+		ICFSecSecUser Buff )
 	{
-		CFSecSecUserPKey pkey = schema.getFactorySecUser().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySecUser().newPKey();
 		pkey.setRequiredSecUserId( Buff.getRequiredSecUserId() );
-		CFSecSecUserBuff existing = dictByPKey.get( pkey );
+		ICFSecSecUser existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateSecUser",
@@ -532,29 +532,29 @@ public class CFIntRamSecUserTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFSecSecUserByULoginIdxKey existingKeyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
+		CFSecBuffSecUserByULoginIdxKey existingKeyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
 		existingKeyULoginIdx.setRequiredLoginId( existing.getRequiredLoginId() );
 
-		CFSecSecUserByULoginIdxKey newKeyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
+		CFSecBuffSecUserByULoginIdxKey newKeyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
 		newKeyULoginIdx.setRequiredLoginId( Buff.getRequiredLoginId() );
 
-		CFSecSecUserByEMConfIdxKey existingKeyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
+		CFSecBuffSecUserByEMConfIdxKey existingKeyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
 		existingKeyEMConfIdx.setOptionalEMailConfirmUuid6( existing.getOptionalEMailConfirmUuid6() );
 
-		CFSecSecUserByEMConfIdxKey newKeyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
+		CFSecBuffSecUserByEMConfIdxKey newKeyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
 		newKeyEMConfIdx.setOptionalEMailConfirmUuid6( Buff.getOptionalEMailConfirmUuid6() );
 
-		CFSecSecUserByPwdResetIdxKey existingKeyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
+		CFSecBuffSecUserByPwdResetIdxKey existingKeyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
 		existingKeyPwdResetIdx.setOptionalPasswordResetUuid6( existing.getOptionalPasswordResetUuid6() );
 
-		CFSecSecUserByPwdResetIdxKey newKeyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
+		CFSecBuffSecUserByPwdResetIdxKey newKeyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
 		newKeyPwdResetIdx.setOptionalPasswordResetUuid6( Buff.getOptionalPasswordResetUuid6() );
 
-		CFSecSecUserByDefDevIdxKey existingKeyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
+		CFSecBuffSecUserByDefDevIdxKey existingKeyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
 		existingKeyDefDevIdx.setOptionalDfltDevUserId( existing.getOptionalDfltDevUserId() );
 		existingKeyDefDevIdx.setOptionalDfltDevName( existing.getOptionalDfltDevName() );
 
-		CFSecSecUserByDefDevIdxKey newKeyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
+		CFSecBuffSecUserByDefDevIdxKey newKeyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
 		newKeyDefDevIdx.setOptionalDfltDevUserId( Buff.getOptionalDfltDevUserId() );
 		newKeyDefDevIdx.setOptionalDfltDevName( Buff.getOptionalDfltDevName() );
 
@@ -573,7 +573,7 @@ public class CFIntRamSecUserTable
 
 		// Update is valid
 
-		Map< CFSecSecUserPKey, CFSecSecUserBuff > subdict;
+		Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdict;
 
 		dictByPKey.remove( pkey );
 		dictByPKey.put( pkey, Buff );
@@ -589,7 +589,7 @@ public class CFIntRamSecUserTable
 			subdict = dictByEMConfIdx.get( newKeyEMConfIdx );
 		}
 		else {
-			subdict = new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByEMConfIdx.put( newKeyEMConfIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -602,7 +602,7 @@ public class CFIntRamSecUserTable
 			subdict = dictByPwdResetIdx.get( newKeyPwdResetIdx );
 		}
 		else {
-			subdict = new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByPwdResetIdx.put( newKeyPwdResetIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -615,21 +615,21 @@ public class CFIntRamSecUserTable
 			subdict = dictByDefDevIdx.get( newKeyDefDevIdx );
 		}
 		else {
-			subdict = new HashMap< CFSecSecUserPKey, CFSecSecUserBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFSecBuffSecUser >();
 			dictByDefDevIdx.put( newKeyDefDevIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
 
 	}
 
-	public void deleteSecUser( CFSecAuthorization Authorization,
-		CFSecSecUserBuff Buff )
+	public void deleteSecUser( ICFSecAuthorization Authorization,
+		ICFSecSecUser Buff )
 	{
 		final String S_ProcName = "CFIntRamSecUserTable.deleteSecUser() ";
 		String classCode;
-		CFSecSecUserPKey pkey = schema.getFactorySecUser().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySecUser().newPKey();
 		pkey.setRequiredSecUserId( Buff.getRequiredSecUserId() );
-		CFSecSecUserBuff existing = dictByPKey.get( pkey );
+		ICFSecSecUser existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}
@@ -678,23 +678,23 @@ public class CFIntRamSecUserTable
 						existing.getRequiredSecUserId() );
 					schema.getTableSecDevice().deleteSecDeviceByUserIdx( Authorization,
 						existing.getRequiredSecUserId() );
-		CFSecSecUserByULoginIdxKey keyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
+		CFSecBuffSecUserByULoginIdxKey keyULoginIdx = schema.getFactorySecUser().newULoginIdxKey();
 		keyULoginIdx.setRequiredLoginId( existing.getRequiredLoginId() );
 
-		CFSecSecUserByEMConfIdxKey keyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
+		CFSecBuffSecUserByEMConfIdxKey keyEMConfIdx = schema.getFactorySecUser().newEMConfIdxKey();
 		keyEMConfIdx.setOptionalEMailConfirmUuid6( existing.getOptionalEMailConfirmUuid6() );
 
-		CFSecSecUserByPwdResetIdxKey keyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
+		CFSecBuffSecUserByPwdResetIdxKey keyPwdResetIdx = schema.getFactorySecUser().newPwdResetIdxKey();
 		keyPwdResetIdx.setOptionalPasswordResetUuid6( existing.getOptionalPasswordResetUuid6() );
 
-		CFSecSecUserByDefDevIdxKey keyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
+		CFSecBuffSecUserByDefDevIdxKey keyDefDevIdx = schema.getFactorySecUser().newDefDevIdxKey();
 		keyDefDevIdx.setOptionalDfltDevUserId( existing.getOptionalDfltDevUserId() );
 		keyDefDevIdx.setOptionalDfltDevName( existing.getOptionalDfltDevName() );
 
 		// Validate reverse foreign keys
 
 		// Delete is valid
-		Map< CFSecSecUserPKey, CFSecSecUserBuff > subdict;
+		Map< CFLibDbKeyHash256, CFSecBuffSecUser > subdict;
 
 		dictByPKey.remove( pkey );
 
@@ -710,32 +710,32 @@ public class CFIntRamSecUserTable
 		subdict.remove( pkey );
 
 	}
-	public void deleteSecUserByIdIdx( CFSecAuthorization Authorization,
+	public void deleteSecUserByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSecUserId )
 	{
-		CFSecSecUserPKey key = schema.getFactorySecUser().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactorySecUser().newPKey();
 		key.setRequiredSecUserId( argSecUserId );
 		deleteSecUserByIdIdx( Authorization, key );
 	}
 
-	public void deleteSecUserByIdIdx( CFSecAuthorization Authorization,
-		CFSecSecUserPKey argKey )
+	public void deleteSecUserByIdIdx( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 argKey )
 	{
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		CFSecSecUserBuff cur;
-		LinkedList<CFSecSecUserBuff> matchSet = new LinkedList<CFSecSecUserBuff>();
-		Iterator<CFSecSecUserBuff> values = dictByPKey.values().iterator();
+		ICFSecSecUser cur;
+		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
+		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecUserBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
@@ -744,32 +744,32 @@ public class CFIntRamSecUserTable
 		}
 	}
 
-	public void deleteSecUserByULoginIdx( CFSecAuthorization Authorization,
+	public void deleteSecUserByULoginIdx( ICFSecAuthorization Authorization,
 		String argLoginId )
 	{
-		CFSecSecUserByULoginIdxKey key = schema.getFactorySecUser().newULoginIdxKey();
+		CFSecBuffSecUserByULoginIdxKey key = schema.getFactorySecUser().newULoginIdxKey();
 		key.setRequiredLoginId( argLoginId );
 		deleteSecUserByULoginIdx( Authorization, key );
 	}
 
-	public void deleteSecUserByULoginIdx( CFSecAuthorization Authorization,
-		CFSecSecUserByULoginIdxKey argKey )
+	public void deleteSecUserByULoginIdx( ICFSecAuthorization Authorization,
+		ICFSecSecUserByULoginIdxKey argKey )
 	{
-		CFSecSecUserBuff cur;
+		ICFSecSecUser cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecUserBuff> matchSet = new LinkedList<CFSecSecUserBuff>();
-		Iterator<CFSecSecUserBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
+		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecUserBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
@@ -778,18 +778,18 @@ public class CFIntRamSecUserTable
 		}
 	}
 
-	public void deleteSecUserByEMConfIdx( CFSecAuthorization Authorization,
+	public void deleteSecUserByEMConfIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 argEMailConfirmUuid6 )
 	{
-		CFSecSecUserByEMConfIdxKey key = schema.getFactorySecUser().newEMConfIdxKey();
+		CFSecBuffSecUserByEMConfIdxKey key = schema.getFactorySecUser().newEMConfIdxKey();
 		key.setOptionalEMailConfirmUuid6( argEMailConfirmUuid6 );
 		deleteSecUserByEMConfIdx( Authorization, key );
 	}
 
-	public void deleteSecUserByEMConfIdx( CFSecAuthorization Authorization,
-		CFSecSecUserByEMConfIdxKey argKey )
+	public void deleteSecUserByEMConfIdx( ICFSecAuthorization Authorization,
+		ICFSecSecUserByEMConfIdxKey argKey )
 	{
-		CFSecSecUserBuff cur;
+		ICFSecSecUser cur;
 		boolean anyNotNull = false;
 		if( argKey.getOptionalEMailConfirmUuid6() != null ) {
 			anyNotNull = true;
@@ -797,15 +797,15 @@ public class CFIntRamSecUserTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecUserBuff> matchSet = new LinkedList<CFSecSecUserBuff>();
-		Iterator<CFSecSecUserBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
+		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecUserBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
@@ -814,18 +814,18 @@ public class CFIntRamSecUserTable
 		}
 	}
 
-	public void deleteSecUserByPwdResetIdx( CFSecAuthorization Authorization,
+	public void deleteSecUserByPwdResetIdx( ICFSecAuthorization Authorization,
 		CFLibUuid6 argPasswordResetUuid6 )
 	{
-		CFSecSecUserByPwdResetIdxKey key = schema.getFactorySecUser().newPwdResetIdxKey();
+		CFSecBuffSecUserByPwdResetIdxKey key = schema.getFactorySecUser().newPwdResetIdxKey();
 		key.setOptionalPasswordResetUuid6( argPasswordResetUuid6 );
 		deleteSecUserByPwdResetIdx( Authorization, key );
 	}
 
-	public void deleteSecUserByPwdResetIdx( CFSecAuthorization Authorization,
-		CFSecSecUserByPwdResetIdxKey argKey )
+	public void deleteSecUserByPwdResetIdx( ICFSecAuthorization Authorization,
+		ICFSecSecUserByPwdResetIdxKey argKey )
 	{
-		CFSecSecUserBuff cur;
+		ICFSecSecUser cur;
 		boolean anyNotNull = false;
 		if( argKey.getOptionalPasswordResetUuid6() != null ) {
 			anyNotNull = true;
@@ -833,15 +833,15 @@ public class CFIntRamSecUserTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecUserBuff> matchSet = new LinkedList<CFSecSecUserBuff>();
-		Iterator<CFSecSecUserBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
+		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecUserBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
@@ -850,20 +850,20 @@ public class CFIntRamSecUserTable
 		}
 	}
 
-	public void deleteSecUserByDefDevIdx( CFSecAuthorization Authorization,
+	public void deleteSecUserByDefDevIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argDfltDevUserId,
 		String argDfltDevName )
 	{
-		CFSecSecUserByDefDevIdxKey key = schema.getFactorySecUser().newDefDevIdxKey();
+		CFSecBuffSecUserByDefDevIdxKey key = schema.getFactorySecUser().newDefDevIdxKey();
 		key.setOptionalDfltDevUserId( argDfltDevUserId );
 		key.setOptionalDfltDevName( argDfltDevName );
 		deleteSecUserByDefDevIdx( Authorization, key );
 	}
 
-	public void deleteSecUserByDefDevIdx( CFSecAuthorization Authorization,
-		CFSecSecUserByDefDevIdxKey argKey )
+	public void deleteSecUserByDefDevIdx( ICFSecAuthorization Authorization,
+		ICFSecSecUserByDefDevIdxKey argKey )
 	{
-		CFSecSecUserBuff cur;
+		ICFSecSecUser cur;
 		boolean anyNotNull = false;
 		if( argKey.getOptionalDfltDevUserId() != null ) {
 			anyNotNull = true;
@@ -874,15 +874,15 @@ public class CFIntRamSecUserTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecUserBuff> matchSet = new LinkedList<CFSecSecUserBuff>();
-		Iterator<CFSecSecUserBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
+		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecUserBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,

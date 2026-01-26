@@ -38,6 +38,7 @@ package io.github.msobkow.v3_1.cfint.cfintram;
 import java.math.*;
 import java.sql.*;
 import java.text.*;
+import java.time.*;
 import java.util.*;
 import org.apache.commons.codec.binary.Base64;
 import io.github.msobkow.v3_1.cflib.*;
@@ -45,7 +46,8 @@ import io.github.msobkow.v3_1.cflib.dbutil.*;
 
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
-import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfsec.cfsec.buff.*;
+import io.github.msobkow.v3_1.cfint.cfint.buff.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
 
@@ -57,45 +59,45 @@ public class CFIntRamTopProjectTable
 	implements ICFIntTopProjectTable
 {
 	private ICFIntSchema schema;
-	private Map< CFIntTopProjectPKey,
-				CFIntTopProjectBuff > dictByPKey
-		= new HashMap< CFIntTopProjectPKey,
-				CFIntTopProjectBuff >();
-	private Map< CFIntTopProjectByTenantIdxKey,
-				Map< CFIntTopProjectPKey,
-					CFIntTopProjectBuff >> dictByTenantIdx
-		= new HashMap< CFIntTopProjectByTenantIdxKey,
-				Map< CFIntTopProjectPKey,
-					CFIntTopProjectBuff >>();
-	private Map< CFIntTopProjectByTopDomainIdxKey,
-				Map< CFIntTopProjectPKey,
-					CFIntTopProjectBuff >> dictByTopDomainIdx
-		= new HashMap< CFIntTopProjectByTopDomainIdxKey,
-				Map< CFIntTopProjectPKey,
-					CFIntTopProjectBuff >>();
-	private Map< CFIntTopProjectByNameIdxKey,
-			CFIntTopProjectBuff > dictByNameIdx
-		= new HashMap< CFIntTopProjectByNameIdxKey,
-			CFIntTopProjectBuff >();
+	private Map< CFLibDbKeyHash256,
+				CFIntBuffTopProject > dictByPKey
+		= new HashMap< CFLibDbKeyHash256,
+				CFIntBuffTopProject >();
+	private Map< CFIntBuffTopProjectByTenantIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffTopProject >> dictByTenantIdx
+		= new HashMap< CFIntBuffTopProjectByTenantIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffTopProject >>();
+	private Map< CFIntBuffTopProjectByTopDomainIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffTopProject >> dictByTopDomainIdx
+		= new HashMap< CFIntBuffTopProjectByTopDomainIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffTopProject >>();
+	private Map< CFIntBuffTopProjectByNameIdxKey,
+			CFIntBuffTopProject > dictByNameIdx
+		= new HashMap< CFIntBuffTopProjectByNameIdxKey,
+			CFIntBuffTopProject >();
 
 	public CFIntRamTopProjectTable( ICFIntSchema argSchema ) {
 		schema = argSchema;
 	}
 
-	public void createTopProject( CFSecAuthorization Authorization,
-		CFIntTopProjectBuff Buff )
+	public void createTopProject( ICFSecAuthorization Authorization,
+		ICFIntTopProject Buff )
 	{
 		final String S_ProcName = "createTopProject";
-		CFIntTopProjectPKey pkey = schema.getFactoryTopProject().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactoryTopProject().newPKey();
 		pkey.setRequiredId( schema.nextTopProjectIdGen() );
 		Buff.setRequiredId( pkey.getRequiredId() );
-		CFIntTopProjectByTenantIdxKey keyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
+		CFIntBuffTopProjectByTenantIdxKey keyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
 		keyTenantIdx.setRequiredTenantId( Buff.getRequiredTenantId() );
 
-		CFIntTopProjectByTopDomainIdxKey keyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
+		CFIntBuffTopProjectByTopDomainIdxKey keyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
 		keyTopDomainIdx.setRequiredTopDomainId( Buff.getRequiredTopDomainId() );
 
-		CFIntTopProjectByNameIdxKey keyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
+		CFIntBuffTopProjectByNameIdxKey keyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
 		keyNameIdx.setRequiredTopDomainId( Buff.getRequiredTopDomainId() );
 		keyNameIdx.setRequiredName( Buff.getRequiredName() );
 
@@ -152,22 +154,22 @@ public class CFIntRamTopProjectTable
 
 		dictByPKey.put( pkey, Buff );
 
-		Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdictTenantIdx;
+		Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdictTenantIdx;
 		if( dictByTenantIdx.containsKey( keyTenantIdx ) ) {
 			subdictTenantIdx = dictByTenantIdx.get( keyTenantIdx );
 		}
 		else {
-			subdictTenantIdx = new HashMap< CFIntTopProjectPKey, CFIntTopProjectBuff >();
+			subdictTenantIdx = new HashMap< CFLibDbKeyHash256, CFIntBuffTopProject >();
 			dictByTenantIdx.put( keyTenantIdx, subdictTenantIdx );
 		}
 		subdictTenantIdx.put( pkey, Buff );
 
-		Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdictTopDomainIdx;
+		Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdictTopDomainIdx;
 		if( dictByTopDomainIdx.containsKey( keyTopDomainIdx ) ) {
 			subdictTopDomainIdx = dictByTopDomainIdx.get( keyTopDomainIdx );
 		}
 		else {
-			subdictTopDomainIdx = new HashMap< CFIntTopProjectPKey, CFIntTopProjectBuff >();
+			subdictTopDomainIdx = new HashMap< CFLibDbKeyHash256, CFIntBuffTopProject >();
 			dictByTopDomainIdx.put( keyTopDomainIdx, subdictTopDomainIdx );
 		}
 		subdictTopDomainIdx.put( pkey, Buff );
@@ -176,13 +178,27 @@ public class CFIntRamTopProjectTable
 
 	}
 
-	public CFIntTopProjectBuff readDerived( CFSecAuthorization Authorization,
-		CFIntTopProjectPKey PKey )
+	public ICFIntTopProject readDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readDerived";
-		CFIntTopProjectPKey key = schema.getFactoryTopProject().newPKey();
+		ICFIntTopProject buff;
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
+		}
+		else {
+			buff = null;
+		}
+		return( buff );
+	}
+
+	public ICFIntTopProject lockDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
+	{
+		final String S_ProcName = "CFIntRamTopProject.readDerived";
+		CFLibDbKeyHash256 key = schema.getFactoryTopProject().newPKey();
 		key.setRequiredId( PKey.getRequiredId() );
-		CFIntTopProjectBuff buff;
+		ICFIntTopProject buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -192,26 +208,10 @@ public class CFIntRamTopProjectTable
 		return( buff );
 	}
 
-	public CFIntTopProjectBuff lockDerived( CFSecAuthorization Authorization,
-		CFIntTopProjectPKey PKey )
-	{
-		final String S_ProcName = "CFIntRamTopProject.readDerived";
-		CFIntTopProjectPKey key = schema.getFactoryTopProject().newPKey();
-		key.setRequiredId( PKey.getRequiredId() );
-		CFIntTopProjectBuff buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
-		}
-		else {
-			buff = null;
-		}
-		return( buff );
-	}
-
-	public CFIntTopProjectBuff[] readAllDerived( CFSecAuthorization Authorization ) {
+	public ICFIntTopProject[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamTopProject.readAllDerived";
-		CFIntTopProjectBuff[] retList = new CFIntTopProjectBuff[ dictByPKey.values().size() ];
-		Iterator< CFIntTopProjectBuff > iter = dictByPKey.values().iterator();
+		ICFIntTopProject[] retList = new ICFIntTopProject[ dictByPKey.values().size() ];
+		Iterator< ICFIntTopProject > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -219,70 +219,70 @@ public class CFIntRamTopProjectTable
 		return( retList );
 	}
 
-	public CFIntTopProjectBuff[] readDerivedByTenantIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readDerivedByTenantIdx";
-		CFIntTopProjectByTenantIdxKey key = schema.getFactoryTopProject().newTenantIdxKey();
+		CFIntBuffTopProjectByTenantIdxKey key = schema.getFactoryTopProject().newTenantIdxKey();
 		key.setRequiredTenantId( TenantId );
 
-		CFIntTopProjectBuff[] recArray;
+		ICFIntTopProject[] recArray;
 		if( dictByTenantIdx.containsKey( key ) ) {
-			Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdictTenantIdx
+			Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdictTenantIdx
 				= dictByTenantIdx.get( key );
-			recArray = new CFIntTopProjectBuff[ subdictTenantIdx.size() ];
-			Iterator< CFIntTopProjectBuff > iter = subdictTenantIdx.values().iterator();
+			recArray = new ICFIntTopProject[ subdictTenantIdx.size() ];
+			Iterator< ICFIntTopProject > iter = subdictTenantIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdictTenantIdx
-				= new HashMap< CFIntTopProjectPKey, CFIntTopProjectBuff >();
+			Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdictTenantIdx
+				= new HashMap< CFLibDbKeyHash256, CFIntBuffTopProject >();
 			dictByTenantIdx.put( key, subdictTenantIdx );
-			recArray = new CFIntTopProjectBuff[0];
+			recArray = new ICFIntTopProject[0];
 		}
 		return( recArray );
 	}
 
-	public CFIntTopProjectBuff[] readDerivedByTopDomainIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject[] readDerivedByTopDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readDerivedByTopDomainIdx";
-		CFIntTopProjectByTopDomainIdxKey key = schema.getFactoryTopProject().newTopDomainIdxKey();
+		CFIntBuffTopProjectByTopDomainIdxKey key = schema.getFactoryTopProject().newTopDomainIdxKey();
 		key.setRequiredTopDomainId( TopDomainId );
 
-		CFIntTopProjectBuff[] recArray;
+		ICFIntTopProject[] recArray;
 		if( dictByTopDomainIdx.containsKey( key ) ) {
-			Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdictTopDomainIdx
+			Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdictTopDomainIdx
 				= dictByTopDomainIdx.get( key );
-			recArray = new CFIntTopProjectBuff[ subdictTopDomainIdx.size() ];
-			Iterator< CFIntTopProjectBuff > iter = subdictTopDomainIdx.values().iterator();
+			recArray = new ICFIntTopProject[ subdictTopDomainIdx.size() ];
+			Iterator< ICFIntTopProject > iter = subdictTopDomainIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdictTopDomainIdx
-				= new HashMap< CFIntTopProjectPKey, CFIntTopProjectBuff >();
+			Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdictTopDomainIdx
+				= new HashMap< CFLibDbKeyHash256, CFIntBuffTopProject >();
 			dictByTopDomainIdx.put( key, subdictTopDomainIdx );
-			recArray = new CFIntTopProjectBuff[0];
+			recArray = new ICFIntTopProject[0];
 		}
 		return( recArray );
 	}
 
-	public CFIntTopProjectBuff readDerivedByNameIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject readDerivedByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId,
 		String Name )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readDerivedByNameIdx";
-		CFIntTopProjectByNameIdxKey key = schema.getFactoryTopProject().newNameIdxKey();
+		CFIntBuffTopProjectByNameIdxKey key = schema.getFactoryTopProject().newNameIdxKey();
 		key.setRequiredTopDomainId( TopDomainId );
 		key.setRequiredName( Name );
 
-		CFIntTopProjectBuff buff;
+		ICFIntTopProject buff;
 		if( dictByNameIdx.containsKey( key ) ) {
 			buff = dictByNameIdx.get( key );
 		}
@@ -292,14 +292,14 @@ public class CFIntRamTopProjectTable
 		return( buff );
 	}
 
-	public CFIntTopProjectBuff readDerivedByIdIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readDerivedByIdIdx() ";
-		CFIntTopProjectPKey key = schema.getFactoryTopProject().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactoryTopProject().newPKey();
 		key.setRequiredId( Id );
 
-		CFIntTopProjectBuff buff;
+		ICFIntTopProject buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -309,113 +309,113 @@ public class CFIntRamTopProjectTable
 		return( buff );
 	}
 
-	public CFIntTopProjectBuff readBuff( CFSecAuthorization Authorization,
-		CFIntTopProjectPKey PKey )
+	public ICFIntTopProject readBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readBuff";
-		CFIntTopProjectBuff buff = readDerived( Authorization, PKey );
+		ICFIntTopProject buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a108" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFIntTopProjectBuff lockBuff( CFSecAuthorization Authorization,
-		CFIntTopProjectPKey PKey )
+	public ICFIntTopProject lockBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "lockBuff";
-		CFIntTopProjectBuff buff = readDerived( Authorization, PKey );
+		ICFIntTopProject buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a108" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFIntTopProjectBuff[] readAllBuff( CFSecAuthorization Authorization )
+	public ICFIntTopProject[] readAllBuff( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readAllBuff";
-		CFIntTopProjectBuff buff;
-		ArrayList<CFIntTopProjectBuff> filteredList = new ArrayList<CFIntTopProjectBuff>();
-		CFIntTopProjectBuff[] buffList = readAllDerived( Authorization );
+		ICFIntTopProject buff;
+		ArrayList<ICFIntTopProject> filteredList = new ArrayList<ICFIntTopProject>();
+		ICFIntTopProject[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a108" ) ) {
 				filteredList.add( buff );
 			}
 		}
-		return( filteredList.toArray( new CFIntTopProjectBuff[0] ) );
+		return( filteredList.toArray( new ICFIntTopProject[0] ) );
 	}
 
-	public CFIntTopProjectBuff readBuffByIdIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject readBuffByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readBuffByIdIdx() ";
-		CFIntTopProjectBuff buff = readDerivedByIdIdx( Authorization,
+		ICFIntTopProject buff = readDerivedByIdIdx( Authorization,
 			Id );
 		if( ( buff != null ) && buff.getClassCode().equals( "a108" ) ) {
-			return( (CFIntTopProjectBuff)buff );
+			return( (ICFIntTopProject)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public CFIntTopProjectBuff[] readBuffByTenantIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject[] readBuffByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readBuffByTenantIdx() ";
-		CFIntTopProjectBuff buff;
-		ArrayList<CFIntTopProjectBuff> filteredList = new ArrayList<CFIntTopProjectBuff>();
-		CFIntTopProjectBuff[] buffList = readDerivedByTenantIdx( Authorization,
+		ICFIntTopProject buff;
+		ArrayList<ICFIntTopProject> filteredList = new ArrayList<ICFIntTopProject>();
+		ICFIntTopProject[] buffList = readDerivedByTenantIdx( Authorization,
 			TenantId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a108" ) ) {
-				filteredList.add( (CFIntTopProjectBuff)buff );
+				filteredList.add( (ICFIntTopProject)buff );
 			}
 		}
-		return( filteredList.toArray( new CFIntTopProjectBuff[0] ) );
+		return( filteredList.toArray( new ICFIntTopProject[0] ) );
 	}
 
-	public CFIntTopProjectBuff[] readBuffByTopDomainIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject[] readBuffByTopDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readBuffByTopDomainIdx() ";
-		CFIntTopProjectBuff buff;
-		ArrayList<CFIntTopProjectBuff> filteredList = new ArrayList<CFIntTopProjectBuff>();
-		CFIntTopProjectBuff[] buffList = readDerivedByTopDomainIdx( Authorization,
+		ICFIntTopProject buff;
+		ArrayList<ICFIntTopProject> filteredList = new ArrayList<ICFIntTopProject>();
+		ICFIntTopProject[] buffList = readDerivedByTopDomainIdx( Authorization,
 			TopDomainId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a108" ) ) {
-				filteredList.add( (CFIntTopProjectBuff)buff );
+				filteredList.add( (ICFIntTopProject)buff );
 			}
 		}
-		return( filteredList.toArray( new CFIntTopProjectBuff[0] ) );
+		return( filteredList.toArray( new ICFIntTopProject[0] ) );
 	}
 
-	public CFIntTopProjectBuff readBuffByNameIdx( CFSecAuthorization Authorization,
+	public ICFIntTopProject readBuffByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId,
 		String Name )
 	{
 		final String S_ProcName = "CFIntRamTopProject.readBuffByNameIdx() ";
-		CFIntTopProjectBuff buff = readDerivedByNameIdx( Authorization,
+		ICFIntTopProject buff = readDerivedByNameIdx( Authorization,
 			TopDomainId,
 			Name );
 		if( ( buff != null ) && buff.getClassCode().equals( "a108" ) ) {
-			return( (CFIntTopProjectBuff)buff );
+			return( (ICFIntTopProject)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public void updateTopProject( CFSecAuthorization Authorization,
-		CFIntTopProjectBuff Buff )
+	public void updateTopProject( ICFSecAuthorization Authorization,
+		ICFIntTopProject Buff )
 	{
-		CFIntTopProjectPKey pkey = schema.getFactoryTopProject().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactoryTopProject().newPKey();
 		pkey.setRequiredId( Buff.getRequiredId() );
-		CFIntTopProjectBuff existing = dictByPKey.get( pkey );
+		ICFIntTopProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateTopProject",
@@ -429,23 +429,23 @@ public class CFIntRamTopProjectTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFIntTopProjectByTenantIdxKey existingKeyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
+		CFIntBuffTopProjectByTenantIdxKey existingKeyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
 		existingKeyTenantIdx.setRequiredTenantId( existing.getRequiredTenantId() );
 
-		CFIntTopProjectByTenantIdxKey newKeyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
+		CFIntBuffTopProjectByTenantIdxKey newKeyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
 		newKeyTenantIdx.setRequiredTenantId( Buff.getRequiredTenantId() );
 
-		CFIntTopProjectByTopDomainIdxKey existingKeyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
+		CFIntBuffTopProjectByTopDomainIdxKey existingKeyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
 		existingKeyTopDomainIdx.setRequiredTopDomainId( existing.getRequiredTopDomainId() );
 
-		CFIntTopProjectByTopDomainIdxKey newKeyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
+		CFIntBuffTopProjectByTopDomainIdxKey newKeyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
 		newKeyTopDomainIdx.setRequiredTopDomainId( Buff.getRequiredTopDomainId() );
 
-		CFIntTopProjectByNameIdxKey existingKeyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
+		CFIntBuffTopProjectByNameIdxKey existingKeyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
 		existingKeyNameIdx.setRequiredTopDomainId( existing.getRequiredTopDomainId() );
 		existingKeyNameIdx.setRequiredName( existing.getRequiredName() );
 
-		CFIntTopProjectByNameIdxKey newKeyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
+		CFIntBuffTopProjectByNameIdxKey newKeyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
 		newKeyNameIdx.setRequiredTopDomainId( Buff.getRequiredTopDomainId() );
 		newKeyNameIdx.setRequiredName( Buff.getRequiredName() );
 
@@ -498,7 +498,7 @@ public class CFIntRamTopProjectTable
 
 		// Update is valid
 
-		Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdict;
+		Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdict;
 
 		dictByPKey.remove( pkey );
 		dictByPKey.put( pkey, Buff );
@@ -511,7 +511,7 @@ public class CFIntRamTopProjectTable
 			subdict = dictByTenantIdx.get( newKeyTenantIdx );
 		}
 		else {
-			subdict = new HashMap< CFIntTopProjectPKey, CFIntTopProjectBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFIntBuffTopProject >();
 			dictByTenantIdx.put( newKeyTenantIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -524,7 +524,7 @@ public class CFIntRamTopProjectTable
 			subdict = dictByTopDomainIdx.get( newKeyTopDomainIdx );
 		}
 		else {
-			subdict = new HashMap< CFIntTopProjectPKey, CFIntTopProjectBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFIntBuffTopProject >();
 			dictByTopDomainIdx.put( newKeyTopDomainIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -534,14 +534,14 @@ public class CFIntRamTopProjectTable
 
 	}
 
-	public void deleteTopProject( CFSecAuthorization Authorization,
-		CFIntTopProjectBuff Buff )
+	public void deleteTopProject( ICFSecAuthorization Authorization,
+		ICFIntTopProject Buff )
 	{
 		final String S_ProcName = "CFIntRamTopProjectTable.deleteTopProject() ";
 		String classCode;
-		CFIntTopProjectPKey pkey = schema.getFactoryTopProject().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactoryTopProject().newPKey();
 		pkey.setRequiredId( Buff.getRequiredId() );
-		CFIntTopProjectBuff existing = dictByPKey.get( pkey );
+		ICFIntTopProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}
@@ -553,20 +553,20 @@ public class CFIntRamTopProjectTable
 		}
 					schema.getTableSubProject().deleteSubProjectByTopProjectIdx( Authorization,
 						existing.getRequiredId() );
-		CFIntTopProjectByTenantIdxKey keyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
+		CFIntBuffTopProjectByTenantIdxKey keyTenantIdx = schema.getFactoryTopProject().newTenantIdxKey();
 		keyTenantIdx.setRequiredTenantId( existing.getRequiredTenantId() );
 
-		CFIntTopProjectByTopDomainIdxKey keyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
+		CFIntBuffTopProjectByTopDomainIdxKey keyTopDomainIdx = schema.getFactoryTopProject().newTopDomainIdxKey();
 		keyTopDomainIdx.setRequiredTopDomainId( existing.getRequiredTopDomainId() );
 
-		CFIntTopProjectByNameIdxKey keyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
+		CFIntBuffTopProjectByNameIdxKey keyNameIdx = schema.getFactoryTopProject().newNameIdxKey();
 		keyNameIdx.setRequiredTopDomainId( existing.getRequiredTopDomainId() );
 		keyNameIdx.setRequiredName( existing.getRequiredName() );
 
 		// Validate reverse foreign keys
 
 		// Delete is valid
-		Map< CFIntTopProjectPKey, CFIntTopProjectBuff > subdict;
+		Map< CFLibDbKeyHash256, CFIntBuffTopProject > subdict;
 
 		dictByPKey.remove( pkey );
 
@@ -579,32 +579,32 @@ public class CFIntRamTopProjectTable
 		dictByNameIdx.remove( keyNameIdx );
 
 	}
-	public void deleteTopProjectByIdIdx( CFSecAuthorization Authorization,
+	public void deleteTopProjectByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		CFIntTopProjectPKey key = schema.getFactoryTopProject().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactoryTopProject().newPKey();
 		key.setRequiredId( argId );
 		deleteTopProjectByIdIdx( Authorization, key );
 	}
 
-	public void deleteTopProjectByIdIdx( CFSecAuthorization Authorization,
-		CFIntTopProjectPKey argKey )
+	public void deleteTopProjectByIdIdx( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 argKey )
 	{
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		CFIntTopProjectBuff cur;
-		LinkedList<CFIntTopProjectBuff> matchSet = new LinkedList<CFIntTopProjectBuff>();
-		Iterator<CFIntTopProjectBuff> values = dictByPKey.values().iterator();
+		ICFIntTopProject cur;
+		LinkedList<ICFIntTopProject> matchSet = new LinkedList<ICFIntTopProject>();
+		Iterator<ICFIntTopProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntTopProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntTopProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableTopProject().readDerivedByIdIdx( Authorization,
@@ -613,32 +613,32 @@ public class CFIntRamTopProjectTable
 		}
 	}
 
-	public void deleteTopProjectByTenantIdx( CFSecAuthorization Authorization,
+	public void deleteTopProjectByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		CFIntTopProjectByTenantIdxKey key = schema.getFactoryTopProject().newTenantIdxKey();
+		CFIntBuffTopProjectByTenantIdxKey key = schema.getFactoryTopProject().newTenantIdxKey();
 		key.setRequiredTenantId( argTenantId );
 		deleteTopProjectByTenantIdx( Authorization, key );
 	}
 
-	public void deleteTopProjectByTenantIdx( CFSecAuthorization Authorization,
-		CFIntTopProjectByTenantIdxKey argKey )
+	public void deleteTopProjectByTenantIdx( ICFSecAuthorization Authorization,
+		ICFIntTopProjectByTenantIdxKey argKey )
 	{
-		CFIntTopProjectBuff cur;
+		ICFIntTopProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFIntTopProjectBuff> matchSet = new LinkedList<CFIntTopProjectBuff>();
-		Iterator<CFIntTopProjectBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFIntTopProject> matchSet = new LinkedList<ICFIntTopProject>();
+		Iterator<ICFIntTopProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntTopProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntTopProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableTopProject().readDerivedByIdIdx( Authorization,
@@ -647,32 +647,32 @@ public class CFIntRamTopProjectTable
 		}
 	}
 
-	public void deleteTopProjectByTopDomainIdx( CFSecAuthorization Authorization,
+	public void deleteTopProjectByTopDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId )
 	{
-		CFIntTopProjectByTopDomainIdxKey key = schema.getFactoryTopProject().newTopDomainIdxKey();
+		CFIntBuffTopProjectByTopDomainIdxKey key = schema.getFactoryTopProject().newTopDomainIdxKey();
 		key.setRequiredTopDomainId( argTopDomainId );
 		deleteTopProjectByTopDomainIdx( Authorization, key );
 	}
 
-	public void deleteTopProjectByTopDomainIdx( CFSecAuthorization Authorization,
-		CFIntTopProjectByTopDomainIdxKey argKey )
+	public void deleteTopProjectByTopDomainIdx( ICFSecAuthorization Authorization,
+		ICFIntTopProjectByTopDomainIdxKey argKey )
 	{
-		CFIntTopProjectBuff cur;
+		ICFIntTopProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFIntTopProjectBuff> matchSet = new LinkedList<CFIntTopProjectBuff>();
-		Iterator<CFIntTopProjectBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFIntTopProject> matchSet = new LinkedList<ICFIntTopProject>();
+		Iterator<ICFIntTopProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntTopProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntTopProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableTopProject().readDerivedByIdIdx( Authorization,
@@ -681,35 +681,35 @@ public class CFIntRamTopProjectTable
 		}
 	}
 
-	public void deleteTopProjectByNameIdx( CFSecAuthorization Authorization,
+	public void deleteTopProjectByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId,
 		String argName )
 	{
-		CFIntTopProjectByNameIdxKey key = schema.getFactoryTopProject().newNameIdxKey();
+		CFIntBuffTopProjectByNameIdxKey key = schema.getFactoryTopProject().newNameIdxKey();
 		key.setRequiredTopDomainId( argTopDomainId );
 		key.setRequiredName( argName );
 		deleteTopProjectByNameIdx( Authorization, key );
 	}
 
-	public void deleteTopProjectByNameIdx( CFSecAuthorization Authorization,
-		CFIntTopProjectByNameIdxKey argKey )
+	public void deleteTopProjectByNameIdx( ICFSecAuthorization Authorization,
+		ICFIntTopProjectByNameIdxKey argKey )
 	{
-		CFIntTopProjectBuff cur;
+		ICFIntTopProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFIntTopProjectBuff> matchSet = new LinkedList<CFIntTopProjectBuff>();
-		Iterator<CFIntTopProjectBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFIntTopProject> matchSet = new LinkedList<ICFIntTopProject>();
+		Iterator<ICFIntTopProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntTopProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntTopProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableTopProject().readDerivedByIdIdx( Authorization,

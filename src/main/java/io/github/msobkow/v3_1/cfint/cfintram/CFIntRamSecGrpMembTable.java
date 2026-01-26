@@ -38,6 +38,7 @@ package io.github.msobkow.v3_1.cfint.cfintram;
 import java.math.*;
 import java.sql.*;
 import java.text.*;
+import java.time.*;
 import java.util.*;
 import org.apache.commons.codec.binary.Base64;
 import io.github.msobkow.v3_1.cflib.*;
@@ -45,7 +46,8 @@ import io.github.msobkow.v3_1.cflib.dbutil.*;
 
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
-import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfsec.cfsec.buff.*;
+import io.github.msobkow.v3_1.cfint.cfint.buff.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
 
@@ -57,54 +59,54 @@ public class CFIntRamSecGrpMembTable
 	implements ICFIntSecGrpMembTable
 {
 	private ICFIntSchema schema;
-	private Map< CFSecSecGrpMembPKey,
-				CFSecSecGrpMembBuff > dictByPKey
-		= new HashMap< CFSecSecGrpMembPKey,
-				CFSecSecGrpMembBuff >();
-	private Map< CFSecSecGrpMembByClusterIdxKey,
-				Map< CFSecSecGrpMembPKey,
-					CFSecSecGrpMembBuff >> dictByClusterIdx
-		= new HashMap< CFSecSecGrpMembByClusterIdxKey,
-				Map< CFSecSecGrpMembPKey,
-					CFSecSecGrpMembBuff >>();
-	private Map< CFSecSecGrpMembByGroupIdxKey,
-				Map< CFSecSecGrpMembPKey,
-					CFSecSecGrpMembBuff >> dictByGroupIdx
-		= new HashMap< CFSecSecGrpMembByGroupIdxKey,
-				Map< CFSecSecGrpMembPKey,
-					CFSecSecGrpMembBuff >>();
-	private Map< CFSecSecGrpMembByUserIdxKey,
-				Map< CFSecSecGrpMembPKey,
-					CFSecSecGrpMembBuff >> dictByUserIdx
-		= new HashMap< CFSecSecGrpMembByUserIdxKey,
-				Map< CFSecSecGrpMembPKey,
-					CFSecSecGrpMembBuff >>();
-	private Map< CFSecSecGrpMembByUUserIdxKey,
-			CFSecSecGrpMembBuff > dictByUUserIdx
-		= new HashMap< CFSecSecGrpMembByUUserIdxKey,
-			CFSecSecGrpMembBuff >();
+	private Map< CFLibDbKeyHash256,
+				CFSecBuffSecGrpMemb > dictByPKey
+		= new HashMap< CFLibDbKeyHash256,
+				CFSecBuffSecGrpMemb >();
+	private Map< CFSecBuffSecGrpMembByClusterIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecGrpMemb >> dictByClusterIdx
+		= new HashMap< CFSecBuffSecGrpMembByClusterIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecGrpMemb >>();
+	private Map< CFSecBuffSecGrpMembByGroupIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecGrpMemb >> dictByGroupIdx
+		= new HashMap< CFSecBuffSecGrpMembByGroupIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecGrpMemb >>();
+	private Map< CFSecBuffSecGrpMembByUserIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecGrpMemb >> dictByUserIdx
+		= new HashMap< CFSecBuffSecGrpMembByUserIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFSecBuffSecGrpMemb >>();
+	private Map< CFSecBuffSecGrpMembByUUserIdxKey,
+			CFSecBuffSecGrpMemb > dictByUUserIdx
+		= new HashMap< CFSecBuffSecGrpMembByUUserIdxKey,
+			CFSecBuffSecGrpMemb >();
 
 	public CFIntRamSecGrpMembTable( ICFIntSchema argSchema ) {
 		schema = argSchema;
 	}
 
-	public void createSecGrpMemb( CFSecAuthorization Authorization,
-		CFSecSecGrpMembBuff Buff )
+	public void createSecGrpMemb( ICFSecAuthorization Authorization,
+		ICFSecSecGrpMemb Buff )
 	{
 		final String S_ProcName = "createSecGrpMemb";
-		CFSecSecGrpMembPKey pkey = schema.getFactorySecGrpMemb().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySecGrpMemb().newPKey();
 		pkey.setRequiredSecGrpMembId( schema.nextSecGrpMembIdGen() );
 		Buff.setRequiredSecGrpMembId( pkey.getRequiredSecGrpMembId() );
-		CFSecSecGrpMembByClusterIdxKey keyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
+		CFSecBuffSecGrpMembByClusterIdxKey keyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
 		keyClusterIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 
-		CFSecSecGrpMembByGroupIdxKey keyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
+		CFSecBuffSecGrpMembByGroupIdxKey keyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
 		keyGroupIdx.setRequiredSecGroupId( Buff.getRequiredSecGroupId() );
 
-		CFSecSecGrpMembByUserIdxKey keyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
+		CFSecBuffSecGrpMembByUserIdxKey keyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
 		keyUserIdx.setRequiredSecUserId( Buff.getRequiredSecUserId() );
 
-		CFSecSecGrpMembByUUserIdxKey keyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
+		CFSecBuffSecGrpMembByUUserIdxKey keyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
 		keyUUserIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 		keyUUserIdx.setRequiredSecGroupId( Buff.getRequiredSecGroupId() );
 		keyUUserIdx.setRequiredSecUserId( Buff.getRequiredSecUserId() );
@@ -162,32 +164,32 @@ public class CFIntRamSecGrpMembTable
 
 		dictByPKey.put( pkey, Buff );
 
-		Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictClusterIdx;
+		Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictClusterIdx;
 		if( dictByClusterIdx.containsKey( keyClusterIdx ) ) {
 			subdictClusterIdx = dictByClusterIdx.get( keyClusterIdx );
 		}
 		else {
-			subdictClusterIdx = new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			subdictClusterIdx = new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByClusterIdx.put( keyClusterIdx, subdictClusterIdx );
 		}
 		subdictClusterIdx.put( pkey, Buff );
 
-		Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictGroupIdx;
+		Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictGroupIdx;
 		if( dictByGroupIdx.containsKey( keyGroupIdx ) ) {
 			subdictGroupIdx = dictByGroupIdx.get( keyGroupIdx );
 		}
 		else {
-			subdictGroupIdx = new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			subdictGroupIdx = new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByGroupIdx.put( keyGroupIdx, subdictGroupIdx );
 		}
 		subdictGroupIdx.put( pkey, Buff );
 
-		Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictUserIdx;
+		Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictUserIdx;
 		if( dictByUserIdx.containsKey( keyUserIdx ) ) {
 			subdictUserIdx = dictByUserIdx.get( keyUserIdx );
 		}
 		else {
-			subdictUserIdx = new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			subdictUserIdx = new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByUserIdx.put( keyUserIdx, subdictUserIdx );
 		}
 		subdictUserIdx.put( pkey, Buff );
@@ -196,13 +198,27 @@ public class CFIntRamSecGrpMembTable
 
 	}
 
-	public CFSecSecGrpMembBuff readDerived( CFSecAuthorization Authorization,
-		CFSecSecGrpMembPKey PKey )
+	public ICFSecSecGrpMemb readDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readDerived";
-		CFSecSecGrpMembPKey key = schema.getFactorySecGrpMemb().newPKey();
+		ICFSecSecGrpMemb buff;
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
+		}
+		else {
+			buff = null;
+		}
+		return( buff );
+	}
+
+	public ICFSecSecGrpMemb lockDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
+	{
+		final String S_ProcName = "CFIntRamSecGrpMemb.readDerived";
+		CFLibDbKeyHash256 key = schema.getFactorySecGrpMemb().newPKey();
 		key.setRequiredSecGrpMembId( PKey.getRequiredSecGrpMembId() );
-		CFSecSecGrpMembBuff buff;
+		ICFSecSecGrpMemb buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -212,26 +228,10 @@ public class CFIntRamSecGrpMembTable
 		return( buff );
 	}
 
-	public CFSecSecGrpMembBuff lockDerived( CFSecAuthorization Authorization,
-		CFSecSecGrpMembPKey PKey )
-	{
-		final String S_ProcName = "CFIntRamSecGrpMemb.readDerived";
-		CFSecSecGrpMembPKey key = schema.getFactorySecGrpMemb().newPKey();
-		key.setRequiredSecGrpMembId( PKey.getRequiredSecGrpMembId() );
-		CFSecSecGrpMembBuff buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
-		}
-		else {
-			buff = null;
-		}
-		return( buff );
-	}
-
-	public CFSecSecGrpMembBuff[] readAllDerived( CFSecAuthorization Authorization ) {
+	public ICFSecSecGrpMemb[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamSecGrpMemb.readAllDerived";
-		CFSecSecGrpMembBuff[] retList = new CFSecSecGrpMembBuff[ dictByPKey.values().size() ];
-		Iterator< CFSecSecGrpMembBuff > iter = dictByPKey.values().iterator();
+		ICFSecSecGrpMemb[] retList = new ICFSecSecGrpMemb[ dictByPKey.values().size() ];
+		Iterator< ICFSecSecGrpMemb > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -239,99 +239,99 @@ public class CFIntRamSecGrpMembTable
 		return( retList );
 	}
 
-	public CFSecSecGrpMembBuff[] readDerivedByClusterIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] readDerivedByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readDerivedByClusterIdx";
-		CFSecSecGrpMembByClusterIdxKey key = schema.getFactorySecGrpMemb().newClusterIdxKey();
+		CFSecBuffSecGrpMembByClusterIdxKey key = schema.getFactorySecGrpMemb().newClusterIdxKey();
 		key.setRequiredClusterId( ClusterId );
 
-		CFSecSecGrpMembBuff[] recArray;
+		ICFSecSecGrpMemb[] recArray;
 		if( dictByClusterIdx.containsKey( key ) ) {
-			Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictClusterIdx
+			Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictClusterIdx
 				= dictByClusterIdx.get( key );
-			recArray = new CFSecSecGrpMembBuff[ subdictClusterIdx.size() ];
-			Iterator< CFSecSecGrpMembBuff > iter = subdictClusterIdx.values().iterator();
+			recArray = new ICFSecSecGrpMemb[ subdictClusterIdx.size() ];
+			Iterator< ICFSecSecGrpMemb > iter = subdictClusterIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictClusterIdx
-				= new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictClusterIdx
+				= new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByClusterIdx.put( key, subdictClusterIdx );
-			recArray = new CFSecSecGrpMembBuff[0];
+			recArray = new ICFSecSecGrpMemb[0];
 		}
 		return( recArray );
 	}
 
-	public CFSecSecGrpMembBuff[] readDerivedByGroupIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] readDerivedByGroupIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecGroupId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readDerivedByGroupIdx";
-		CFSecSecGrpMembByGroupIdxKey key = schema.getFactorySecGrpMemb().newGroupIdxKey();
+		CFSecBuffSecGrpMembByGroupIdxKey key = schema.getFactorySecGrpMemb().newGroupIdxKey();
 		key.setRequiredSecGroupId( SecGroupId );
 
-		CFSecSecGrpMembBuff[] recArray;
+		ICFSecSecGrpMemb[] recArray;
 		if( dictByGroupIdx.containsKey( key ) ) {
-			Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictGroupIdx
+			Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictGroupIdx
 				= dictByGroupIdx.get( key );
-			recArray = new CFSecSecGrpMembBuff[ subdictGroupIdx.size() ];
-			Iterator< CFSecSecGrpMembBuff > iter = subdictGroupIdx.values().iterator();
+			recArray = new ICFSecSecGrpMemb[ subdictGroupIdx.size() ];
+			Iterator< ICFSecSecGrpMemb > iter = subdictGroupIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictGroupIdx
-				= new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictGroupIdx
+				= new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByGroupIdx.put( key, subdictGroupIdx );
-			recArray = new CFSecSecGrpMembBuff[0];
+			recArray = new ICFSecSecGrpMemb[0];
 		}
 		return( recArray );
 	}
 
-	public CFSecSecGrpMembBuff[] readDerivedByUserIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] readDerivedByUserIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecUserId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readDerivedByUserIdx";
-		CFSecSecGrpMembByUserIdxKey key = schema.getFactorySecGrpMemb().newUserIdxKey();
+		CFSecBuffSecGrpMembByUserIdxKey key = schema.getFactorySecGrpMemb().newUserIdxKey();
 		key.setRequiredSecUserId( SecUserId );
 
-		CFSecSecGrpMembBuff[] recArray;
+		ICFSecSecGrpMemb[] recArray;
 		if( dictByUserIdx.containsKey( key ) ) {
-			Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictUserIdx
+			Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictUserIdx
 				= dictByUserIdx.get( key );
-			recArray = new CFSecSecGrpMembBuff[ subdictUserIdx.size() ];
-			Iterator< CFSecSecGrpMembBuff > iter = subdictUserIdx.values().iterator();
+			recArray = new ICFSecSecGrpMemb[ subdictUserIdx.size() ];
+			Iterator< ICFSecSecGrpMemb > iter = subdictUserIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdictUserIdx
-				= new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdictUserIdx
+				= new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByUserIdx.put( key, subdictUserIdx );
-			recArray = new CFSecSecGrpMembBuff[0];
+			recArray = new ICFSecSecGrpMemb[0];
 		}
 		return( recArray );
 	}
 
-	public CFSecSecGrpMembBuff readDerivedByUUserIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb readDerivedByUUserIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		CFLibDbKeyHash256 SecGroupId,
 		CFLibDbKeyHash256 SecUserId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readDerivedByUUserIdx";
-		CFSecSecGrpMembByUUserIdxKey key = schema.getFactorySecGrpMemb().newUUserIdxKey();
+		CFSecBuffSecGrpMembByUUserIdxKey key = schema.getFactorySecGrpMemb().newUUserIdxKey();
 		key.setRequiredClusterId( ClusterId );
 		key.setRequiredSecGroupId( SecGroupId );
 		key.setRequiredSecUserId( SecUserId );
 
-		CFSecSecGrpMembBuff buff;
+		ICFSecSecGrpMemb buff;
 		if( dictByUUserIdx.containsKey( key ) ) {
 			buff = dictByUUserIdx.get( key );
 		}
@@ -341,14 +341,14 @@ public class CFIntRamSecGrpMembTable
 		return( buff );
 	}
 
-	public CFSecSecGrpMembBuff readDerivedByIdIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecGrpMembId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readDerivedByIdIdx() ";
-		CFSecSecGrpMembPKey key = schema.getFactorySecGrpMemb().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactorySecGrpMemb().newPKey();
 		key.setRequiredSecGrpMembId( SecGrpMembId );
 
-		CFSecSecGrpMembBuff buff;
+		ICFSecSecGrpMemb buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -358,41 +358,41 @@ public class CFIntRamSecGrpMembTable
 		return( buff );
 	}
 
-	public CFSecSecGrpMembBuff readBuff( CFSecAuthorization Authorization,
-		CFSecSecGrpMembPKey PKey )
+	public ICFSecSecGrpMemb readBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readBuff";
-		CFSecSecGrpMembBuff buff = readDerived( Authorization, PKey );
+		ICFSecSecGrpMemb buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a00f" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFSecSecGrpMembBuff lockBuff( CFSecAuthorization Authorization,
-		CFSecSecGrpMembPKey PKey )
+	public ICFSecSecGrpMemb lockBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "lockBuff";
-		CFSecSecGrpMembBuff buff = readDerived( Authorization, PKey );
+		ICFSecSecGrpMemb buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a00f" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFSecSecGrpMembBuff[] readAllBuff( CFSecAuthorization Authorization )
+	public ICFSecSecGrpMemb[] readAllBuff( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readAllBuff";
-		CFSecSecGrpMembBuff buff;
-		ArrayList<CFSecSecGrpMembBuff> filteredList = new ArrayList<CFSecSecGrpMembBuff>();
-		CFSecSecGrpMembBuff[] buffList = readAllDerived( Authorization );
+		ICFSecSecGrpMemb buff;
+		ArrayList<ICFSecSecGrpMemb> filteredList = new ArrayList<ICFSecSecGrpMemb>();
+		ICFSecSecGrpMemb[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a00f" ) ) {
 				filteredList.add( buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecGrpMembBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecGrpMemb[0] ) );
 	}
 
 	/**
@@ -402,90 +402,90 @@ public class CFIntRamSecGrpMembTable
 	 *
 	 *	@return All the specific SecGrpMemb instances in the database accessible for the Authorization.
 	 */
-	public CFSecSecGrpMembBuff[] pageAllBuff( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] pageAllBuff( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 priorSecGrpMembId )
 	{
 		final String S_ProcName = "pageAllBuff";
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 
-	public CFSecSecGrpMembBuff readBuffByIdIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb readBuffByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecGrpMembId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readBuffByIdIdx() ";
-		CFSecSecGrpMembBuff buff = readDerivedByIdIdx( Authorization,
+		ICFSecSecGrpMemb buff = readDerivedByIdIdx( Authorization,
 			SecGrpMembId );
 		if( ( buff != null ) && buff.getClassCode().equals( "a00f" ) ) {
-			return( (CFSecSecGrpMembBuff)buff );
+			return( (ICFSecSecGrpMemb)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public CFSecSecGrpMembBuff[] readBuffByClusterIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] readBuffByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readBuffByClusterIdx() ";
-		CFSecSecGrpMembBuff buff;
-		ArrayList<CFSecSecGrpMembBuff> filteredList = new ArrayList<CFSecSecGrpMembBuff>();
-		CFSecSecGrpMembBuff[] buffList = readDerivedByClusterIdx( Authorization,
+		ICFSecSecGrpMemb buff;
+		ArrayList<ICFSecSecGrpMemb> filteredList = new ArrayList<ICFSecSecGrpMemb>();
+		ICFSecSecGrpMemb[] buffList = readDerivedByClusterIdx( Authorization,
 			ClusterId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a00f" ) ) {
-				filteredList.add( (CFSecSecGrpMembBuff)buff );
+				filteredList.add( (ICFSecSecGrpMemb)buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecGrpMembBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecGrpMemb[0] ) );
 	}
 
-	public CFSecSecGrpMembBuff[] readBuffByGroupIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] readBuffByGroupIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecGroupId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readBuffByGroupIdx() ";
-		CFSecSecGrpMembBuff buff;
-		ArrayList<CFSecSecGrpMembBuff> filteredList = new ArrayList<CFSecSecGrpMembBuff>();
-		CFSecSecGrpMembBuff[] buffList = readDerivedByGroupIdx( Authorization,
+		ICFSecSecGrpMemb buff;
+		ArrayList<ICFSecSecGrpMemb> filteredList = new ArrayList<ICFSecSecGrpMemb>();
+		ICFSecSecGrpMemb[] buffList = readDerivedByGroupIdx( Authorization,
 			SecGroupId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a00f" ) ) {
-				filteredList.add( (CFSecSecGrpMembBuff)buff );
+				filteredList.add( (ICFSecSecGrpMemb)buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecGrpMembBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecGrpMemb[0] ) );
 	}
 
-	public CFSecSecGrpMembBuff[] readBuffByUserIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] readBuffByUserIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecUserId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readBuffByUserIdx() ";
-		CFSecSecGrpMembBuff buff;
-		ArrayList<CFSecSecGrpMembBuff> filteredList = new ArrayList<CFSecSecGrpMembBuff>();
-		CFSecSecGrpMembBuff[] buffList = readDerivedByUserIdx( Authorization,
+		ICFSecSecGrpMemb buff;
+		ArrayList<ICFSecSecGrpMemb> filteredList = new ArrayList<ICFSecSecGrpMemb>();
+		ICFSecSecGrpMemb[] buffList = readDerivedByUserIdx( Authorization,
 			SecUserId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a00f" ) ) {
-				filteredList.add( (CFSecSecGrpMembBuff)buff );
+				filteredList.add( (ICFSecSecGrpMemb)buff );
 			}
 		}
-		return( filteredList.toArray( new CFSecSecGrpMembBuff[0] ) );
+		return( filteredList.toArray( new ICFSecSecGrpMemb[0] ) );
 	}
 
-	public CFSecSecGrpMembBuff readBuffByUUserIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb readBuffByUUserIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		CFLibDbKeyHash256 SecGroupId,
 		CFLibDbKeyHash256 SecUserId )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMemb.readBuffByUUserIdx() ";
-		CFSecSecGrpMembBuff buff = readDerivedByUUserIdx( Authorization,
+		ICFSecSecGrpMemb buff = readDerivedByUUserIdx( Authorization,
 			ClusterId,
 			SecGroupId,
 			SecUserId );
 		if( ( buff != null ) && buff.getClassCode().equals( "a00f" ) ) {
-			return( (CFSecSecGrpMembBuff)buff );
+			return( (ICFSecSecGrpMemb)buff );
 		}
 		else {
 			return( null );
@@ -503,7 +503,7 @@ public class CFIntRamSecGrpMembTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public CFSecSecGrpMembBuff[] pageBuffByClusterIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] pageBuffByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		CFLibDbKeyHash256 priorSecGrpMembId )
 	{
@@ -522,7 +522,7 @@ public class CFIntRamSecGrpMembTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public CFSecSecGrpMembBuff[] pageBuffByGroupIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] pageBuffByGroupIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecGroupId,
 		CFLibDbKeyHash256 priorSecGrpMembId )
 	{
@@ -541,7 +541,7 @@ public class CFIntRamSecGrpMembTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public CFSecSecGrpMembBuff[] pageBuffByUserIdx( CFSecAuthorization Authorization,
+	public ICFSecSecGrpMemb[] pageBuffByUserIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SecUserId,
 		CFLibDbKeyHash256 priorSecGrpMembId )
 	{
@@ -549,12 +549,12 @@ public class CFIntRamSecGrpMembTable
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 
-	public void updateSecGrpMemb( CFSecAuthorization Authorization,
-		CFSecSecGrpMembBuff Buff )
+	public void updateSecGrpMemb( ICFSecAuthorization Authorization,
+		ICFSecSecGrpMemb Buff )
 	{
-		CFSecSecGrpMembPKey pkey = schema.getFactorySecGrpMemb().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySecGrpMemb().newPKey();
 		pkey.setRequiredSecGrpMembId( Buff.getRequiredSecGrpMembId() );
-		CFSecSecGrpMembBuff existing = dictByPKey.get( pkey );
+		ICFSecSecGrpMemb existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateSecGrpMemb",
@@ -568,30 +568,30 @@ public class CFIntRamSecGrpMembTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFSecSecGrpMembByClusterIdxKey existingKeyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
+		CFSecBuffSecGrpMembByClusterIdxKey existingKeyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
 		existingKeyClusterIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 
-		CFSecSecGrpMembByClusterIdxKey newKeyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
+		CFSecBuffSecGrpMembByClusterIdxKey newKeyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
 		newKeyClusterIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 
-		CFSecSecGrpMembByGroupIdxKey existingKeyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
+		CFSecBuffSecGrpMembByGroupIdxKey existingKeyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
 		existingKeyGroupIdx.setRequiredSecGroupId( existing.getRequiredSecGroupId() );
 
-		CFSecSecGrpMembByGroupIdxKey newKeyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
+		CFSecBuffSecGrpMembByGroupIdxKey newKeyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
 		newKeyGroupIdx.setRequiredSecGroupId( Buff.getRequiredSecGroupId() );
 
-		CFSecSecGrpMembByUserIdxKey existingKeyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
+		CFSecBuffSecGrpMembByUserIdxKey existingKeyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
 		existingKeyUserIdx.setRequiredSecUserId( existing.getRequiredSecUserId() );
 
-		CFSecSecGrpMembByUserIdxKey newKeyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
+		CFSecBuffSecGrpMembByUserIdxKey newKeyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
 		newKeyUserIdx.setRequiredSecUserId( Buff.getRequiredSecUserId() );
 
-		CFSecSecGrpMembByUUserIdxKey existingKeyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
+		CFSecBuffSecGrpMembByUUserIdxKey existingKeyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
 		existingKeyUUserIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 		existingKeyUUserIdx.setRequiredSecGroupId( existing.getRequiredSecGroupId() );
 		existingKeyUUserIdx.setRequiredSecUserId( existing.getRequiredSecUserId() );
 
-		CFSecSecGrpMembByUUserIdxKey newKeyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
+		CFSecBuffSecGrpMembByUUserIdxKey newKeyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
 		newKeyUUserIdx.setRequiredClusterId( Buff.getRequiredClusterId() );
 		newKeyUUserIdx.setRequiredSecGroupId( Buff.getRequiredSecGroupId() );
 		newKeyUUserIdx.setRequiredSecUserId( Buff.getRequiredSecUserId() );
@@ -645,7 +645,7 @@ public class CFIntRamSecGrpMembTable
 
 		// Update is valid
 
-		Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdict;
+		Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdict;
 
 		dictByPKey.remove( pkey );
 		dictByPKey.put( pkey, Buff );
@@ -658,7 +658,7 @@ public class CFIntRamSecGrpMembTable
 			subdict = dictByClusterIdx.get( newKeyClusterIdx );
 		}
 		else {
-			subdict = new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByClusterIdx.put( newKeyClusterIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -671,7 +671,7 @@ public class CFIntRamSecGrpMembTable
 			subdict = dictByGroupIdx.get( newKeyGroupIdx );
 		}
 		else {
-			subdict = new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByGroupIdx.put( newKeyGroupIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -684,7 +684,7 @@ public class CFIntRamSecGrpMembTable
 			subdict = dictByUserIdx.get( newKeyUserIdx );
 		}
 		else {
-			subdict = new HashMap< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFSecBuffSecGrpMemb >();
 			dictByUserIdx.put( newKeyUserIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -694,14 +694,14 @@ public class CFIntRamSecGrpMembTable
 
 	}
 
-	public void deleteSecGrpMemb( CFSecAuthorization Authorization,
-		CFSecSecGrpMembBuff Buff )
+	public void deleteSecGrpMemb( ICFSecAuthorization Authorization,
+		ICFSecSecGrpMemb Buff )
 	{
 		final String S_ProcName = "CFIntRamSecGrpMembTable.deleteSecGrpMemb() ";
 		String classCode;
-		CFSecSecGrpMembPKey pkey = schema.getFactorySecGrpMemb().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySecGrpMemb().newPKey();
 		pkey.setRequiredSecGrpMembId( Buff.getRequiredSecGrpMembId() );
-		CFSecSecGrpMembBuff existing = dictByPKey.get( pkey );
+		ICFSecSecGrpMemb existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}
@@ -711,16 +711,16 @@ public class CFIntRamSecGrpMembTable
 				"deleteSecGrpMemb",
 				pkey );
 		}
-		CFSecSecGrpMembByClusterIdxKey keyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
+		CFSecBuffSecGrpMembByClusterIdxKey keyClusterIdx = schema.getFactorySecGrpMemb().newClusterIdxKey();
 		keyClusterIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 
-		CFSecSecGrpMembByGroupIdxKey keyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
+		CFSecBuffSecGrpMembByGroupIdxKey keyGroupIdx = schema.getFactorySecGrpMemb().newGroupIdxKey();
 		keyGroupIdx.setRequiredSecGroupId( existing.getRequiredSecGroupId() );
 
-		CFSecSecGrpMembByUserIdxKey keyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
+		CFSecBuffSecGrpMembByUserIdxKey keyUserIdx = schema.getFactorySecGrpMemb().newUserIdxKey();
 		keyUserIdx.setRequiredSecUserId( existing.getRequiredSecUserId() );
 
-		CFSecSecGrpMembByUUserIdxKey keyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
+		CFSecBuffSecGrpMembByUUserIdxKey keyUUserIdx = schema.getFactorySecGrpMemb().newUUserIdxKey();
 		keyUUserIdx.setRequiredClusterId( existing.getRequiredClusterId() );
 		keyUUserIdx.setRequiredSecGroupId( existing.getRequiredSecGroupId() );
 		keyUUserIdx.setRequiredSecUserId( existing.getRequiredSecUserId() );
@@ -728,7 +728,7 @@ public class CFIntRamSecGrpMembTable
 		// Validate reverse foreign keys
 
 		// Delete is valid
-		Map< CFSecSecGrpMembPKey, CFSecSecGrpMembBuff > subdict;
+		Map< CFLibDbKeyHash256, CFSecBuffSecGrpMemb > subdict;
 
 		dictByPKey.remove( pkey );
 
@@ -744,32 +744,32 @@ public class CFIntRamSecGrpMembTable
 		dictByUUserIdx.remove( keyUUserIdx );
 
 	}
-	public void deleteSecGrpMembByIdIdx( CFSecAuthorization Authorization,
+	public void deleteSecGrpMembByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSecGrpMembId )
 	{
-		CFSecSecGrpMembPKey key = schema.getFactorySecGrpMemb().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactorySecGrpMemb().newPKey();
 		key.setRequiredSecGrpMembId( argSecGrpMembId );
 		deleteSecGrpMembByIdIdx( Authorization, key );
 	}
 
-	public void deleteSecGrpMembByIdIdx( CFSecAuthorization Authorization,
-		CFSecSecGrpMembPKey argKey )
+	public void deleteSecGrpMembByIdIdx( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 argKey )
 	{
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		CFSecSecGrpMembBuff cur;
-		LinkedList<CFSecSecGrpMembBuff> matchSet = new LinkedList<CFSecSecGrpMembBuff>();
-		Iterator<CFSecSecGrpMembBuff> values = dictByPKey.values().iterator();
+		ICFSecSecGrpMemb cur;
+		LinkedList<ICFSecSecGrpMemb> matchSet = new LinkedList<ICFSecSecGrpMemb>();
+		Iterator<ICFSecSecGrpMemb> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecGrpMembBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecGrpMemb> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecGrpMemb().readDerivedByIdIdx( Authorization,
@@ -778,32 +778,32 @@ public class CFIntRamSecGrpMembTable
 		}
 	}
 
-	public void deleteSecGrpMembByClusterIdx( CFSecAuthorization Authorization,
+	public void deleteSecGrpMembByClusterIdx( ICFSecAuthorization Authorization,
 		long argClusterId )
 	{
-		CFSecSecGrpMembByClusterIdxKey key = schema.getFactorySecGrpMemb().newClusterIdxKey();
+		CFSecBuffSecGrpMembByClusterIdxKey key = schema.getFactorySecGrpMemb().newClusterIdxKey();
 		key.setRequiredClusterId( argClusterId );
 		deleteSecGrpMembByClusterIdx( Authorization, key );
 	}
 
-	public void deleteSecGrpMembByClusterIdx( CFSecAuthorization Authorization,
-		CFSecSecGrpMembByClusterIdxKey argKey )
+	public void deleteSecGrpMembByClusterIdx( ICFSecAuthorization Authorization,
+		ICFSecSecGrpMembByClusterIdxKey argKey )
 	{
-		CFSecSecGrpMembBuff cur;
+		ICFSecSecGrpMemb cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecGrpMembBuff> matchSet = new LinkedList<CFSecSecGrpMembBuff>();
-		Iterator<CFSecSecGrpMembBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecGrpMemb> matchSet = new LinkedList<ICFSecSecGrpMemb>();
+		Iterator<ICFSecSecGrpMemb> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecGrpMembBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecGrpMemb> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecGrpMemb().readDerivedByIdIdx( Authorization,
@@ -812,32 +812,32 @@ public class CFIntRamSecGrpMembTable
 		}
 	}
 
-	public void deleteSecGrpMembByGroupIdx( CFSecAuthorization Authorization,
+	public void deleteSecGrpMembByGroupIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSecGroupId )
 	{
-		CFSecSecGrpMembByGroupIdxKey key = schema.getFactorySecGrpMemb().newGroupIdxKey();
+		CFSecBuffSecGrpMembByGroupIdxKey key = schema.getFactorySecGrpMemb().newGroupIdxKey();
 		key.setRequiredSecGroupId( argSecGroupId );
 		deleteSecGrpMembByGroupIdx( Authorization, key );
 	}
 
-	public void deleteSecGrpMembByGroupIdx( CFSecAuthorization Authorization,
-		CFSecSecGrpMembByGroupIdxKey argKey )
+	public void deleteSecGrpMembByGroupIdx( ICFSecAuthorization Authorization,
+		ICFSecSecGrpMembByGroupIdxKey argKey )
 	{
-		CFSecSecGrpMembBuff cur;
+		ICFSecSecGrpMemb cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecGrpMembBuff> matchSet = new LinkedList<CFSecSecGrpMembBuff>();
-		Iterator<CFSecSecGrpMembBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecGrpMemb> matchSet = new LinkedList<ICFSecSecGrpMemb>();
+		Iterator<ICFSecSecGrpMemb> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecGrpMembBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecGrpMemb> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecGrpMemb().readDerivedByIdIdx( Authorization,
@@ -846,32 +846,32 @@ public class CFIntRamSecGrpMembTable
 		}
 	}
 
-	public void deleteSecGrpMembByUserIdx( CFSecAuthorization Authorization,
+	public void deleteSecGrpMembByUserIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSecUserId )
 	{
-		CFSecSecGrpMembByUserIdxKey key = schema.getFactorySecGrpMemb().newUserIdxKey();
+		CFSecBuffSecGrpMembByUserIdxKey key = schema.getFactorySecGrpMemb().newUserIdxKey();
 		key.setRequiredSecUserId( argSecUserId );
 		deleteSecGrpMembByUserIdx( Authorization, key );
 	}
 
-	public void deleteSecGrpMembByUserIdx( CFSecAuthorization Authorization,
-		CFSecSecGrpMembByUserIdxKey argKey )
+	public void deleteSecGrpMembByUserIdx( ICFSecAuthorization Authorization,
+		ICFSecSecGrpMembByUserIdxKey argKey )
 	{
-		CFSecSecGrpMembBuff cur;
+		ICFSecSecGrpMemb cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecGrpMembBuff> matchSet = new LinkedList<CFSecSecGrpMembBuff>();
-		Iterator<CFSecSecGrpMembBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecGrpMemb> matchSet = new LinkedList<ICFSecSecGrpMemb>();
+		Iterator<ICFSecSecGrpMemb> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecGrpMembBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecGrpMemb> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecGrpMemb().readDerivedByIdIdx( Authorization,
@@ -880,22 +880,22 @@ public class CFIntRamSecGrpMembTable
 		}
 	}
 
-	public void deleteSecGrpMembByUUserIdx( CFSecAuthorization Authorization,
+	public void deleteSecGrpMembByUUserIdx( ICFSecAuthorization Authorization,
 		long argClusterId,
 		CFLibDbKeyHash256 argSecGroupId,
 		CFLibDbKeyHash256 argSecUserId )
 	{
-		CFSecSecGrpMembByUUserIdxKey key = schema.getFactorySecGrpMemb().newUUserIdxKey();
+		CFSecBuffSecGrpMembByUUserIdxKey key = schema.getFactorySecGrpMemb().newUUserIdxKey();
 		key.setRequiredClusterId( argClusterId );
 		key.setRequiredSecGroupId( argSecGroupId );
 		key.setRequiredSecUserId( argSecUserId );
 		deleteSecGrpMembByUUserIdx( Authorization, key );
 	}
 
-	public void deleteSecGrpMembByUUserIdx( CFSecAuthorization Authorization,
-		CFSecSecGrpMembByUUserIdxKey argKey )
+	public void deleteSecGrpMembByUUserIdx( ICFSecAuthorization Authorization,
+		ICFSecSecGrpMembByUUserIdxKey argKey )
 	{
-		CFSecSecGrpMembBuff cur;
+		ICFSecSecGrpMemb cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
@@ -903,15 +903,15 @@ public class CFIntRamSecGrpMembTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFSecSecGrpMembBuff> matchSet = new LinkedList<CFSecSecGrpMembBuff>();
-		Iterator<CFSecSecGrpMembBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFSecSecGrpMemb> matchSet = new LinkedList<ICFSecSecGrpMemb>();
+		Iterator<ICFSecSecGrpMemb> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFSecSecGrpMembBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFSecSecGrpMemb> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSecGrpMemb().readDerivedByIdIdx( Authorization,

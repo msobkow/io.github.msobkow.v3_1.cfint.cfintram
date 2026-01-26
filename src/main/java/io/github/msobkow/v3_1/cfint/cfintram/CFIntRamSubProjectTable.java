@@ -38,6 +38,7 @@ package io.github.msobkow.v3_1.cfint.cfintram;
 import java.math.*;
 import java.sql.*;
 import java.text.*;
+import java.time.*;
 import java.util.*;
 import org.apache.commons.codec.binary.Base64;
 import io.github.msobkow.v3_1.cflib.*;
@@ -45,7 +46,8 @@ import io.github.msobkow.v3_1.cflib.dbutil.*;
 
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
-import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfsec.cfsec.buff.*;
+import io.github.msobkow.v3_1.cfint.cfint.buff.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
 
@@ -57,45 +59,45 @@ public class CFIntRamSubProjectTable
 	implements ICFIntSubProjectTable
 {
 	private ICFIntSchema schema;
-	private Map< CFIntSubProjectPKey,
-				CFIntSubProjectBuff > dictByPKey
-		= new HashMap< CFIntSubProjectPKey,
-				CFIntSubProjectBuff >();
-	private Map< CFIntSubProjectByTenantIdxKey,
-				Map< CFIntSubProjectPKey,
-					CFIntSubProjectBuff >> dictByTenantIdx
-		= new HashMap< CFIntSubProjectByTenantIdxKey,
-				Map< CFIntSubProjectPKey,
-					CFIntSubProjectBuff >>();
-	private Map< CFIntSubProjectByTopProjectIdxKey,
-				Map< CFIntSubProjectPKey,
-					CFIntSubProjectBuff >> dictByTopProjectIdx
-		= new HashMap< CFIntSubProjectByTopProjectIdxKey,
-				Map< CFIntSubProjectPKey,
-					CFIntSubProjectBuff >>();
-	private Map< CFIntSubProjectByNameIdxKey,
-			CFIntSubProjectBuff > dictByNameIdx
-		= new HashMap< CFIntSubProjectByNameIdxKey,
-			CFIntSubProjectBuff >();
+	private Map< CFLibDbKeyHash256,
+				CFIntBuffSubProject > dictByPKey
+		= new HashMap< CFLibDbKeyHash256,
+				CFIntBuffSubProject >();
+	private Map< CFIntBuffSubProjectByTenantIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffSubProject >> dictByTenantIdx
+		= new HashMap< CFIntBuffSubProjectByTenantIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffSubProject >>();
+	private Map< CFIntBuffSubProjectByTopProjectIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffSubProject >> dictByTopProjectIdx
+		= new HashMap< CFIntBuffSubProjectByTopProjectIdxKey,
+				Map< CFLibDbKeyHash256,
+					CFIntBuffSubProject >>();
+	private Map< CFIntBuffSubProjectByNameIdxKey,
+			CFIntBuffSubProject > dictByNameIdx
+		= new HashMap< CFIntBuffSubProjectByNameIdxKey,
+			CFIntBuffSubProject >();
 
 	public CFIntRamSubProjectTable( ICFIntSchema argSchema ) {
 		schema = argSchema;
 	}
 
-	public void createSubProject( CFSecAuthorization Authorization,
-		CFIntSubProjectBuff Buff )
+	public void createSubProject( ICFSecAuthorization Authorization,
+		ICFIntSubProject Buff )
 	{
 		final String S_ProcName = "createSubProject";
-		CFIntSubProjectPKey pkey = schema.getFactorySubProject().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySubProject().newPKey();
 		pkey.setRequiredId( schema.nextSubProjectIdGen() );
 		Buff.setRequiredId( pkey.getRequiredId() );
-		CFIntSubProjectByTenantIdxKey keyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
+		CFIntBuffSubProjectByTenantIdxKey keyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
 		keyTenantIdx.setRequiredTenantId( Buff.getRequiredTenantId() );
 
-		CFIntSubProjectByTopProjectIdxKey keyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
+		CFIntBuffSubProjectByTopProjectIdxKey keyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
 		keyTopProjectIdx.setRequiredTopProjectId( Buff.getRequiredTopProjectId() );
 
-		CFIntSubProjectByNameIdxKey keyNameIdx = schema.getFactorySubProject().newNameIdxKey();
+		CFIntBuffSubProjectByNameIdxKey keyNameIdx = schema.getFactorySubProject().newNameIdxKey();
 		keyNameIdx.setRequiredTopProjectId( Buff.getRequiredTopProjectId() );
 		keyNameIdx.setRequiredName( Buff.getRequiredName() );
 
@@ -152,22 +154,22 @@ public class CFIntRamSubProjectTable
 
 		dictByPKey.put( pkey, Buff );
 
-		Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdictTenantIdx;
+		Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTenantIdx;
 		if( dictByTenantIdx.containsKey( keyTenantIdx ) ) {
 			subdictTenantIdx = dictByTenantIdx.get( keyTenantIdx );
 		}
 		else {
-			subdictTenantIdx = new HashMap< CFIntSubProjectPKey, CFIntSubProjectBuff >();
+			subdictTenantIdx = new HashMap< CFLibDbKeyHash256, CFIntBuffSubProject >();
 			dictByTenantIdx.put( keyTenantIdx, subdictTenantIdx );
 		}
 		subdictTenantIdx.put( pkey, Buff );
 
-		Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdictTopProjectIdx;
+		Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTopProjectIdx;
 		if( dictByTopProjectIdx.containsKey( keyTopProjectIdx ) ) {
 			subdictTopProjectIdx = dictByTopProjectIdx.get( keyTopProjectIdx );
 		}
 		else {
-			subdictTopProjectIdx = new HashMap< CFIntSubProjectPKey, CFIntSubProjectBuff >();
+			subdictTopProjectIdx = new HashMap< CFLibDbKeyHash256, CFIntBuffSubProject >();
 			dictByTopProjectIdx.put( keyTopProjectIdx, subdictTopProjectIdx );
 		}
 		subdictTopProjectIdx.put( pkey, Buff );
@@ -176,13 +178,27 @@ public class CFIntRamSubProjectTable
 
 	}
 
-	public CFIntSubProjectBuff readDerived( CFSecAuthorization Authorization,
-		CFIntSubProjectPKey PKey )
+	public ICFIntSubProject readDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readDerived";
-		CFIntSubProjectPKey key = schema.getFactorySubProject().newPKey();
+		ICFIntSubProject buff;
+		if( dictByPKey.containsKey( PKey ) ) {
+			buff = dictByPKey.get( PKey );
+		}
+		else {
+			buff = null;
+		}
+		return( buff );
+	}
+
+	public ICFIntSubProject lockDerived( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
+	{
+		final String S_ProcName = "CFIntRamSubProject.readDerived";
+		CFLibDbKeyHash256 key = schema.getFactorySubProject().newPKey();
 		key.setRequiredId( PKey.getRequiredId() );
-		CFIntSubProjectBuff buff;
+		ICFIntSubProject buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -192,26 +208,10 @@ public class CFIntRamSubProjectTable
 		return( buff );
 	}
 
-	public CFIntSubProjectBuff lockDerived( CFSecAuthorization Authorization,
-		CFIntSubProjectPKey PKey )
-	{
-		final String S_ProcName = "CFIntRamSubProject.readDerived";
-		CFIntSubProjectPKey key = schema.getFactorySubProject().newPKey();
-		key.setRequiredId( PKey.getRequiredId() );
-		CFIntSubProjectBuff buff;
-		if( dictByPKey.containsKey( key ) ) {
-			buff = dictByPKey.get( key );
-		}
-		else {
-			buff = null;
-		}
-		return( buff );
-	}
-
-	public CFIntSubProjectBuff[] readAllDerived( CFSecAuthorization Authorization ) {
+	public ICFIntSubProject[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamSubProject.readAllDerived";
-		CFIntSubProjectBuff[] retList = new CFIntSubProjectBuff[ dictByPKey.values().size() ];
-		Iterator< CFIntSubProjectBuff > iter = dictByPKey.values().iterator();
+		ICFIntSubProject[] retList = new ICFIntSubProject[ dictByPKey.values().size() ];
+		Iterator< ICFIntSubProject > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -219,70 +219,70 @@ public class CFIntRamSubProjectTable
 		return( retList );
 	}
 
-	public CFIntSubProjectBuff[] readDerivedByTenantIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readDerivedByTenantIdx";
-		CFIntSubProjectByTenantIdxKey key = schema.getFactorySubProject().newTenantIdxKey();
+		CFIntBuffSubProjectByTenantIdxKey key = schema.getFactorySubProject().newTenantIdxKey();
 		key.setRequiredTenantId( TenantId );
 
-		CFIntSubProjectBuff[] recArray;
+		ICFIntSubProject[] recArray;
 		if( dictByTenantIdx.containsKey( key ) ) {
-			Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdictTenantIdx
+			Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTenantIdx
 				= dictByTenantIdx.get( key );
-			recArray = new CFIntSubProjectBuff[ subdictTenantIdx.size() ];
-			Iterator< CFIntSubProjectBuff > iter = subdictTenantIdx.values().iterator();
+			recArray = new ICFIntSubProject[ subdictTenantIdx.size() ];
+			Iterator< ICFIntSubProject > iter = subdictTenantIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdictTenantIdx
-				= new HashMap< CFIntSubProjectPKey, CFIntSubProjectBuff >();
+			Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTenantIdx
+				= new HashMap< CFLibDbKeyHash256, CFIntBuffSubProject >();
 			dictByTenantIdx.put( key, subdictTenantIdx );
-			recArray = new CFIntSubProjectBuff[0];
+			recArray = new ICFIntSubProject[0];
 		}
 		return( recArray );
 	}
 
-	public CFIntSubProjectBuff[] readDerivedByTopProjectIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject[] readDerivedByTopProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopProjectId )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readDerivedByTopProjectIdx";
-		CFIntSubProjectByTopProjectIdxKey key = schema.getFactorySubProject().newTopProjectIdxKey();
+		CFIntBuffSubProjectByTopProjectIdxKey key = schema.getFactorySubProject().newTopProjectIdxKey();
 		key.setRequiredTopProjectId( TopProjectId );
 
-		CFIntSubProjectBuff[] recArray;
+		ICFIntSubProject[] recArray;
 		if( dictByTopProjectIdx.containsKey( key ) ) {
-			Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdictTopProjectIdx
+			Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTopProjectIdx
 				= dictByTopProjectIdx.get( key );
-			recArray = new CFIntSubProjectBuff[ subdictTopProjectIdx.size() ];
-			Iterator< CFIntSubProjectBuff > iter = subdictTopProjectIdx.values().iterator();
+			recArray = new ICFIntSubProject[ subdictTopProjectIdx.size() ];
+			Iterator< ICFIntSubProject > iter = subdictTopProjectIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
 			}
 		}
 		else {
-			Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdictTopProjectIdx
-				= new HashMap< CFIntSubProjectPKey, CFIntSubProjectBuff >();
+			Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTopProjectIdx
+				= new HashMap< CFLibDbKeyHash256, CFIntBuffSubProject >();
 			dictByTopProjectIdx.put( key, subdictTopProjectIdx );
-			recArray = new CFIntSubProjectBuff[0];
+			recArray = new ICFIntSubProject[0];
 		}
 		return( recArray );
 	}
 
-	public CFIntSubProjectBuff readDerivedByNameIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject readDerivedByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopProjectId,
 		String Name )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readDerivedByNameIdx";
-		CFIntSubProjectByNameIdxKey key = schema.getFactorySubProject().newNameIdxKey();
+		CFIntBuffSubProjectByNameIdxKey key = schema.getFactorySubProject().newNameIdxKey();
 		key.setRequiredTopProjectId( TopProjectId );
 		key.setRequiredName( Name );
 
-		CFIntSubProjectBuff buff;
+		ICFIntSubProject buff;
 		if( dictByNameIdx.containsKey( key ) ) {
 			buff = dictByNameIdx.get( key );
 		}
@@ -292,14 +292,14 @@ public class CFIntRamSubProjectTable
 		return( buff );
 	}
 
-	public CFIntSubProjectBuff readDerivedByIdIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readDerivedByIdIdx() ";
-		CFIntSubProjectPKey key = schema.getFactorySubProject().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactorySubProject().newPKey();
 		key.setRequiredId( Id );
 
-		CFIntSubProjectBuff buff;
+		ICFIntSubProject buff;
 		if( dictByPKey.containsKey( key ) ) {
 			buff = dictByPKey.get( key );
 		}
@@ -309,113 +309,113 @@ public class CFIntRamSubProjectTable
 		return( buff );
 	}
 
-	public CFIntSubProjectBuff readBuff( CFSecAuthorization Authorization,
-		CFIntSubProjectPKey PKey )
+	public ICFIntSubProject readBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readBuff";
-		CFIntSubProjectBuff buff = readDerived( Authorization, PKey );
+		ICFIntSubProject buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a105" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFIntSubProjectBuff lockBuff( CFSecAuthorization Authorization,
-		CFIntSubProjectPKey PKey )
+	public ICFIntSubProject lockBuff( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 PKey )
 	{
 		final String S_ProcName = "lockBuff";
-		CFIntSubProjectBuff buff = readDerived( Authorization, PKey );
+		ICFIntSubProject buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( ! buff.getClassCode().equals( "a105" ) ) ) {
 			buff = null;
 		}
 		return( buff );
 	}
 
-	public CFIntSubProjectBuff[] readAllBuff( CFSecAuthorization Authorization )
+	public ICFIntSubProject[] readAllBuff( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readAllBuff";
-		CFIntSubProjectBuff buff;
-		ArrayList<CFIntSubProjectBuff> filteredList = new ArrayList<CFIntSubProjectBuff>();
-		CFIntSubProjectBuff[] buffList = readAllDerived( Authorization );
+		ICFIntSubProject buff;
+		ArrayList<ICFIntSubProject> filteredList = new ArrayList<ICFIntSubProject>();
+		ICFIntSubProject[] buffList = readAllDerived( Authorization );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a105" ) ) {
 				filteredList.add( buff );
 			}
 		}
-		return( filteredList.toArray( new CFIntSubProjectBuff[0] ) );
+		return( filteredList.toArray( new ICFIntSubProject[0] ) );
 	}
 
-	public CFIntSubProjectBuff readBuffByIdIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject readBuffByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readBuffByIdIdx() ";
-		CFIntSubProjectBuff buff = readDerivedByIdIdx( Authorization,
+		ICFIntSubProject buff = readDerivedByIdIdx( Authorization,
 			Id );
 		if( ( buff != null ) && buff.getClassCode().equals( "a105" ) ) {
-			return( (CFIntSubProjectBuff)buff );
+			return( (ICFIntSubProject)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public CFIntSubProjectBuff[] readBuffByTenantIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject[] readBuffByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readBuffByTenantIdx() ";
-		CFIntSubProjectBuff buff;
-		ArrayList<CFIntSubProjectBuff> filteredList = new ArrayList<CFIntSubProjectBuff>();
-		CFIntSubProjectBuff[] buffList = readDerivedByTenantIdx( Authorization,
+		ICFIntSubProject buff;
+		ArrayList<ICFIntSubProject> filteredList = new ArrayList<ICFIntSubProject>();
+		ICFIntSubProject[] buffList = readDerivedByTenantIdx( Authorization,
 			TenantId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a105" ) ) {
-				filteredList.add( (CFIntSubProjectBuff)buff );
+				filteredList.add( (ICFIntSubProject)buff );
 			}
 		}
-		return( filteredList.toArray( new CFIntSubProjectBuff[0] ) );
+		return( filteredList.toArray( new ICFIntSubProject[0] ) );
 	}
 
-	public CFIntSubProjectBuff[] readBuffByTopProjectIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject[] readBuffByTopProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopProjectId )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readBuffByTopProjectIdx() ";
-		CFIntSubProjectBuff buff;
-		ArrayList<CFIntSubProjectBuff> filteredList = new ArrayList<CFIntSubProjectBuff>();
-		CFIntSubProjectBuff[] buffList = readDerivedByTopProjectIdx( Authorization,
+		ICFIntSubProject buff;
+		ArrayList<ICFIntSubProject> filteredList = new ArrayList<ICFIntSubProject>();
+		ICFIntSubProject[] buffList = readDerivedByTopProjectIdx( Authorization,
 			TopProjectId );
 		for( int idx = 0; idx < buffList.length; idx ++ ) {
 			buff = buffList[idx];
 			if( ( buff != null ) && buff.getClassCode().equals( "a105" ) ) {
-				filteredList.add( (CFIntSubProjectBuff)buff );
+				filteredList.add( (ICFIntSubProject)buff );
 			}
 		}
-		return( filteredList.toArray( new CFIntSubProjectBuff[0] ) );
+		return( filteredList.toArray( new ICFIntSubProject[0] ) );
 	}
 
-	public CFIntSubProjectBuff readBuffByNameIdx( CFSecAuthorization Authorization,
+	public ICFIntSubProject readBuffByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopProjectId,
 		String Name )
 	{
 		final String S_ProcName = "CFIntRamSubProject.readBuffByNameIdx() ";
-		CFIntSubProjectBuff buff = readDerivedByNameIdx( Authorization,
+		ICFIntSubProject buff = readDerivedByNameIdx( Authorization,
 			TopProjectId,
 			Name );
 		if( ( buff != null ) && buff.getClassCode().equals( "a105" ) ) {
-			return( (CFIntSubProjectBuff)buff );
+			return( (ICFIntSubProject)buff );
 		}
 		else {
 			return( null );
 		}
 	}
 
-	public void updateSubProject( CFSecAuthorization Authorization,
-		CFIntSubProjectBuff Buff )
+	public void updateSubProject( ICFSecAuthorization Authorization,
+		ICFIntSubProject Buff )
 	{
-		CFIntSubProjectPKey pkey = schema.getFactorySubProject().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySubProject().newPKey();
 		pkey.setRequiredId( Buff.getRequiredId() );
-		CFIntSubProjectBuff existing = dictByPKey.get( pkey );
+		ICFIntSubProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateSubProject",
@@ -429,23 +429,23 @@ public class CFIntRamSubProjectTable
 				pkey );
 		}
 		Buff.setRequiredRevision( Buff.getRequiredRevision() + 1 );
-		CFIntSubProjectByTenantIdxKey existingKeyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
+		CFIntBuffSubProjectByTenantIdxKey existingKeyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
 		existingKeyTenantIdx.setRequiredTenantId( existing.getRequiredTenantId() );
 
-		CFIntSubProjectByTenantIdxKey newKeyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
+		CFIntBuffSubProjectByTenantIdxKey newKeyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
 		newKeyTenantIdx.setRequiredTenantId( Buff.getRequiredTenantId() );
 
-		CFIntSubProjectByTopProjectIdxKey existingKeyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
+		CFIntBuffSubProjectByTopProjectIdxKey existingKeyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
 		existingKeyTopProjectIdx.setRequiredTopProjectId( existing.getRequiredTopProjectId() );
 
-		CFIntSubProjectByTopProjectIdxKey newKeyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
+		CFIntBuffSubProjectByTopProjectIdxKey newKeyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
 		newKeyTopProjectIdx.setRequiredTopProjectId( Buff.getRequiredTopProjectId() );
 
-		CFIntSubProjectByNameIdxKey existingKeyNameIdx = schema.getFactorySubProject().newNameIdxKey();
+		CFIntBuffSubProjectByNameIdxKey existingKeyNameIdx = schema.getFactorySubProject().newNameIdxKey();
 		existingKeyNameIdx.setRequiredTopProjectId( existing.getRequiredTopProjectId() );
 		existingKeyNameIdx.setRequiredName( existing.getRequiredName() );
 
-		CFIntSubProjectByNameIdxKey newKeyNameIdx = schema.getFactorySubProject().newNameIdxKey();
+		CFIntBuffSubProjectByNameIdxKey newKeyNameIdx = schema.getFactorySubProject().newNameIdxKey();
 		newKeyNameIdx.setRequiredTopProjectId( Buff.getRequiredTopProjectId() );
 		newKeyNameIdx.setRequiredName( Buff.getRequiredName() );
 
@@ -498,7 +498,7 @@ public class CFIntRamSubProjectTable
 
 		// Update is valid
 
-		Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdict;
+		Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdict;
 
 		dictByPKey.remove( pkey );
 		dictByPKey.put( pkey, Buff );
@@ -511,7 +511,7 @@ public class CFIntRamSubProjectTable
 			subdict = dictByTenantIdx.get( newKeyTenantIdx );
 		}
 		else {
-			subdict = new HashMap< CFIntSubProjectPKey, CFIntSubProjectBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFIntBuffSubProject >();
 			dictByTenantIdx.put( newKeyTenantIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -524,7 +524,7 @@ public class CFIntRamSubProjectTable
 			subdict = dictByTopProjectIdx.get( newKeyTopProjectIdx );
 		}
 		else {
-			subdict = new HashMap< CFIntSubProjectPKey, CFIntSubProjectBuff >();
+			subdict = new HashMap< CFLibDbKeyHash256, CFIntBuffSubProject >();
 			dictByTopProjectIdx.put( newKeyTopProjectIdx, subdict );
 		}
 		subdict.put( pkey, Buff );
@@ -534,14 +534,14 @@ public class CFIntRamSubProjectTable
 
 	}
 
-	public void deleteSubProject( CFSecAuthorization Authorization,
-		CFIntSubProjectBuff Buff )
+	public void deleteSubProject( ICFSecAuthorization Authorization,
+		ICFIntSubProject Buff )
 	{
 		final String S_ProcName = "CFIntRamSubProjectTable.deleteSubProject() ";
 		String classCode;
-		CFIntSubProjectPKey pkey = schema.getFactorySubProject().newPKey();
+		CFLibDbKeyHash256 pkey = schema.getFactorySubProject().newPKey();
 		pkey.setRequiredId( Buff.getRequiredId() );
-		CFIntSubProjectBuff existing = dictByPKey.get( pkey );
+		ICFIntSubProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}
@@ -553,20 +553,20 @@ public class CFIntRamSubProjectTable
 		}
 					schema.getTableMajorVersion().deleteMajorVersionBySubProjectIdx( Authorization,
 						existing.getRequiredId() );
-		CFIntSubProjectByTenantIdxKey keyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
+		CFIntBuffSubProjectByTenantIdxKey keyTenantIdx = schema.getFactorySubProject().newTenantIdxKey();
 		keyTenantIdx.setRequiredTenantId( existing.getRequiredTenantId() );
 
-		CFIntSubProjectByTopProjectIdxKey keyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
+		CFIntBuffSubProjectByTopProjectIdxKey keyTopProjectIdx = schema.getFactorySubProject().newTopProjectIdxKey();
 		keyTopProjectIdx.setRequiredTopProjectId( existing.getRequiredTopProjectId() );
 
-		CFIntSubProjectByNameIdxKey keyNameIdx = schema.getFactorySubProject().newNameIdxKey();
+		CFIntBuffSubProjectByNameIdxKey keyNameIdx = schema.getFactorySubProject().newNameIdxKey();
 		keyNameIdx.setRequiredTopProjectId( existing.getRequiredTopProjectId() );
 		keyNameIdx.setRequiredName( existing.getRequiredName() );
 
 		// Validate reverse foreign keys
 
 		// Delete is valid
-		Map< CFIntSubProjectPKey, CFIntSubProjectBuff > subdict;
+		Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdict;
 
 		dictByPKey.remove( pkey );
 
@@ -579,32 +579,32 @@ public class CFIntRamSubProjectTable
 		dictByNameIdx.remove( keyNameIdx );
 
 	}
-	public void deleteSubProjectByIdIdx( CFSecAuthorization Authorization,
+	public void deleteSubProjectByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		CFIntSubProjectPKey key = schema.getFactorySubProject().newPKey();
+		CFLibDbKeyHash256 key = schema.getFactorySubProject().newPKey();
 		key.setRequiredId( argId );
 		deleteSubProjectByIdIdx( Authorization, key );
 	}
 
-	public void deleteSubProjectByIdIdx( CFSecAuthorization Authorization,
-		CFIntSubProjectPKey argKey )
+	public void deleteSubProjectByIdIdx( ICFSecAuthorization Authorization,
+		CFLibDbKeyHash256 argKey )
 	{
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		CFIntSubProjectBuff cur;
-		LinkedList<CFIntSubProjectBuff> matchSet = new LinkedList<CFIntSubProjectBuff>();
-		Iterator<CFIntSubProjectBuff> values = dictByPKey.values().iterator();
+		ICFIntSubProject cur;
+		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
+		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntSubProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
@@ -613,32 +613,32 @@ public class CFIntRamSubProjectTable
 		}
 	}
 
-	public void deleteSubProjectByTenantIdx( CFSecAuthorization Authorization,
+	public void deleteSubProjectByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		CFIntSubProjectByTenantIdxKey key = schema.getFactorySubProject().newTenantIdxKey();
+		CFIntBuffSubProjectByTenantIdxKey key = schema.getFactorySubProject().newTenantIdxKey();
 		key.setRequiredTenantId( argTenantId );
 		deleteSubProjectByTenantIdx( Authorization, key );
 	}
 
-	public void deleteSubProjectByTenantIdx( CFSecAuthorization Authorization,
-		CFIntSubProjectByTenantIdxKey argKey )
+	public void deleteSubProjectByTenantIdx( ICFSecAuthorization Authorization,
+		ICFIntSubProjectByTenantIdxKey argKey )
 	{
-		CFIntSubProjectBuff cur;
+		ICFIntSubProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFIntSubProjectBuff> matchSet = new LinkedList<CFIntSubProjectBuff>();
-		Iterator<CFIntSubProjectBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
+		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntSubProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
@@ -647,32 +647,32 @@ public class CFIntRamSubProjectTable
 		}
 	}
 
-	public void deleteSubProjectByTopProjectIdx( CFSecAuthorization Authorization,
+	public void deleteSubProjectByTopProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopProjectId )
 	{
-		CFIntSubProjectByTopProjectIdxKey key = schema.getFactorySubProject().newTopProjectIdxKey();
+		CFIntBuffSubProjectByTopProjectIdxKey key = schema.getFactorySubProject().newTopProjectIdxKey();
 		key.setRequiredTopProjectId( argTopProjectId );
 		deleteSubProjectByTopProjectIdx( Authorization, key );
 	}
 
-	public void deleteSubProjectByTopProjectIdx( CFSecAuthorization Authorization,
-		CFIntSubProjectByTopProjectIdxKey argKey )
+	public void deleteSubProjectByTopProjectIdx( ICFSecAuthorization Authorization,
+		ICFIntSubProjectByTopProjectIdxKey argKey )
 	{
-		CFIntSubProjectBuff cur;
+		ICFIntSubProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFIntSubProjectBuff> matchSet = new LinkedList<CFIntSubProjectBuff>();
-		Iterator<CFIntSubProjectBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
+		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntSubProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
@@ -681,35 +681,35 @@ public class CFIntRamSubProjectTable
 		}
 	}
 
-	public void deleteSubProjectByNameIdx( CFSecAuthorization Authorization,
+	public void deleteSubProjectByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopProjectId,
 		String argName )
 	{
-		CFIntSubProjectByNameIdxKey key = schema.getFactorySubProject().newNameIdxKey();
+		CFIntBuffSubProjectByNameIdxKey key = schema.getFactorySubProject().newNameIdxKey();
 		key.setRequiredTopProjectId( argTopProjectId );
 		key.setRequiredName( argName );
 		deleteSubProjectByNameIdx( Authorization, key );
 	}
 
-	public void deleteSubProjectByNameIdx( CFSecAuthorization Authorization,
-		CFIntSubProjectByNameIdxKey argKey )
+	public void deleteSubProjectByNameIdx( ICFSecAuthorization Authorization,
+		ICFIntSubProjectByNameIdxKey argKey )
 	{
-		CFIntSubProjectBuff cur;
+		ICFIntSubProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<CFIntSubProjectBuff> matchSet = new LinkedList<CFIntSubProjectBuff>();
-		Iterator<CFIntSubProjectBuff> values = dictByPKey.values().iterator();
+		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
+		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<CFIntSubProjectBuff> iterMatch = matchSet.iterator();
+		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
 			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
