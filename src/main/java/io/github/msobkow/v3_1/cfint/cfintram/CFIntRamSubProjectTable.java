@@ -84,10 +84,27 @@ public class CFIntRamSubProjectTable
 		schema = argSchema;
 	}
 
+	public CFIntBuffSubProject ensureRec(ICFIntSubProject rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFIntSubProject.CLASS_CODE) {
+				return( ((CFIntBuffSubProjectDefaultFactory)(schema.getFactorySubProject())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFIntSubProject createSubProject( ICFSecAuthorization Authorization,
-		ICFIntSubProject Buff )
+		ICFIntSubProject iBuff )
 	{
 		final String S_ProcName = "createSubProject";
+		
+		CFIntBuffSubProject Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextSubProjectIdGen();
 		Buff.setRequiredId( pkey );
@@ -177,7 +194,20 @@ public class CFIntRamSubProjectTable
 
 		dictByNameIdx.put( keyNameIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFIntSubProject.CLASS_CODE) {
+				CFIntBuffSubProject retbuff = ((CFIntBuffSubProject)(schema.getFactorySubProject().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFIntSubProject readDerived( ICFSecAuthorization Authorization,

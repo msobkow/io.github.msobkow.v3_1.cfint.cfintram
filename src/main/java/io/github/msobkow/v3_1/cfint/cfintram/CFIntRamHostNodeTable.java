@@ -82,10 +82,27 @@ public class CFIntRamHostNodeTable
 		schema = argSchema;
 	}
 
+	public CFSecBuffHostNode ensureRec(ICFSecHostNode rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFSecHostNode.CLASS_CODE) {
+				return( ((CFSecBuffHostNodeDefaultFactory)(schema.getFactoryHostNode())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFSecHostNode createHostNode( ICFSecAuthorization Authorization,
-		ICFSecHostNode Buff )
+		ICFSecHostNode iBuff )
 	{
 		final String S_ProcName = "createHostNode";
+		
+		CFSecBuffHostNode Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextHostNodeIdGen();
 		Buff.setRequiredHostNodeId( pkey );
@@ -159,7 +176,20 @@ public class CFIntRamHostNodeTable
 
 		dictByHostNameIdx.put( keyHostNameIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFSecHostNode.CLASS_CODE) {
+				CFSecBuffHostNode retbuff = ((CFSecBuffHostNode)(schema.getFactoryHostNode().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFSecHostNode readDerived( ICFSecAuthorization Authorization,

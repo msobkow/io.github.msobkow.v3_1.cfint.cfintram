@@ -76,10 +76,27 @@ public class CFIntRamClusterTable
 		schema = argSchema;
 	}
 
+	public CFSecBuffCluster ensureRec(ICFSecCluster rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFSecCluster.CLASS_CODE) {
+				return( ((CFSecBuffClusterDefaultFactory)(schema.getFactoryCluster())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFSecCluster createCluster( ICFSecAuthorization Authorization,
-		ICFSecCluster Buff )
+		ICFSecCluster iBuff )
 	{
 		final String S_ProcName = "createCluster";
+		
+		CFSecBuffCluster Buff = ensureRec(iBuff);
 		Long pkey;
 		pkey = schema.nextClusterIdGen();
 		Buff.setRequiredId( pkey );
@@ -121,7 +138,20 @@ public class CFIntRamClusterTable
 
 		dictByUDescrIdx.put( keyUDescrIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFSecCluster.CLASS_CODE) {
+				CFSecBuffCluster retbuff = ((CFSecBuffCluster)(schema.getFactoryCluster().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFSecCluster readDerived( ICFSecAuthorization Authorization,

@@ -84,10 +84,27 @@ public class CFIntRamSecGroupTable
 		schema = argSchema;
 	}
 
+	public CFSecBuffSecGroup ensureRec(ICFSecSecGroup rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFSecSecGroup.CLASS_CODE) {
+				return( ((CFSecBuffSecGroupDefaultFactory)(schema.getFactorySecGroup())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFSecSecGroup createSecGroup( ICFSecAuthorization Authorization,
-		ICFSecSecGroup Buff )
+		ICFSecSecGroup iBuff )
 	{
 		final String S_ProcName = "createSecGroup";
+		
+		CFSecBuffSecGroup Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextSecGroupIdGen();
 		Buff.setRequiredSecGroupId( pkey );
@@ -161,7 +178,20 @@ public class CFIntRamSecGroupTable
 
 		dictByUNameIdx.put( keyUNameIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFSecSecGroup.CLASS_CODE) {
+				CFSecBuffSecGroup retbuff = ((CFSecBuffSecGroup)(schema.getFactorySecGroup().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFSecSecGroup readDerived( ICFSecAuthorization Authorization,

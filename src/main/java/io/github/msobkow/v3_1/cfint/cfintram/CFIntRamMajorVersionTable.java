@@ -84,10 +84,27 @@ public class CFIntRamMajorVersionTable
 		schema = argSchema;
 	}
 
+	public CFIntBuffMajorVersion ensureRec(ICFIntMajorVersion rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFIntMajorVersion.CLASS_CODE) {
+				return( ((CFIntBuffMajorVersionDefaultFactory)(schema.getFactoryMajorVersion())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFIntMajorVersion createMajorVersion( ICFSecAuthorization Authorization,
-		ICFIntMajorVersion Buff )
+		ICFIntMajorVersion iBuff )
 	{
 		final String S_ProcName = "createMajorVersion";
+		
+		CFIntBuffMajorVersion Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextMajorVersionIdGen();
 		Buff.setRequiredId( pkey );
@@ -177,7 +194,20 @@ public class CFIntRamMajorVersionTable
 
 		dictByNameIdx.put( keyNameIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFIntMajorVersion.CLASS_CODE) {
+				CFIntBuffMajorVersion retbuff = ((CFIntBuffMajorVersion)(schema.getFactoryMajorVersion().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFIntMajorVersion readDerived( ICFSecAuthorization Authorization,

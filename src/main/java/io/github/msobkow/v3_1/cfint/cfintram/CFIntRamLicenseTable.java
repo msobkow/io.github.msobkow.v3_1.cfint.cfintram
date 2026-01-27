@@ -84,10 +84,27 @@ public class CFIntRamLicenseTable
 		schema = argSchema;
 	}
 
+	public CFIntBuffLicense ensureRec(ICFIntLicense rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFIntLicense.CLASS_CODE) {
+				return( ((CFIntBuffLicenseDefaultFactory)(schema.getFactoryLicense())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFIntLicense createLicense( ICFSecAuthorization Authorization,
-		ICFIntLicense Buff )
+		ICFIntLicense iBuff )
 	{
 		final String S_ProcName = "createLicense";
+		
+		CFIntBuffLicense Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextLicenseIdGen();
 		Buff.setRequiredId( pkey );
@@ -177,7 +194,20 @@ public class CFIntRamLicenseTable
 
 		dictByUNameIdx.put( keyUNameIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFIntLicense.CLASS_CODE) {
+				CFIntBuffLicense retbuff = ((CFIntBuffLicense)(schema.getFactoryLicense().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFIntLicense readDerived( ICFSecAuthorization Authorization,

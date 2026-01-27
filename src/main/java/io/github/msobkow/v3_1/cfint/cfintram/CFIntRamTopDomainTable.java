@@ -84,10 +84,27 @@ public class CFIntRamTopDomainTable
 		schema = argSchema;
 	}
 
+	public CFIntBuffTopDomain ensureRec(ICFIntTopDomain rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFIntTopDomain.CLASS_CODE) {
+				return( ((CFIntBuffTopDomainDefaultFactory)(schema.getFactoryTopDomain())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFIntTopDomain createTopDomain( ICFSecAuthorization Authorization,
-		ICFIntTopDomain Buff )
+		ICFIntTopDomain iBuff )
 	{
 		final String S_ProcName = "createTopDomain";
+		
+		CFIntBuffTopDomain Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextTopDomainIdGen();
 		Buff.setRequiredId( pkey );
@@ -177,7 +194,20 @@ public class CFIntRamTopDomainTable
 
 		dictByNameIdx.put( keyNameIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFIntTopDomain.CLASS_CODE) {
+				CFIntBuffTopDomain retbuff = ((CFIntBuffTopDomain)(schema.getFactoryTopDomain().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFIntTopDomain readDerived( ICFSecAuthorization Authorization,

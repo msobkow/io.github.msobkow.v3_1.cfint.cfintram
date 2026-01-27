@@ -72,10 +72,27 @@ public class CFIntRamMimeTypeTable
 		schema = argSchema;
 	}
 
+	public CFIntBuffMimeType ensureRec(ICFIntMimeType rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFIntMimeType.CLASS_CODE) {
+				return( ((CFIntBuffMimeTypeDefaultFactory)(schema.getFactoryMimeType())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFIntMimeType createMimeType( ICFSecAuthorization Authorization,
-		ICFIntMimeType Buff )
+		ICFIntMimeType iBuff )
 	{
 		final String S_ProcName = "createMimeType";
+		
+		CFIntBuffMimeType Buff = ensureRec(iBuff);
 		Integer pkey;
 		pkey = schema.nextMimeTypeIdGen();
 		Buff.setRequiredMimeTypeId( pkey );
@@ -104,7 +121,20 @@ public class CFIntRamMimeTypeTable
 
 		dictByUNameIdx.put( keyUNameIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFIntMimeType.CLASS_CODE) {
+				CFIntBuffMimeType retbuff = ((CFIntBuffMimeType)(schema.getFactoryMimeType().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFIntMimeType readDerived( ICFSecAuthorization Authorization,

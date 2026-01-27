@@ -72,10 +72,27 @@ public class CFIntRamServiceTypeTable
 		schema = argSchema;
 	}
 
+	public CFSecBuffServiceType ensureRec(ICFSecServiceType rec) {
+		if (rec == null) {
+			return( null );
+		}
+		else {
+			int classCode = rec.getClassCode();
+			if (classCode == ICFSecServiceType.CLASS_CODE) {
+				return( ((CFSecBuffServiceTypeDefaultFactory)(schema.getFactoryServiceType())).ensureRec(rec) );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+			}
+		}
+	}
+
 	public ICFSecServiceType createServiceType( ICFSecAuthorization Authorization,
-		ICFSecServiceType Buff )
+		ICFSecServiceType iBuff )
 	{
 		final String S_ProcName = "createServiceType";
+		
+		CFSecBuffServiceType Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextServiceTypeIdGen();
 		Buff.setRequiredServiceTypeId( pkey );
@@ -104,7 +121,20 @@ public class CFIntRamServiceTypeTable
 
 		dictByUDescrIdx.put( keyUDescrIdx, Buff );
 
-		return( Buff );
+		if (Buff == null) {
+			return( null );
+		}
+		else {
+			int classCode = Buff.getClassCode();
+			if (classCode == ICFSecServiceType.CLASS_CODE) {
+				CFSecBuffServiceType retbuff = ((CFSecBuffServiceType)(schema.getFactoryServiceType().newRec()));
+				retbuff.set(Buff);
+				return( retbuff );
+			}
+			else {
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+			}
+		}
 	}
 
 	public ICFSecServiceType readDerived( ICFSecAuthorization Authorization,
