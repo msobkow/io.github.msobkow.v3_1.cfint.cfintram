@@ -88,7 +88,7 @@ public class CFIntRamSecDeviceTable
 				return( ((CFSecBuffSecDeviceDefaultFactory)(schema.getFactorySecDevice())).ensureRec(rec) );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class CFIntRamSecDeviceTable
 				return( retbuff );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, "-create-buff-cloning-", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -213,7 +213,7 @@ public class CFIntRamSecDeviceTable
 	public ICFSecSecDevice[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamSecDevice.readAllDerived";
 		ICFSecSecDevice[] retList = new ICFSecSecDevice[ dictByPKey.values().size() ];
-		Iterator< ICFSecSecDevice > iter = dictByPKey.values().iterator();
+		Iterator< CFSecBuffSecDevice > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -252,7 +252,7 @@ public class CFIntRamSecDeviceTable
 			Map< CFSecBuffSecDevicePKey, CFSecBuffSecDevice > subdictUserIdx
 				= dictByUserIdx.get( key );
 			recArray = new ICFSecSecDevice[ subdictUserIdx.size() ];
-			Iterator< ICFSecSecDevice > iter = subdictUserIdx.values().iterator();
+			Iterator< CFSecBuffSecDevice > iter = subdictUserIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -408,16 +408,19 @@ public class CFIntRamSecDeviceTable
 	}
 
 	public ICFSecSecDevice updateSecDevice( ICFSecAuthorization Authorization,
-		ICFSecSecDevice Buff )
+		ICFSecSecDevice iBuff )
 	{
-		ICFSecSecDevicePKey pkey = schema.getFactorySecDevice().newPKey();
+		CFSecBuffSecDevice Buff = ensureRec(iBuff);
+		CFSecBuffSecDevicePKey pkey = (CFSecBuffSecDevicePKey)schema.getFactorySecDevice().newPKey();
 		pkey.setRequiredSecUserId( Buff.getRequiredSecUserId() );
 		pkey.setRequiredDevName( Buff.getRequiredDevName() );
-		ICFSecSecDevice existing = dictByPKey.get( pkey );
+		CFSecBuffSecDevice existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateSecDevice",
 				"Existing record not found",
+				"Existing record not found",
+				"SecDevice",
 				"SecDevice",
 				pkey );
 		}
@@ -474,7 +477,7 @@ public class CFIntRamSecDeviceTable
 
 		// Update is valid
 
-		Map< ICFSecSecDevicePKey, CFSecBuffSecDevice > subdict;
+		Map< CFSecBuffSecDevicePKey, CFSecBuffSecDevice > subdict;
 
 		dictByPKey.remove( pkey );
 		dictByPKey.put( pkey, Buff );
@@ -499,14 +502,13 @@ public class CFIntRamSecDeviceTable
 	}
 
 	public void deleteSecDevice( ICFSecAuthorization Authorization,
-		ICFSecSecDevice Buff )
+		ICFSecSecDevice iBuff )
 	{
 		final String S_ProcName = "CFIntRamSecDeviceTable.deleteSecDevice() ";
-		String classCode;
-		ICFSecSecDevicePKey pkey = schema.getFactorySecDevice().newPKey();
-		pkey.setRequiredSecUserId( Buff.getRequiredSecUserId() );
-		pkey.setRequiredDevName( Buff.getRequiredDevName() );
-		ICFSecSecDevice existing = dictByPKey.get( pkey );
+		CFSecBuffSecDevice Buff = ensureRec(iBuff);
+		int classCode;
+		CFSecBuffSecDevicePKey pkey = (CFSecBuffSecDevicePKey)(Buff.getPKey());
+		CFSecBuffSecDevice existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}
@@ -526,7 +528,7 @@ public class CFIntRamSecDeviceTable
 		// Validate reverse foreign keys
 
 		// Delete is valid
-		Map< ICFSecSecDevicePKey, CFSecBuffSecDevice > subdict;
+		Map< CFSecBuffSecDevicePKey, CFSecBuffSecDevice > subdict;
 
 		dictByPKey.remove( pkey );
 

@@ -100,7 +100,7 @@ public class CFIntRamSecGrpIncTable
 				return( ((CFSecBuffSecGrpIncDefaultFactory)(schema.getFactorySecGrpInc())).ensureRec(rec) );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -225,7 +225,7 @@ public class CFIntRamSecGrpIncTable
 				return( retbuff );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, "-create-buff-cloning-", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -261,7 +261,7 @@ public class CFIntRamSecGrpIncTable
 	public ICFSecSecGrpInc[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamSecGrpInc.readAllDerived";
 		ICFSecSecGrpInc[] retList = new ICFSecSecGrpInc[ dictByPKey.values().size() ];
-		Iterator< ICFSecSecGrpInc > iter = dictByPKey.values().iterator();
+		Iterator< CFSecBuffSecGrpInc > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -281,7 +281,7 @@ public class CFIntRamSecGrpIncTable
 			Map< CFLibDbKeyHash256, CFSecBuffSecGrpInc > subdictClusterIdx
 				= dictByClusterIdx.get( key );
 			recArray = new ICFSecSecGrpInc[ subdictClusterIdx.size() ];
-			Iterator< ICFSecSecGrpInc > iter = subdictClusterIdx.values().iterator();
+			Iterator< CFSecBuffSecGrpInc > iter = subdictClusterIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -308,7 +308,7 @@ public class CFIntRamSecGrpIncTable
 			Map< CFLibDbKeyHash256, CFSecBuffSecGrpInc > subdictGroupIdx
 				= dictByGroupIdx.get( key );
 			recArray = new ICFSecSecGrpInc[ subdictGroupIdx.size() ];
-			Iterator< ICFSecSecGrpInc > iter = subdictGroupIdx.values().iterator();
+			Iterator< CFSecBuffSecGrpInc > iter = subdictGroupIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -335,7 +335,7 @@ public class CFIntRamSecGrpIncTable
 			Map< CFLibDbKeyHash256, CFSecBuffSecGrpInc > subdictIncludeIdx
 				= dictByIncludeIdx.get( key );
 			recArray = new ICFSecSecGrpInc[ subdictIncludeIdx.size() ];
-			Iterator< ICFSecSecGrpInc > iter = subdictIncludeIdx.values().iterator();
+			Iterator< CFSecBuffSecGrpInc > iter = subdictIncludeIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -577,14 +577,17 @@ public class CFIntRamSecGrpIncTable
 	}
 
 	public ICFSecSecGrpInc updateSecGrpInc( ICFSecAuthorization Authorization,
-		ICFSecSecGrpInc Buff )
+		ICFSecSecGrpInc iBuff )
 	{
+		CFSecBuffSecGrpInc Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
-		ICFSecSecGrpInc existing = dictByPKey.get( pkey );
+		CFSecBuffSecGrpInc existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateSecGrpInc",
 				"Existing record not found",
+				"Existing record not found",
+				"SecGrpInc",
 				"SecGrpInc",
 				pkey );
 		}
@@ -723,13 +726,13 @@ public class CFIntRamSecGrpIncTable
 	}
 
 	public void deleteSecGrpInc( ICFSecAuthorization Authorization,
-		ICFSecSecGrpInc Buff )
+		ICFSecSecGrpInc iBuff )
 	{
 		final String S_ProcName = "CFIntRamSecGrpIncTable.deleteSecGrpInc() ";
-		String classCode;
-		CFLibDbKeyHash256 pkey = schema.getFactorySecGrpInc().newPKey();
-		pkey.setRequiredSecGrpIncId( Buff.getRequiredSecGrpIncId() );
-		ICFSecSecGrpInc existing = dictByPKey.get( pkey );
+		CFSecBuffSecGrpInc Buff = ensureRec(iBuff);
+		int classCode;
+		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
+		CFSecBuffSecGrpInc existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}

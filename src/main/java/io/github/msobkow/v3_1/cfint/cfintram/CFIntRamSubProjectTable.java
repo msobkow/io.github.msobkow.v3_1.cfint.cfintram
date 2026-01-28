@@ -94,7 +94,7 @@ public class CFIntRamSubProjectTable
 				return( ((CFIntBuffSubProjectDefaultFactory)(schema.getFactorySubProject())).ensureRec(rec) );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -205,7 +205,7 @@ public class CFIntRamSubProjectTable
 				return( retbuff );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, "-create-buff-cloning-", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -241,7 +241,7 @@ public class CFIntRamSubProjectTable
 	public ICFIntSubProject[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamSubProject.readAllDerived";
 		ICFIntSubProject[] retList = new ICFIntSubProject[ dictByPKey.values().size() ];
-		Iterator< ICFIntSubProject > iter = dictByPKey.values().iterator();
+		Iterator< CFIntBuffSubProject > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -261,7 +261,7 @@ public class CFIntRamSubProjectTable
 			Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTenantIdx
 				= dictByTenantIdx.get( key );
 			recArray = new ICFIntSubProject[ subdictTenantIdx.size() ];
-			Iterator< ICFIntSubProject > iter = subdictTenantIdx.values().iterator();
+			Iterator< CFIntBuffSubProject > iter = subdictTenantIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -288,7 +288,7 @@ public class CFIntRamSubProjectTable
 			Map< CFLibDbKeyHash256, CFIntBuffSubProject > subdictTopProjectIdx
 				= dictByTopProjectIdx.get( key );
 			recArray = new ICFIntSubProject[ subdictTopProjectIdx.size() ];
-			Iterator< ICFIntSubProject > iter = subdictTopProjectIdx.values().iterator();
+			Iterator< CFIntBuffSubProject > iter = subdictTopProjectIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -438,14 +438,17 @@ public class CFIntRamSubProjectTable
 	}
 
 	public ICFIntSubProject updateSubProject( ICFSecAuthorization Authorization,
-		ICFIntSubProject Buff )
+		ICFIntSubProject iBuff )
 	{
+		CFIntBuffSubProject Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
-		ICFIntSubProject existing = dictByPKey.get( pkey );
+		CFIntBuffSubProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateSubProject",
 				"Existing record not found",
+				"Existing record not found",
+				"SubProject",
 				"SubProject",
 				pkey );
 		}
@@ -563,13 +566,13 @@ public class CFIntRamSubProjectTable
 	}
 
 	public void deleteSubProject( ICFSecAuthorization Authorization,
-		ICFIntSubProject Buff )
+		ICFIntSubProject iBuff )
 	{
 		final String S_ProcName = "CFIntRamSubProjectTable.deleteSubProject() ";
-		String classCode;
-		CFLibDbKeyHash256 pkey = schema.getFactorySubProject().newPKey();
-		pkey.setRequiredId( Buff.getRequiredId() );
-		ICFIntSubProject existing = dictByPKey.get( pkey );
+		CFIntBuffSubProject Buff = ensureRec(iBuff);
+		int classCode;
+		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
+		CFIntBuffSubProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}

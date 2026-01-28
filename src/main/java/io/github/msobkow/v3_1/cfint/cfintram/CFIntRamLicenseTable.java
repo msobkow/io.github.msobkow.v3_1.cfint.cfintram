@@ -94,7 +94,7 @@ public class CFIntRamLicenseTable
 				return( ((CFIntBuffLicenseDefaultFactory)(schema.getFactoryLicense())).ensureRec(rec) );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -205,7 +205,7 @@ public class CFIntRamLicenseTable
 				return( retbuff );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, "-create-buff-cloning-", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -241,7 +241,7 @@ public class CFIntRamLicenseTable
 	public ICFIntLicense[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamLicense.readAllDerived";
 		ICFIntLicense[] retList = new ICFIntLicense[ dictByPKey.values().size() ];
-		Iterator< ICFIntLicense > iter = dictByPKey.values().iterator();
+		Iterator< CFIntBuffLicense > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -261,7 +261,7 @@ public class CFIntRamLicenseTable
 			Map< CFLibDbKeyHash256, CFIntBuffLicense > subdictLicnTenantIdx
 				= dictByLicnTenantIdx.get( key );
 			recArray = new ICFIntLicense[ subdictLicnTenantIdx.size() ];
-			Iterator< ICFIntLicense > iter = subdictLicnTenantIdx.values().iterator();
+			Iterator< CFIntBuffLicense > iter = subdictLicnTenantIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -288,7 +288,7 @@ public class CFIntRamLicenseTable
 			Map< CFLibDbKeyHash256, CFIntBuffLicense > subdictDomainIdx
 				= dictByDomainIdx.get( key );
 			recArray = new ICFIntLicense[ subdictDomainIdx.size() ];
-			Iterator< ICFIntLicense > iter = subdictDomainIdx.values().iterator();
+			Iterator< CFIntBuffLicense > iter = subdictDomainIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -438,14 +438,17 @@ public class CFIntRamLicenseTable
 	}
 
 	public ICFIntLicense updateLicense( ICFSecAuthorization Authorization,
-		ICFIntLicense Buff )
+		ICFIntLicense iBuff )
 	{
+		CFIntBuffLicense Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
-		ICFIntLicense existing = dictByPKey.get( pkey );
+		CFIntBuffLicense existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateLicense",
 				"Existing record not found",
+				"Existing record not found",
+				"License",
 				"License",
 				pkey );
 		}
@@ -563,13 +566,13 @@ public class CFIntRamLicenseTable
 	}
 
 	public void deleteLicense( ICFSecAuthorization Authorization,
-		ICFIntLicense Buff )
+		ICFIntLicense iBuff )
 	{
 		final String S_ProcName = "CFIntRamLicenseTable.deleteLicense() ";
-		String classCode;
-		CFLibDbKeyHash256 pkey = schema.getFactoryLicense().newPKey();
-		pkey.setRequiredId( Buff.getRequiredId() );
-		ICFIntLicense existing = dictByPKey.get( pkey );
+		CFIntBuffLicense Buff = ensureRec(iBuff);
+		int classCode;
+		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
+		CFIntBuffLicense existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}

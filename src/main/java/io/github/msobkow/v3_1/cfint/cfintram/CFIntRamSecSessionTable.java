@@ -106,7 +106,7 @@ public class CFIntRamSecSessionTable
 				return( ((CFSecBuffSecSessionDefaultFactory)(schema.getFactorySecSession())).ensureRec(rec) );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", 1, "rec", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -228,7 +228,7 @@ public class CFIntRamSecSessionTable
 				return( retbuff );
 			}
 			else {
-				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, 0, "-create-buff-cloning-", "Not " + Integer.toString(classCode));
+				throw new CFLibUnsupportedClassException(getClass(), S_ProcName, "-create-buff-cloning-", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 			}
 		}
 	}
@@ -264,7 +264,7 @@ public class CFIntRamSecSessionTable
 	public ICFSecSecSession[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamSecSession.readAllDerived";
 		ICFSecSecSession[] retList = new ICFSecSecSession[ dictByPKey.values().size() ];
-		Iterator< ICFSecSecSession > iter = dictByPKey.values().iterator();
+		Iterator< CFSecBuffSecSession > iter = dictByPKey.values().iterator();
 		int idx = 0;
 		while( iter.hasNext() ) {
 			retList[ idx++ ] = iter.next();
@@ -284,7 +284,7 @@ public class CFIntRamSecSessionTable
 			Map< CFLibDbKeyHash256, CFSecBuffSecSession > subdictSecUserIdx
 				= dictBySecUserIdx.get( key );
 			recArray = new ICFSecSecSession[ subdictSecUserIdx.size() ];
-			Iterator< ICFSecSecSession > iter = subdictSecUserIdx.values().iterator();
+			Iterator< CFSecBuffSecSession > iter = subdictSecUserIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -313,7 +313,7 @@ public class CFIntRamSecSessionTable
 			Map< CFLibDbKeyHash256, CFSecBuffSecSession > subdictSecDevIdx
 				= dictBySecDevIdx.get( key );
 			recArray = new ICFSecSecSession[ subdictSecDevIdx.size() ];
-			Iterator< ICFSecSecSession > iter = subdictSecDevIdx.values().iterator();
+			Iterator< CFSecBuffSecSession > iter = subdictSecDevIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -361,7 +361,7 @@ public class CFIntRamSecSessionTable
 			Map< CFLibDbKeyHash256, CFSecBuffSecSession > subdictFinishIdx
 				= dictByFinishIdx.get( key );
 			recArray = new ICFSecSecSession[ subdictFinishIdx.size() ];
-			Iterator< ICFSecSecSession > iter = subdictFinishIdx.values().iterator();
+			Iterator< CFSecBuffSecSession > iter = subdictFinishIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -388,7 +388,7 @@ public class CFIntRamSecSessionTable
 			Map< CFLibDbKeyHash256, CFSecBuffSecSession > subdictSecProxyIdx
 				= dictBySecProxyIdx.get( key );
 			recArray = new ICFSecSecSession[ subdictSecProxyIdx.size() ];
-			Iterator< ICFSecSecSession > iter = subdictSecProxyIdx.values().iterator();
+			Iterator< CFSecBuffSecSession > iter = subdictSecProxyIdx.values().iterator();
 			int idx = 0;
 			while( iter.hasNext() ) {
 				recArray[ idx++ ] = iter.next();
@@ -653,14 +653,17 @@ public class CFIntRamSecSessionTable
 	}
 
 	public ICFSecSecSession updateSecSession( ICFSecAuthorization Authorization,
-		ICFSecSecSession Buff )
+		ICFSecSecSession iBuff )
 	{
+		CFSecBuffSecSession Buff = ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
-		ICFSecSecSession existing = dictByPKey.get( pkey );
+		CFSecBuffSecSession existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			throw new CFLibStaleCacheDetectedException( getClass(),
 				"updateSecSession",
 				"Existing record not found",
+				"Existing record not found",
+				"SecSession",
 				"SecSession",
 				pkey );
 		}
@@ -803,13 +806,13 @@ public class CFIntRamSecSessionTable
 	}
 
 	public void deleteSecSession( ICFSecAuthorization Authorization,
-		ICFSecSecSession Buff )
+		ICFSecSecSession iBuff )
 	{
 		final String S_ProcName = "CFIntRamSecSessionTable.deleteSecSession() ";
-		String classCode;
-		CFLibDbKeyHash256 pkey = schema.getFactorySecSession().newPKey();
-		pkey.setRequiredSecSessionId( Buff.getRequiredSecSessionId() );
-		ICFSecSecSession existing = dictByPKey.get( pkey );
+		CFSecBuffSecSession Buff = ensureRec(iBuff);
+		int classCode;
+		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
+		CFSecBuffSecSession existing = dictByPKey.get( pkey );
 		if( existing == null ) {
 			return;
 		}
