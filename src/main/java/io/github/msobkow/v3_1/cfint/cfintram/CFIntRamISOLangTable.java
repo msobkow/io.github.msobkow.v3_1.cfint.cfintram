@@ -253,10 +253,10 @@ public class CFIntRamISOLangTable
 		return( buff );
 	}
 
-	public ICFSecISOLang readBuff( ICFSecAuthorization Authorization,
+	public ICFSecISOLang readRec( ICFSecAuthorization Authorization,
 		Short PKey )
 	{
-		final String S_ProcName = "CFIntRamISOLang.readBuff";
+		final String S_ProcName = "CFIntRamISOLang.readRec";
 		ICFSecISOLang buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFSecISOLang.CLASS_CODE ) ) {
 			buff = null;
@@ -264,10 +264,10 @@ public class CFIntRamISOLangTable
 		return( buff );
 	}
 
-	public ICFSecISOLang lockBuff( ICFSecAuthorization Authorization,
+	public ICFSecISOLang lockRec( ICFSecAuthorization Authorization,
 		Short PKey )
 	{
-		final String S_ProcName = "lockBuff";
+		final String S_ProcName = "lockRec";
 		ICFSecISOLang buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFSecISOLang.CLASS_CODE ) ) {
 			buff = null;
@@ -275,9 +275,9 @@ public class CFIntRamISOLangTable
 		return( buff );
 	}
 
-	public ICFSecISOLang[] readAllBuff( ICFSecAuthorization Authorization )
+	public ICFSecISOLang[] readAllRec( ICFSecAuthorization Authorization )
 	{
-		final String S_ProcName = "CFIntRamISOLang.readAllBuff";
+		final String S_ProcName = "CFIntRamISOLang.readAllRec";
 		ICFSecISOLang buff;
 		ArrayList<ICFSecISOLang> filteredList = new ArrayList<ICFSecISOLang>();
 		ICFSecISOLang[] buffList = readAllDerived( Authorization );
@@ -290,10 +290,10 @@ public class CFIntRamISOLangTable
 		return( filteredList.toArray( new ICFSecISOLang[0] ) );
 	}
 
-	public ICFSecISOLang readBuffByIdIdx( ICFSecAuthorization Authorization,
+	public ICFSecISOLang readRecByIdIdx( ICFSecAuthorization Authorization,
 		short ISOLangId )
 	{
-		final String S_ProcName = "CFIntRamISOLang.readBuffByIdIdx() ";
+		final String S_ProcName = "CFIntRamISOLang.readRecByIdIdx() ";
 		ICFSecISOLang buff = readDerivedByIdIdx( Authorization,
 			ISOLangId );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFSecISOLang.CLASS_CODE ) ) {
@@ -304,10 +304,10 @@ public class CFIntRamISOLangTable
 		}
 	}
 
-	public ICFSecISOLang readBuffByCode3Idx( ICFSecAuthorization Authorization,
+	public ICFSecISOLang readRecByCode3Idx( ICFSecAuthorization Authorization,
 		String ISO6392Code )
 	{
-		final String S_ProcName = "CFIntRamISOLang.readBuffByCode3Idx() ";
+		final String S_ProcName = "CFIntRamISOLang.readRecByCode3Idx() ";
 		ICFSecISOLang buff = readDerivedByCode3Idx( Authorization,
 			ISO6392Code );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFSecISOLang.CLASS_CODE ) ) {
@@ -318,10 +318,10 @@ public class CFIntRamISOLangTable
 		}
 	}
 
-	public ICFSecISOLang[] readBuffByCode2Idx( ICFSecAuthorization Authorization,
+	public ICFSecISOLang[] readRecByCode2Idx( ICFSecAuthorization Authorization,
 		String ISO6391Code )
 	{
-		final String S_ProcName = "CFIntRamISOLang.readBuffByCode2Idx() ";
+		final String S_ProcName = "CFIntRamISOLang.readRecByCode2Idx() ";
 		ICFSecISOLang buff;
 		ArrayList<ICFSecISOLang> filteredList = new ArrayList<ICFSecISOLang>();
 		ICFSecISOLang[] buffList = readDerivedByCode2Idx( Authorization,

@@ -342,10 +342,10 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
-	public ICFIntMajorVersion readBuff( ICFSecAuthorization Authorization,
+	public ICFIntMajorVersion readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamMajorVersion.readBuff";
+		final String S_ProcName = "CFIntRamMajorVersion.readRec";
 		ICFIntMajorVersion buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFIntMajorVersion.CLASS_CODE ) ) {
 			buff = null;
@@ -353,10 +353,10 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
-	public ICFIntMajorVersion lockBuff( ICFSecAuthorization Authorization,
+	public ICFIntMajorVersion lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "lockBuff";
+		final String S_ProcName = "lockRec";
 		ICFIntMajorVersion buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFIntMajorVersion.CLASS_CODE ) ) {
 			buff = null;
@@ -364,9 +364,9 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
-	public ICFIntMajorVersion[] readAllBuff( ICFSecAuthorization Authorization )
+	public ICFIntMajorVersion[] readAllRec( ICFSecAuthorization Authorization )
 	{
-		final String S_ProcName = "CFIntRamMajorVersion.readAllBuff";
+		final String S_ProcName = "CFIntRamMajorVersion.readAllRec";
 		ICFIntMajorVersion buff;
 		ArrayList<ICFIntMajorVersion> filteredList = new ArrayList<ICFIntMajorVersion>();
 		ICFIntMajorVersion[] buffList = readAllDerived( Authorization );
@@ -379,10 +379,10 @@ public class CFIntRamMajorVersionTable
 		return( filteredList.toArray( new ICFIntMajorVersion[0] ) );
 	}
 
-	public ICFIntMajorVersion readBuffByIdIdx( ICFSecAuthorization Authorization,
+	public ICFIntMajorVersion readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
-		final String S_ProcName = "CFIntRamMajorVersion.readBuffByIdIdx() ";
+		final String S_ProcName = "CFIntRamMajorVersion.readRecByIdIdx() ";
 		ICFIntMajorVersion buff = readDerivedByIdIdx( Authorization,
 			Id );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFIntMajorVersion.CLASS_CODE ) ) {
@@ -393,10 +393,10 @@ public class CFIntRamMajorVersionTable
 		}
 	}
 
-	public ICFIntMajorVersion[] readBuffByTenantIdx( ICFSecAuthorization Authorization,
+	public ICFIntMajorVersion[] readRecByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
-		final String S_ProcName = "CFIntRamMajorVersion.readBuffByTenantIdx() ";
+		final String S_ProcName = "CFIntRamMajorVersion.readRecByTenantIdx() ";
 		ICFIntMajorVersion buff;
 		ArrayList<ICFIntMajorVersion> filteredList = new ArrayList<ICFIntMajorVersion>();
 		ICFIntMajorVersion[] buffList = readDerivedByTenantIdx( Authorization,
@@ -410,10 +410,10 @@ public class CFIntRamMajorVersionTable
 		return( filteredList.toArray( new ICFIntMajorVersion[0] ) );
 	}
 
-	public ICFIntMajorVersion[] readBuffBySubProjectIdx( ICFSecAuthorization Authorization,
+	public ICFIntMajorVersion[] readRecBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SubProjectId )
 	{
-		final String S_ProcName = "CFIntRamMajorVersion.readBuffBySubProjectIdx() ";
+		final String S_ProcName = "CFIntRamMajorVersion.readRecBySubProjectIdx() ";
 		ICFIntMajorVersion buff;
 		ArrayList<ICFIntMajorVersion> filteredList = new ArrayList<ICFIntMajorVersion>();
 		ICFIntMajorVersion[] buffList = readDerivedBySubProjectIdx( Authorization,
@@ -427,11 +427,11 @@ public class CFIntRamMajorVersionTable
 		return( filteredList.toArray( new ICFIntMajorVersion[0] ) );
 	}
 
-	public ICFIntMajorVersion readBuffByNameIdx( ICFSecAuthorization Authorization,
+	public ICFIntMajorVersion readRecByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SubProjectId,
 		String Name )
 	{
-		final String S_ProcName = "CFIntRamMajorVersion.readBuffByNameIdx() ";
+		final String S_ProcName = "CFIntRamMajorVersion.readRecByNameIdx() ";
 		ICFIntMajorVersion buff = readDerivedByNameIdx( Authorization,
 			SubProjectId,
 			Name );

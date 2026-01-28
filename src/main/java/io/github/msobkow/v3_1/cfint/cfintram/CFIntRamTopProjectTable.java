@@ -342,10 +342,10 @@ public class CFIntRamTopProjectTable
 		return( buff );
 	}
 
-	public ICFIntTopProject readBuff( ICFSecAuthorization Authorization,
+	public ICFIntTopProject readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamTopProject.readBuff";
+		final String S_ProcName = "CFIntRamTopProject.readRec";
 		ICFIntTopProject buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFIntTopProject.CLASS_CODE ) ) {
 			buff = null;
@@ -353,10 +353,10 @@ public class CFIntRamTopProjectTable
 		return( buff );
 	}
 
-	public ICFIntTopProject lockBuff( ICFSecAuthorization Authorization,
+	public ICFIntTopProject lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "lockBuff";
+		final String S_ProcName = "lockRec";
 		ICFIntTopProject buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFIntTopProject.CLASS_CODE ) ) {
 			buff = null;
@@ -364,9 +364,9 @@ public class CFIntRamTopProjectTable
 		return( buff );
 	}
 
-	public ICFIntTopProject[] readAllBuff( ICFSecAuthorization Authorization )
+	public ICFIntTopProject[] readAllRec( ICFSecAuthorization Authorization )
 	{
-		final String S_ProcName = "CFIntRamTopProject.readAllBuff";
+		final String S_ProcName = "CFIntRamTopProject.readAllRec";
 		ICFIntTopProject buff;
 		ArrayList<ICFIntTopProject> filteredList = new ArrayList<ICFIntTopProject>();
 		ICFIntTopProject[] buffList = readAllDerived( Authorization );
@@ -379,10 +379,10 @@ public class CFIntRamTopProjectTable
 		return( filteredList.toArray( new ICFIntTopProject[0] ) );
 	}
 
-	public ICFIntTopProject readBuffByIdIdx( ICFSecAuthorization Authorization,
+	public ICFIntTopProject readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
-		final String S_ProcName = "CFIntRamTopProject.readBuffByIdIdx() ";
+		final String S_ProcName = "CFIntRamTopProject.readRecByIdIdx() ";
 		ICFIntTopProject buff = readDerivedByIdIdx( Authorization,
 			Id );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFIntTopProject.CLASS_CODE ) ) {
@@ -393,10 +393,10 @@ public class CFIntRamTopProjectTable
 		}
 	}
 
-	public ICFIntTopProject[] readBuffByTenantIdx( ICFSecAuthorization Authorization,
+	public ICFIntTopProject[] readRecByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
-		final String S_ProcName = "CFIntRamTopProject.readBuffByTenantIdx() ";
+		final String S_ProcName = "CFIntRamTopProject.readRecByTenantIdx() ";
 		ICFIntTopProject buff;
 		ArrayList<ICFIntTopProject> filteredList = new ArrayList<ICFIntTopProject>();
 		ICFIntTopProject[] buffList = readDerivedByTenantIdx( Authorization,
@@ -410,10 +410,10 @@ public class CFIntRamTopProjectTable
 		return( filteredList.toArray( new ICFIntTopProject[0] ) );
 	}
 
-	public ICFIntTopProject[] readBuffByTopDomainIdx( ICFSecAuthorization Authorization,
+	public ICFIntTopProject[] readRecByTopDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId )
 	{
-		final String S_ProcName = "CFIntRamTopProject.readBuffByTopDomainIdx() ";
+		final String S_ProcName = "CFIntRamTopProject.readRecByTopDomainIdx() ";
 		ICFIntTopProject buff;
 		ArrayList<ICFIntTopProject> filteredList = new ArrayList<ICFIntTopProject>();
 		ICFIntTopProject[] buffList = readDerivedByTopDomainIdx( Authorization,
@@ -427,11 +427,11 @@ public class CFIntRamTopProjectTable
 		return( filteredList.toArray( new ICFIntTopProject[0] ) );
 	}
 
-	public ICFIntTopProject readBuffByNameIdx( ICFSecAuthorization Authorization,
+	public ICFIntTopProject readRecByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId,
 		String Name )
 	{
-		final String S_ProcName = "CFIntRamTopProject.readBuffByNameIdx() ";
+		final String S_ProcName = "CFIntRamTopProject.readRecByNameIdx() ";
 		ICFIntTopProject buff = readDerivedByNameIdx( Authorization,
 			TopDomainId,
 			Name );

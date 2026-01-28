@@ -207,10 +207,10 @@ public class CFIntRamServiceTypeTable
 		return( buff );
 	}
 
-	public ICFSecServiceType readBuff( ICFSecAuthorization Authorization,
+	public ICFSecServiceType readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamServiceType.readBuff";
+		final String S_ProcName = "CFIntRamServiceType.readRec";
 		ICFSecServiceType buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFSecServiceType.CLASS_CODE ) ) {
 			buff = null;
@@ -218,10 +218,10 @@ public class CFIntRamServiceTypeTable
 		return( buff );
 	}
 
-	public ICFSecServiceType lockBuff( ICFSecAuthorization Authorization,
+	public ICFSecServiceType lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "lockBuff";
+		final String S_ProcName = "lockRec";
 		ICFSecServiceType buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFSecServiceType.CLASS_CODE ) ) {
 			buff = null;
@@ -229,9 +229,9 @@ public class CFIntRamServiceTypeTable
 		return( buff );
 	}
 
-	public ICFSecServiceType[] readAllBuff( ICFSecAuthorization Authorization )
+	public ICFSecServiceType[] readAllRec( ICFSecAuthorization Authorization )
 	{
-		final String S_ProcName = "CFIntRamServiceType.readAllBuff";
+		final String S_ProcName = "CFIntRamServiceType.readAllRec";
 		ICFSecServiceType buff;
 		ArrayList<ICFSecServiceType> filteredList = new ArrayList<ICFSecServiceType>();
 		ICFSecServiceType[] buffList = readAllDerived( Authorization );
@@ -244,10 +244,10 @@ public class CFIntRamServiceTypeTable
 		return( filteredList.toArray( new ICFSecServiceType[0] ) );
 	}
 
-	public ICFSecServiceType readBuffByIdIdx( ICFSecAuthorization Authorization,
+	public ICFSecServiceType readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 ServiceTypeId )
 	{
-		final String S_ProcName = "CFIntRamServiceType.readBuffByIdIdx() ";
+		final String S_ProcName = "CFIntRamServiceType.readRecByIdIdx() ";
 		ICFSecServiceType buff = readDerivedByIdIdx( Authorization,
 			ServiceTypeId );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFSecServiceType.CLASS_CODE ) ) {
@@ -258,10 +258,10 @@ public class CFIntRamServiceTypeTable
 		}
 	}
 
-	public ICFSecServiceType readBuffByUDescrIdx( ICFSecAuthorization Authorization,
+	public ICFSecServiceType readRecByUDescrIdx( ICFSecAuthorization Authorization,
 		String Description )
 	{
-		final String S_ProcName = "CFIntRamServiceType.readBuffByUDescrIdx() ";
+		final String S_ProcName = "CFIntRamServiceType.readRecByUDescrIdx() ";
 		ICFSecServiceType buff = readDerivedByUDescrIdx( Authorization,
 			Description );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFSecServiceType.CLASS_CODE ) ) {

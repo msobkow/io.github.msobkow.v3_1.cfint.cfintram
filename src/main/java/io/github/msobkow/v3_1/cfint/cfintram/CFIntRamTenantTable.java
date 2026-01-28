@@ -276,10 +276,10 @@ public class CFIntRamTenantTable
 		return( buff );
 	}
 
-	public ICFSecTenant readBuff( ICFSecAuthorization Authorization,
+	public ICFSecTenant readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamTenant.readBuff";
+		final String S_ProcName = "CFIntRamTenant.readRec";
 		ICFSecTenant buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFSecTenant.CLASS_CODE ) ) {
 			buff = null;
@@ -287,10 +287,10 @@ public class CFIntRamTenantTable
 		return( buff );
 	}
 
-	public ICFSecTenant lockBuff( ICFSecAuthorization Authorization,
+	public ICFSecTenant lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "lockBuff";
+		final String S_ProcName = "lockRec";
 		ICFSecTenant buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFSecTenant.CLASS_CODE ) ) {
 			buff = null;
@@ -298,9 +298,9 @@ public class CFIntRamTenantTable
 		return( buff );
 	}
 
-	public ICFSecTenant[] readAllBuff( ICFSecAuthorization Authorization )
+	public ICFSecTenant[] readAllRec( ICFSecAuthorization Authorization )
 	{
-		final String S_ProcName = "CFIntRamTenant.readAllBuff";
+		final String S_ProcName = "CFIntRamTenant.readAllRec";
 		ICFSecTenant buff;
 		ArrayList<ICFSecTenant> filteredList = new ArrayList<ICFSecTenant>();
 		ICFSecTenant[] buffList = readAllDerived( Authorization );
@@ -320,17 +320,17 @@ public class CFIntRamTenantTable
 	 *
 	 *	@return All the specific Tenant instances in the database accessible for the Authorization.
 	 */
-	public ICFSecTenant[] pageAllBuff( ICFSecAuthorization Authorization,
+	public ICFSecTenant[] pageAllRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 priorId )
 	{
-		final String S_ProcName = "pageAllBuff";
+		final String S_ProcName = "pageAllRec";
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 
-	public ICFSecTenant readBuffByIdIdx( ICFSecAuthorization Authorization,
+	public ICFSecTenant readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
-		final String S_ProcName = "CFIntRamTenant.readBuffByIdIdx() ";
+		final String S_ProcName = "CFIntRamTenant.readRecByIdIdx() ";
 		ICFSecTenant buff = readDerivedByIdIdx( Authorization,
 			Id );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFSecTenant.CLASS_CODE ) ) {
@@ -341,10 +341,10 @@ public class CFIntRamTenantTable
 		}
 	}
 
-	public ICFSecTenant[] readBuffByClusterIdx( ICFSecAuthorization Authorization,
+	public ICFSecTenant[] readRecByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId )
 	{
-		final String S_ProcName = "CFIntRamTenant.readBuffByClusterIdx() ";
+		final String S_ProcName = "CFIntRamTenant.readRecByClusterIdx() ";
 		ICFSecTenant buff;
 		ArrayList<ICFSecTenant> filteredList = new ArrayList<ICFSecTenant>();
 		ICFSecTenant[] buffList = readDerivedByClusterIdx( Authorization,
@@ -358,11 +358,11 @@ public class CFIntRamTenantTable
 		return( filteredList.toArray( new ICFSecTenant[0] ) );
 	}
 
-	public ICFSecTenant readBuffByUNameIdx( ICFSecAuthorization Authorization,
+	public ICFSecTenant readRecByUNameIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		String TenantName )
 	{
-		final String S_ProcName = "CFIntRamTenant.readBuffByUNameIdx() ";
+		final String S_ProcName = "CFIntRamTenant.readRecByUNameIdx() ";
 		ICFSecTenant buff = readDerivedByUNameIdx( Authorization,
 			ClusterId,
 			TenantName );
@@ -385,11 +385,11 @@ public class CFIntRamTenantTable
 	 *
 	 *	@throws	CFLibNotSupportedException thrown by client-side implementations.
 	 */
-	public ICFSecTenant[] pageBuffByClusterIdx( ICFSecAuthorization Authorization,
+	public ICFSecTenant[] pageRecByClusterIdx( ICFSecAuthorization Authorization,
 		long ClusterId,
 		CFLibDbKeyHash256 priorId )
 	{
-		final String S_ProcName = "pageBuffByClusterIdx";
+		final String S_ProcName = "pageRecByClusterIdx";
 		throw new CFLibNotImplementedYetException( getClass(), S_ProcName );
 	}
 

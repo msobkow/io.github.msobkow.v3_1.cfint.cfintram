@@ -342,10 +342,10 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
-	public ICFIntLicense readBuff( ICFSecAuthorization Authorization,
+	public ICFIntLicense readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamLicense.readBuff";
+		final String S_ProcName = "CFIntRamLicense.readRec";
 		ICFIntLicense buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFIntLicense.CLASS_CODE ) ) {
 			buff = null;
@@ -353,10 +353,10 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
-	public ICFIntLicense lockBuff( ICFSecAuthorization Authorization,
+	public ICFIntLicense lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "lockBuff";
+		final String S_ProcName = "lockRec";
 		ICFIntLicense buff = readDerived( Authorization, PKey );
 		if( ( buff != null ) && ( buff.getClassCode() != ICFIntLicense.CLASS_CODE ) ) {
 			buff = null;
@@ -364,9 +364,9 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
-	public ICFIntLicense[] readAllBuff( ICFSecAuthorization Authorization )
+	public ICFIntLicense[] readAllRec( ICFSecAuthorization Authorization )
 	{
-		final String S_ProcName = "CFIntRamLicense.readAllBuff";
+		final String S_ProcName = "CFIntRamLicense.readAllRec";
 		ICFIntLicense buff;
 		ArrayList<ICFIntLicense> filteredList = new ArrayList<ICFIntLicense>();
 		ICFIntLicense[] buffList = readAllDerived( Authorization );
@@ -379,10 +379,10 @@ public class CFIntRamLicenseTable
 		return( filteredList.toArray( new ICFIntLicense[0] ) );
 	}
 
-	public ICFIntLicense readBuffByIdIdx( ICFSecAuthorization Authorization,
+	public ICFIntLicense readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
-		final String S_ProcName = "CFIntRamLicense.readBuffByIdIdx() ";
+		final String S_ProcName = "CFIntRamLicense.readRecByIdIdx() ";
 		ICFIntLicense buff = readDerivedByIdIdx( Authorization,
 			Id );
 		if( ( buff != null ) && ( buff.getClassCode() == ICFIntLicense.CLASS_CODE ) ) {
@@ -393,10 +393,10 @@ public class CFIntRamLicenseTable
 		}
 	}
 
-	public ICFIntLicense[] readBuffByLicnTenantIdx( ICFSecAuthorization Authorization,
+	public ICFIntLicense[] readRecByLicnTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
-		final String S_ProcName = "CFIntRamLicense.readBuffByLicnTenantIdx() ";
+		final String S_ProcName = "CFIntRamLicense.readRecByLicnTenantIdx() ";
 		ICFIntLicense buff;
 		ArrayList<ICFIntLicense> filteredList = new ArrayList<ICFIntLicense>();
 		ICFIntLicense[] buffList = readDerivedByLicnTenantIdx( Authorization,
@@ -410,10 +410,10 @@ public class CFIntRamLicenseTable
 		return( filteredList.toArray( new ICFIntLicense[0] ) );
 	}
 
-	public ICFIntLicense[] readBuffByDomainIdx( ICFSecAuthorization Authorization,
+	public ICFIntLicense[] readRecByDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId )
 	{
-		final String S_ProcName = "CFIntRamLicense.readBuffByDomainIdx() ";
+		final String S_ProcName = "CFIntRamLicense.readRecByDomainIdx() ";
 		ICFIntLicense buff;
 		ArrayList<ICFIntLicense> filteredList = new ArrayList<ICFIntLicense>();
 		ICFIntLicense[] buffList = readDerivedByDomainIdx( Authorization,
@@ -427,11 +427,11 @@ public class CFIntRamLicenseTable
 		return( filteredList.toArray( new ICFIntLicense[0] ) );
 	}
 
-	public ICFIntLicense readBuffByUNameIdx( ICFSecAuthorization Authorization,
+	public ICFIntLicense readRecByUNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId,
 		String Name )
 	{
-		final String S_ProcName = "CFIntRamLicense.readBuffByUNameIdx() ";
+		final String S_ProcName = "CFIntRamLicense.readRecByUNameIdx() ";
 		ICFIntLicense buff = readDerivedByUNameIdx( Authorization,
 			TopDomainId,
 			Name );
