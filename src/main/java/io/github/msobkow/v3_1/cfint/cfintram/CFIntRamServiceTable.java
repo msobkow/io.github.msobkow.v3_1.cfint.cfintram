@@ -171,7 +171,10 @@ public class CFIntRamServiceTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Owner",
+						"Owner",
 						"ServiceCluster",
+						"ServiceCluster",
+						"Cluster",
 						"Cluster",
 						null );
 				}
@@ -710,7 +713,10 @@ public class CFIntRamServiceTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateService",
 						"Owner",
+						"Owner",
 						"ServiceCluster",
+						"ServiceCluster",
+						"Cluster",
 						"Cluster",
 						null );
 				}

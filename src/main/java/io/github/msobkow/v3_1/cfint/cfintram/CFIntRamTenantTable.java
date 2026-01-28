@@ -135,7 +135,10 @@ public class CFIntRamTenantTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Container",
+						"Container",
 						"TenantCluster",
+						"TenantCluster",
+						"Cluster",
 						"Cluster",
 						null );
 				}
@@ -449,7 +452,10 @@ public class CFIntRamTenantTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateTenant",
 						"Container",
+						"Container",
 						"TenantCluster",
+						"TenantCluster",
+						"Cluster",
 						"Cluster",
 						null );
 				}

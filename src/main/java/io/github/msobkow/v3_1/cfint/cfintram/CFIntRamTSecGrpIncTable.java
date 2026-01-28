@@ -154,7 +154,10 @@ public class CFIntRamTSecGrpIncTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Owner",
+						"Owner",
 						"TSecGrpIncTenant",
+						"TSecGrpIncTenant",
+						"Tenant",
 						"Tenant",
 						null );
 				}
@@ -171,7 +174,10 @@ public class CFIntRamTSecGrpIncTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Container",
+						"Container",
 						"TSecGrpIncGroup",
+						"TSecGrpIncGroup",
+						"TSecGroup",
 						"TSecGroup",
 						null );
 				}
@@ -649,7 +655,10 @@ public class CFIntRamTSecGrpIncTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateTSecGrpInc",
 						"Owner",
+						"Owner",
 						"TSecGrpIncTenant",
+						"TSecGrpIncTenant",
+						"Tenant",
 						"Tenant",
 						null );
 				}
@@ -666,7 +675,10 @@ public class CFIntRamTSecGrpIncTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateTSecGrpInc",
 						"Container",
+						"Container",
 						"TSecGrpIncGroup",
+						"TSecGrpIncGroup",
+						"TSecGroup",
 						"TSecGroup",
 						null );
 				}

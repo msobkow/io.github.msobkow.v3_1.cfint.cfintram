@@ -134,7 +134,10 @@ public class CFIntRamTldTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Container",
+						"Container",
 						"TldTenant",
+						"TldTenant",
+						"Tenant",
 						"Tenant",
 						null );
 				}
@@ -409,7 +412,10 @@ public class CFIntRamTldTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateTld",
 						"Container",
+						"Container",
 						"TldTenant",
+						"TldTenant",
+						"Tenant",
 						"Tenant",
 						null );
 				}

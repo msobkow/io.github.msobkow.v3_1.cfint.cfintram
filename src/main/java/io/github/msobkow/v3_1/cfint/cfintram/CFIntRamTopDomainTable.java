@@ -144,6 +144,9 @@ public class CFIntRamTopDomainTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Owner",
+						"Owner",
+						"Tenant",
+						"Tenant",
 						"Tenant",
 						"Tenant",
 						null );
@@ -161,7 +164,10 @@ public class CFIntRamTopDomainTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Container",
+						"Container",
 						"ParentTld",
+						"ParentTld",
+						"Tld",
 						"Tld",
 						null );
 				}
@@ -502,6 +508,9 @@ public class CFIntRamTopDomainTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateTopDomain",
 						"Owner",
+						"Owner",
+						"Tenant",
+						"Tenant",
 						"Tenant",
 						"Tenant",
 						null );
@@ -519,7 +528,10 @@ public class CFIntRamTopDomainTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateTopDomain",
 						"Container",
+						"Container",
 						"ParentTld",
+						"ParentTld",
+						"Tld",
 						"Tld",
 						null );
 				}

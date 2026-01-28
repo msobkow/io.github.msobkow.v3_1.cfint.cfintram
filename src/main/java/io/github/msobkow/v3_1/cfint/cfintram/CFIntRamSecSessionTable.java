@@ -164,7 +164,10 @@ public class CFIntRamSecSessionTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Container",
+						"Container",
 						"SecSessionSecUser",
+						"SecSessionSecUser",
+						"SecUser",
 						"SecUser",
 						null );
 				}
@@ -733,7 +736,10 @@ public class CFIntRamSecSessionTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateSecSession",
 						"Container",
+						"Container",
 						"SecSessionSecUser",
+						"SecSessionSecUser",
+						"SecUser",
 						"SecUser",
 						null );
 				}

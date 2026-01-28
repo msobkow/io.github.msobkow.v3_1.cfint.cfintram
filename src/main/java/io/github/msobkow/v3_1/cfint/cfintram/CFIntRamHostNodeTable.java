@@ -151,7 +151,10 @@ public class CFIntRamHostNodeTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						S_ProcName,
 						"Container",
+						"Container",
 						"HostNodeCluster",
+						"HostNodeCluster",
+						"Cluster",
 						"Cluster",
 						null );
 				}
@@ -520,7 +523,10 @@ public class CFIntRamHostNodeTable
 					throw new CFLibUnresolvedRelationException( getClass(),
 						"updateHostNode",
 						"Container",
+						"Container",
 						"HostNodeCluster",
+						"HostNodeCluster",
+						"Cluster",
 						"Cluster",
 						null );
 				}
