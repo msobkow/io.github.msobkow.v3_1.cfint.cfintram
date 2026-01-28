@@ -616,20 +616,20 @@ public class CFIntRamMinorVersionTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFIntMinorVersion cur;
-		LinkedList<ICFIntMinorVersion> matchSet = new LinkedList<ICFIntMinorVersion>();
-		Iterator<ICFIntMinorVersion> values = dictByPKey.values().iterator();
+		CFIntBuffMinorVersion cur;
+		LinkedList<CFIntBuffMinorVersion> matchSet = new LinkedList<CFIntBuffMinorVersion>();
+		Iterator<CFIntBuffMinorVersion> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntMinorVersion> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffMinorVersion> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffMinorVersion)(schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteMinorVersion( Authorization, cur );
 		}
 	}
@@ -645,25 +645,25 @@ public class CFIntRamMinorVersionTable
 	public void deleteMinorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByTenantIdxKey argKey )
 	{
-		ICFIntMinorVersion cur;
+		CFIntBuffMinorVersion cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntMinorVersion> matchSet = new LinkedList<ICFIntMinorVersion>();
-		Iterator<ICFIntMinorVersion> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffMinorVersion> matchSet = new LinkedList<CFIntBuffMinorVersion>();
+		Iterator<CFIntBuffMinorVersion> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntMinorVersion> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffMinorVersion> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffMinorVersion)(schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteMinorVersion( Authorization, cur );
 		}
 	}
@@ -679,25 +679,25 @@ public class CFIntRamMinorVersionTable
 	public void deleteMinorVersionByMajorVerIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByMajorVerIdxKey argKey )
 	{
-		ICFIntMinorVersion cur;
+		CFIntBuffMinorVersion cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntMinorVersion> matchSet = new LinkedList<ICFIntMinorVersion>();
-		Iterator<ICFIntMinorVersion> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffMinorVersion> matchSet = new LinkedList<CFIntBuffMinorVersion>();
+		Iterator<CFIntBuffMinorVersion> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntMinorVersion> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffMinorVersion> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffMinorVersion)(schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteMinorVersion( Authorization, cur );
 		}
 	}
@@ -715,26 +715,26 @@ public class CFIntRamMinorVersionTable
 	public void deleteMinorVersionByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByNameIdxKey argKey )
 	{
-		ICFIntMinorVersion cur;
+		CFIntBuffMinorVersion cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntMinorVersion> matchSet = new LinkedList<ICFIntMinorVersion>();
-		Iterator<ICFIntMinorVersion> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffMinorVersion> matchSet = new LinkedList<CFIntBuffMinorVersion>();
+		Iterator<CFIntBuffMinorVersion> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntMinorVersion> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffMinorVersion> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffMinorVersion)(schema.getTableMinorVersion().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteMinorVersion( Authorization, cur );
 		}
 	}

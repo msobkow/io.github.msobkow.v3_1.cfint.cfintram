@@ -618,20 +618,20 @@ public class CFIntRamSubProjectTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFIntSubProject cur;
-		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
-		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
+		CFIntBuffSubProject cur;
+		LinkedList<CFIntBuffSubProject> matchSet = new LinkedList<CFIntBuffSubProject>();
+		Iterator<CFIntBuffSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffSubProject)(schema.getTableSubProject().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteSubProject( Authorization, cur );
 		}
 	}
@@ -647,25 +647,25 @@ public class CFIntRamSubProjectTable
 	public void deleteSubProjectByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntSubProjectByTenantIdxKey argKey )
 	{
-		ICFIntSubProject cur;
+		CFIntBuffSubProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
-		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffSubProject> matchSet = new LinkedList<CFIntBuffSubProject>();
+		Iterator<CFIntBuffSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffSubProject)(schema.getTableSubProject().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteSubProject( Authorization, cur );
 		}
 	}
@@ -681,25 +681,25 @@ public class CFIntRamSubProjectTable
 	public void deleteSubProjectByTopProjectIdx( ICFSecAuthorization Authorization,
 		ICFIntSubProjectByTopProjectIdxKey argKey )
 	{
-		ICFIntSubProject cur;
+		CFIntBuffSubProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
-		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffSubProject> matchSet = new LinkedList<CFIntBuffSubProject>();
+		Iterator<CFIntBuffSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffSubProject)(schema.getTableSubProject().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteSubProject( Authorization, cur );
 		}
 	}
@@ -717,26 +717,26 @@ public class CFIntRamSubProjectTable
 	public void deleteSubProjectByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntSubProjectByNameIdxKey argKey )
 	{
-		ICFIntSubProject cur;
+		CFIntBuffSubProject cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntSubProject> matchSet = new LinkedList<ICFIntSubProject>();
-		Iterator<ICFIntSubProject> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffSubProject> matchSet = new LinkedList<CFIntBuffSubProject>();
+		Iterator<CFIntBuffSubProject> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntSubProject> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffSubProject> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSubProject().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffSubProject)(schema.getTableSubProject().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteSubProject( Authorization, cur );
 		}
 	}

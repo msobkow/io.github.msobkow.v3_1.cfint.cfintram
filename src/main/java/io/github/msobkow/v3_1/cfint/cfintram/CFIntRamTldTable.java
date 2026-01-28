@@ -488,20 +488,20 @@ public class CFIntRamTldTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFIntTld cur;
-		LinkedList<ICFIntTld> matchSet = new LinkedList<ICFIntTld>();
-		Iterator<ICFIntTld> values = dictByPKey.values().iterator();
+		CFIntBuffTld cur;
+		LinkedList<CFIntBuffTld> matchSet = new LinkedList<CFIntBuffTld>();
+		Iterator<CFIntBuffTld> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntTld> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffTld> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTld().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffTld)(schema.getTableTld().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteTld( Authorization, cur );
 		}
 	}
@@ -517,25 +517,25 @@ public class CFIntRamTldTable
 	public void deleteTldByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntTldByTenantIdxKey argKey )
 	{
-		ICFIntTld cur;
+		CFIntBuffTld cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntTld> matchSet = new LinkedList<ICFIntTld>();
-		Iterator<ICFIntTld> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffTld> matchSet = new LinkedList<CFIntBuffTld>();
+		Iterator<CFIntBuffTld> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntTld> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffTld> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTld().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffTld)(schema.getTableTld().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteTld( Authorization, cur );
 		}
 	}
@@ -551,25 +551,25 @@ public class CFIntRamTldTable
 	public void deleteTldByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntTldByNameIdxKey argKey )
 	{
-		ICFIntTld cur;
+		CFIntBuffTld cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntTld> matchSet = new LinkedList<ICFIntTld>();
-		Iterator<ICFIntTld> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffTld> matchSet = new LinkedList<CFIntBuffTld>();
+		Iterator<CFIntBuffTld> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntTld> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffTld> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTld().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffTld)(schema.getTableTld().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteTld( Authorization, cur );
 		}
 	}

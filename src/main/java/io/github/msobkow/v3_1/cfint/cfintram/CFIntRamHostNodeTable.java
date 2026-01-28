@@ -609,20 +609,20 @@ public class CFIntRamHostNodeTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFSecHostNode cur;
-		LinkedList<ICFSecHostNode> matchSet = new LinkedList<ICFSecHostNode>();
-		Iterator<ICFSecHostNode> values = dictByPKey.values().iterator();
+		CFSecBuffHostNode cur;
+		LinkedList<CFSecBuffHostNode> matchSet = new LinkedList<CFSecBuffHostNode>();
+		Iterator<CFSecBuffHostNode> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecHostNode> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffHostNode> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableHostNode().readDerivedByIdIdx( Authorization,
-				cur.getRequiredHostNodeId() );
+			cur = (CFSecBuffHostNode)(schema.getTableHostNode().readDerivedByIdIdx( Authorization,
+				cur.getRequiredHostNodeId() ));
 			deleteHostNode( Authorization, cur );
 		}
 	}
@@ -638,25 +638,25 @@ public class CFIntRamHostNodeTable
 	public void deleteHostNodeByClusterIdx( ICFSecAuthorization Authorization,
 		ICFSecHostNodeByClusterIdxKey argKey )
 	{
-		ICFSecHostNode cur;
+		CFSecBuffHostNode cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecHostNode> matchSet = new LinkedList<ICFSecHostNode>();
-		Iterator<ICFSecHostNode> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffHostNode> matchSet = new LinkedList<CFSecBuffHostNode>();
+		Iterator<CFSecBuffHostNode> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecHostNode> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffHostNode> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableHostNode().readDerivedByIdIdx( Authorization,
-				cur.getRequiredHostNodeId() );
+			cur = (CFSecBuffHostNode)(schema.getTableHostNode().readDerivedByIdIdx( Authorization,
+				cur.getRequiredHostNodeId() ));
 			deleteHostNode( Authorization, cur );
 		}
 	}
@@ -674,26 +674,26 @@ public class CFIntRamHostNodeTable
 	public void deleteHostNodeByUDescrIdx( ICFSecAuthorization Authorization,
 		ICFSecHostNodeByUDescrIdxKey argKey )
 	{
-		ICFSecHostNode cur;
+		CFSecBuffHostNode cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecHostNode> matchSet = new LinkedList<ICFSecHostNode>();
-		Iterator<ICFSecHostNode> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffHostNode> matchSet = new LinkedList<CFSecBuffHostNode>();
+		Iterator<CFSecBuffHostNode> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecHostNode> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffHostNode> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableHostNode().readDerivedByIdIdx( Authorization,
-				cur.getRequiredHostNodeId() );
+			cur = (CFSecBuffHostNode)(schema.getTableHostNode().readDerivedByIdIdx( Authorization,
+				cur.getRequiredHostNodeId() ));
 			deleteHostNode( Authorization, cur );
 		}
 	}
@@ -711,26 +711,26 @@ public class CFIntRamHostNodeTable
 	public void deleteHostNodeByHostNameIdx( ICFSecAuthorization Authorization,
 		ICFSecHostNodeByHostNameIdxKey argKey )
 	{
-		ICFSecHostNode cur;
+		CFSecBuffHostNode cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecHostNode> matchSet = new LinkedList<ICFSecHostNode>();
-		Iterator<ICFSecHostNode> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffHostNode> matchSet = new LinkedList<CFSecBuffHostNode>();
+		Iterator<CFSecBuffHostNode> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecHostNode> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffHostNode> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableHostNode().readDerivedByIdIdx( Authorization,
-				cur.getRequiredHostNodeId() );
+			cur = (CFSecBuffHostNode)(schema.getTableHostNode().readDerivedByIdIdx( Authorization,
+				cur.getRequiredHostNodeId() ));
 			deleteHostNode( Authorization, cur );
 		}
 	}

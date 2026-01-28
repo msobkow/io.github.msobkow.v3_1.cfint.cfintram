@@ -618,20 +618,20 @@ public class CFIntRamTopDomainTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFIntTopDomain cur;
-		LinkedList<ICFIntTopDomain> matchSet = new LinkedList<ICFIntTopDomain>();
-		Iterator<ICFIntTopDomain> values = dictByPKey.values().iterator();
+		CFIntBuffTopDomain cur;
+		LinkedList<CFIntBuffTopDomain> matchSet = new LinkedList<CFIntBuffTopDomain>();
+		Iterator<CFIntBuffTopDomain> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntTopDomain> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffTopDomain> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffTopDomain)(schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteTopDomain( Authorization, cur );
 		}
 	}
@@ -647,25 +647,25 @@ public class CFIntRamTopDomainTable
 	public void deleteTopDomainByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByTenantIdxKey argKey )
 	{
-		ICFIntTopDomain cur;
+		CFIntBuffTopDomain cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntTopDomain> matchSet = new LinkedList<ICFIntTopDomain>();
-		Iterator<ICFIntTopDomain> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffTopDomain> matchSet = new LinkedList<CFIntBuffTopDomain>();
+		Iterator<CFIntBuffTopDomain> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntTopDomain> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffTopDomain> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffTopDomain)(schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteTopDomain( Authorization, cur );
 		}
 	}
@@ -681,25 +681,25 @@ public class CFIntRamTopDomainTable
 	public void deleteTopDomainByTldIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByTldIdxKey argKey )
 	{
-		ICFIntTopDomain cur;
+		CFIntBuffTopDomain cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntTopDomain> matchSet = new LinkedList<ICFIntTopDomain>();
-		Iterator<ICFIntTopDomain> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffTopDomain> matchSet = new LinkedList<CFIntBuffTopDomain>();
+		Iterator<CFIntBuffTopDomain> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntTopDomain> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffTopDomain> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffTopDomain)(schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteTopDomain( Authorization, cur );
 		}
 	}
@@ -717,26 +717,26 @@ public class CFIntRamTopDomainTable
 	public void deleteTopDomainByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByNameIdxKey argKey )
 	{
-		ICFIntTopDomain cur;
+		CFIntBuffTopDomain cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntTopDomain> matchSet = new LinkedList<ICFIntTopDomain>();
-		Iterator<ICFIntTopDomain> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffTopDomain> matchSet = new LinkedList<CFIntBuffTopDomain>();
+		Iterator<CFIntBuffTopDomain> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntTopDomain> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffTopDomain> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffTopDomain)(schema.getTableTopDomain().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteTopDomain( Authorization, cur );
 		}
 	}

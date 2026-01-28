@@ -616,20 +616,20 @@ public class CFIntRamLicenseTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFIntLicense cur;
-		LinkedList<ICFIntLicense> matchSet = new LinkedList<ICFIntLicense>();
-		Iterator<ICFIntLicense> values = dictByPKey.values().iterator();
+		CFIntBuffLicense cur;
+		LinkedList<CFIntBuffLicense> matchSet = new LinkedList<CFIntBuffLicense>();
+		Iterator<CFIntBuffLicense> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntLicense> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffLicense> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableLicense().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffLicense)(schema.getTableLicense().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteLicense( Authorization, cur );
 		}
 	}
@@ -645,25 +645,25 @@ public class CFIntRamLicenseTable
 	public void deleteLicenseByLicnTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByLicnTenantIdxKey argKey )
 	{
-		ICFIntLicense cur;
+		CFIntBuffLicense cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntLicense> matchSet = new LinkedList<ICFIntLicense>();
-		Iterator<ICFIntLicense> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffLicense> matchSet = new LinkedList<CFIntBuffLicense>();
+		Iterator<CFIntBuffLicense> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntLicense> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffLicense> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableLicense().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffLicense)(schema.getTableLicense().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteLicense( Authorization, cur );
 		}
 	}
@@ -679,25 +679,25 @@ public class CFIntRamLicenseTable
 	public void deleteLicenseByDomainIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByDomainIdxKey argKey )
 	{
-		ICFIntLicense cur;
+		CFIntBuffLicense cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntLicense> matchSet = new LinkedList<ICFIntLicense>();
-		Iterator<ICFIntLicense> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffLicense> matchSet = new LinkedList<CFIntBuffLicense>();
+		Iterator<CFIntBuffLicense> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntLicense> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffLicense> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableLicense().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffLicense)(schema.getTableLicense().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteLicense( Authorization, cur );
 		}
 	}
@@ -715,26 +715,26 @@ public class CFIntRamLicenseTable
 	public void deleteLicenseByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByUNameIdxKey argKey )
 	{
-		ICFIntLicense cur;
+		CFIntBuffLicense cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntLicense> matchSet = new LinkedList<ICFIntLicense>();
-		Iterator<ICFIntLicense> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffLicense> matchSet = new LinkedList<CFIntBuffLicense>();
+		Iterator<CFIntBuffLicense> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntLicense> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffLicense> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableLicense().readDerivedByIdIdx( Authorization,
-				cur.getRequiredId() );
+			cur = (CFIntBuffLicense)(schema.getTableLicense().readDerivedByIdIdx( Authorization,
+				cur.getRequiredId() ));
 			deleteLicense( Authorization, cur );
 		}
 	}

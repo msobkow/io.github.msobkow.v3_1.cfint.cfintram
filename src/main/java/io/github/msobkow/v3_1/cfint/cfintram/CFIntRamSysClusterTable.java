@@ -414,20 +414,20 @@ public class CFIntRamSysClusterTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFSecSysCluster cur;
-		LinkedList<ICFSecSysCluster> matchSet = new LinkedList<ICFSecSysCluster>();
-		Iterator<ICFSecSysCluster> values = dictByPKey.values().iterator();
+		CFSecBuffSysCluster cur;
+		LinkedList<CFSecBuffSysCluster> matchSet = new LinkedList<CFSecBuffSysCluster>();
+		Iterator<CFSecBuffSysCluster> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecSysCluster> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffSysCluster> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSysCluster().readDerivedByIdIdx( Authorization,
-				cur.getRequiredSingletonId() );
+			cur = (CFSecBuffSysCluster)(schema.getTableSysCluster().readDerivedByIdIdx( Authorization,
+				cur.getRequiredSingletonId() ));
 			deleteSysCluster( Authorization, cur );
 		}
 	}
@@ -443,25 +443,25 @@ public class CFIntRamSysClusterTable
 	public void deleteSysClusterByClusterIdx( ICFSecAuthorization Authorization,
 		ICFSecSysClusterByClusterIdxKey argKey )
 	{
-		ICFSecSysCluster cur;
+		CFSecBuffSysCluster cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecSysCluster> matchSet = new LinkedList<ICFSecSysCluster>();
-		Iterator<ICFSecSysCluster> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffSysCluster> matchSet = new LinkedList<CFSecBuffSysCluster>();
+		Iterator<CFSecBuffSysCluster> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecSysCluster> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffSysCluster> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSysCluster().readDerivedByIdIdx( Authorization,
-				cur.getRequiredSingletonId() );
+			cur = (CFSecBuffSysCluster)(schema.getTableSysCluster().readDerivedByIdIdx( Authorization,
+				cur.getRequiredSingletonId() ));
 			deleteSysCluster( Authorization, cur );
 		}
 	}

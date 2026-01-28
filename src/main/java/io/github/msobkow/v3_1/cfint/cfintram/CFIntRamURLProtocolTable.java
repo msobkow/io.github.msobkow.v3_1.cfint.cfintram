@@ -452,20 +452,20 @@ public class CFIntRamURLProtocolTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFIntURLProtocol cur;
-		LinkedList<ICFIntURLProtocol> matchSet = new LinkedList<ICFIntURLProtocol>();
-		Iterator<ICFIntURLProtocol> values = dictByPKey.values().iterator();
+		CFIntBuffURLProtocol cur;
+		LinkedList<CFIntBuffURLProtocol> matchSet = new LinkedList<CFIntBuffURLProtocol>();
+		Iterator<CFIntBuffURLProtocol> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntURLProtocol> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffURLProtocol> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableURLProtocol().readDerivedByIdIdx( Authorization,
-				cur.getRequiredURLProtocolId() );
+			cur = (CFIntBuffURLProtocol)(schema.getTableURLProtocol().readDerivedByIdIdx( Authorization,
+				cur.getRequiredURLProtocolId() ));
 			deleteURLProtocol( Authorization, cur );
 		}
 	}
@@ -481,25 +481,25 @@ public class CFIntRamURLProtocolTable
 	public void deleteURLProtocolByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByUNameIdxKey argKey )
 	{
-		ICFIntURLProtocol cur;
+		CFIntBuffURLProtocol cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntURLProtocol> matchSet = new LinkedList<ICFIntURLProtocol>();
-		Iterator<ICFIntURLProtocol> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffURLProtocol> matchSet = new LinkedList<CFIntBuffURLProtocol>();
+		Iterator<CFIntBuffURLProtocol> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntURLProtocol> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffURLProtocol> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableURLProtocol().readDerivedByIdIdx( Authorization,
-				cur.getRequiredURLProtocolId() );
+			cur = (CFIntBuffURLProtocol)(schema.getTableURLProtocol().readDerivedByIdIdx( Authorization,
+				cur.getRequiredURLProtocolId() ));
 			deleteURLProtocol( Authorization, cur );
 		}
 	}
@@ -515,25 +515,25 @@ public class CFIntRamURLProtocolTable
 	public void deleteURLProtocolByIsSecureIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByIsSecureIdxKey argKey )
 	{
-		ICFIntURLProtocol cur;
+		CFIntBuffURLProtocol cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntURLProtocol> matchSet = new LinkedList<ICFIntURLProtocol>();
-		Iterator<ICFIntURLProtocol> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffURLProtocol> matchSet = new LinkedList<CFIntBuffURLProtocol>();
+		Iterator<CFIntBuffURLProtocol> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntURLProtocol> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffURLProtocol> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableURLProtocol().readDerivedByIdIdx( Authorization,
-				cur.getRequiredURLProtocolId() );
+			cur = (CFIntBuffURLProtocol)(schema.getTableURLProtocol().readDerivedByIdIdx( Authorization,
+				cur.getRequiredURLProtocolId() ));
 			deleteURLProtocol( Authorization, cur );
 		}
 	}

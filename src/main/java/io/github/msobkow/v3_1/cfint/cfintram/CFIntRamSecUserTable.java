@@ -671,8 +671,8 @@ public class CFIntRamSecUserTable
 				pkey );
 		}
 					{
-						CFSecSecUserBuff editBuff = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
-						existing.getRequiredSecUserId() );
+						CFSecSecUserBuff editBuff = (CFSecSecUserBuff)(schema.getTableSecUser().readDerivedByIdIdx( Authorization,
+						existing.getRequiredSecUserId() ));
 						editBuff.setOptionalDfltDevUserId( null );
 						editBuff.setOptionalDfltDevName( null );
 						classCode = editBuff.getClassCode();
@@ -683,8 +683,8 @@ public class CFIntRamSecUserTable
 							throw new CFLibUnsupportedClassException(getClass(), S_ProcName, "-delete-clear-top-dep-", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
 						}
 					}
-		CFSecBuffSecUser editSubobj = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
-			existing.getRequiredSecUserId() );
+		CFSecBuffSecUser editSubobj = (CFSecBuffSecUser)(schema.getTableSecUser().readDerivedByIdIdx( Authorization,
+			existing.getRequiredSecUserId() ));
 			editSubobj.setOptionalDfltDevUserId( null );
 			editSubobj.setOptionalDfltDevName( null );
 		classCode = editSubobj.getClassCode();
@@ -745,20 +745,20 @@ public class CFIntRamSecUserTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFSecSecUser cur;
-		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
-		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
+		CFSecBuffSecUser cur;
+		LinkedList<CFSecBuffSecUser> matchSet = new LinkedList<CFSecBuffSecUser>();
+		Iterator<CFSecBuffSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
-				cur.getRequiredSecUserId() );
+			cur = (CFSecBuffSecUser)(schema.getTableSecUser().readDerivedByIdIdx( Authorization,
+				cur.getRequiredSecUserId() ));
 			deleteSecUser( Authorization, cur );
 		}
 	}
@@ -774,25 +774,25 @@ public class CFIntRamSecUserTable
 	public void deleteSecUserByULoginIdx( ICFSecAuthorization Authorization,
 		ICFSecSecUserByULoginIdxKey argKey )
 	{
-		ICFSecSecUser cur;
+		CFSecBuffSecUser cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
-		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffSecUser> matchSet = new LinkedList<CFSecBuffSecUser>();
+		Iterator<CFSecBuffSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
-				cur.getRequiredSecUserId() );
+			cur = (CFSecBuffSecUser)(schema.getTableSecUser().readDerivedByIdIdx( Authorization,
+				cur.getRequiredSecUserId() ));
 			deleteSecUser( Authorization, cur );
 		}
 	}
@@ -808,7 +808,7 @@ public class CFIntRamSecUserTable
 	public void deleteSecUserByEMConfIdx( ICFSecAuthorization Authorization,
 		ICFSecSecUserByEMConfIdxKey argKey )
 	{
-		ICFSecSecUser cur;
+		CFSecBuffSecUser cur;
 		boolean anyNotNull = false;
 		if( argKey.getOptionalEMailConfirmUuid6() != null ) {
 			anyNotNull = true;
@@ -816,19 +816,19 @@ public class CFIntRamSecUserTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
-		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffSecUser> matchSet = new LinkedList<CFSecBuffSecUser>();
+		Iterator<CFSecBuffSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
-				cur.getRequiredSecUserId() );
+			cur = (CFSecBuffSecUser)(schema.getTableSecUser().readDerivedByIdIdx( Authorization,
+				cur.getRequiredSecUserId() ));
 			deleteSecUser( Authorization, cur );
 		}
 	}
@@ -844,7 +844,7 @@ public class CFIntRamSecUserTable
 	public void deleteSecUserByPwdResetIdx( ICFSecAuthorization Authorization,
 		ICFSecSecUserByPwdResetIdxKey argKey )
 	{
-		ICFSecSecUser cur;
+		CFSecBuffSecUser cur;
 		boolean anyNotNull = false;
 		if( argKey.getOptionalPasswordResetUuid6() != null ) {
 			anyNotNull = true;
@@ -852,19 +852,19 @@ public class CFIntRamSecUserTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
-		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffSecUser> matchSet = new LinkedList<CFSecBuffSecUser>();
+		Iterator<CFSecBuffSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
-				cur.getRequiredSecUserId() );
+			cur = (CFSecBuffSecUser)(schema.getTableSecUser().readDerivedByIdIdx( Authorization,
+				cur.getRequiredSecUserId() ));
 			deleteSecUser( Authorization, cur );
 		}
 	}
@@ -882,7 +882,7 @@ public class CFIntRamSecUserTable
 	public void deleteSecUserByDefDevIdx( ICFSecAuthorization Authorization,
 		ICFSecSecUserByDefDevIdxKey argKey )
 	{
-		ICFSecSecUser cur;
+		CFSecBuffSecUser cur;
 		boolean anyNotNull = false;
 		if( argKey.getOptionalDfltDevUserId() != null ) {
 			anyNotNull = true;
@@ -893,19 +893,19 @@ public class CFIntRamSecUserTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecSecUser> matchSet = new LinkedList<ICFSecSecUser>();
-		Iterator<ICFSecSecUser> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffSecUser> matchSet = new LinkedList<CFSecBuffSecUser>();
+		Iterator<CFSecBuffSecUser> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecSecUser> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffSecUser> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableSecUser().readDerivedByIdIdx( Authorization,
-				cur.getRequiredSecUserId() );
+			cur = (CFSecBuffSecUser)(schema.getTableSecUser().readDerivedByIdIdx( Authorization,
+				cur.getRequiredSecUserId() ));
 			deleteSecUser( Authorization, cur );
 		}
 	}

@@ -440,20 +440,20 @@ public class CFIntRamISOCtryTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFSecISOCtry cur;
-		LinkedList<ICFSecISOCtry> matchSet = new LinkedList<ICFSecISOCtry>();
-		Iterator<ICFSecISOCtry> values = dictByPKey.values().iterator();
+		CFSecBuffISOCtry cur;
+		LinkedList<CFSecBuffISOCtry> matchSet = new LinkedList<CFSecBuffISOCtry>();
+		Iterator<CFSecBuffISOCtry> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecISOCtry> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffISOCtry> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableISOCtry().readDerivedByIdIdx( Authorization,
-				cur.getRequiredISOCtryId() );
+			cur = (CFSecBuffISOCtry)(schema.getTableISOCtry().readDerivedByIdIdx( Authorization,
+				cur.getRequiredISOCtryId() ));
 			deleteISOCtry( Authorization, cur );
 		}
 	}
@@ -469,25 +469,25 @@ public class CFIntRamISOCtryTable
 	public void deleteISOCtryByISOCodeIdx( ICFSecAuthorization Authorization,
 		ICFSecISOCtryByISOCodeIdxKey argKey )
 	{
-		ICFSecISOCtry cur;
+		CFSecBuffISOCtry cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecISOCtry> matchSet = new LinkedList<ICFSecISOCtry>();
-		Iterator<ICFSecISOCtry> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffISOCtry> matchSet = new LinkedList<CFSecBuffISOCtry>();
+		Iterator<CFSecBuffISOCtry> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecISOCtry> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffISOCtry> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableISOCtry().readDerivedByIdIdx( Authorization,
-				cur.getRequiredISOCtryId() );
+			cur = (CFSecBuffISOCtry)(schema.getTableISOCtry().readDerivedByIdIdx( Authorization,
+				cur.getRequiredISOCtryId() ));
 			deleteISOCtry( Authorization, cur );
 		}
 	}
@@ -503,25 +503,25 @@ public class CFIntRamISOCtryTable
 	public void deleteISOCtryByNameIdx( ICFSecAuthorization Authorization,
 		ICFSecISOCtryByNameIdxKey argKey )
 	{
-		ICFSecISOCtry cur;
+		CFSecBuffISOCtry cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecISOCtry> matchSet = new LinkedList<ICFSecISOCtry>();
-		Iterator<ICFSecISOCtry> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffISOCtry> matchSet = new LinkedList<CFSecBuffISOCtry>();
+		Iterator<CFSecBuffISOCtry> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecISOCtry> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffISOCtry> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableISOCtry().readDerivedByIdIdx( Authorization,
-				cur.getRequiredISOCtryId() );
+			cur = (CFSecBuffISOCtry)(schema.getTableISOCtry().readDerivedByIdIdx( Authorization,
+				cur.getRequiredISOCtryId() ));
 			deleteISOCtry( Authorization, cur );
 		}
 	}

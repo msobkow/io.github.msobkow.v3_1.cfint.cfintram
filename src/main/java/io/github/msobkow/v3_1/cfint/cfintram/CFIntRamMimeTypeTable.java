@@ -364,20 +364,20 @@ public class CFIntRamMimeTypeTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFIntMimeType cur;
-		LinkedList<ICFIntMimeType> matchSet = new LinkedList<ICFIntMimeType>();
-		Iterator<ICFIntMimeType> values = dictByPKey.values().iterator();
+		CFIntBuffMimeType cur;
+		LinkedList<CFIntBuffMimeType> matchSet = new LinkedList<CFIntBuffMimeType>();
+		Iterator<CFIntBuffMimeType> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntMimeType> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffMimeType> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableMimeType().readDerivedByIdIdx( Authorization,
-				cur.getRequiredMimeTypeId() );
+			cur = (CFIntBuffMimeType)(schema.getTableMimeType().readDerivedByIdIdx( Authorization,
+				cur.getRequiredMimeTypeId() ));
 			deleteMimeType( Authorization, cur );
 		}
 	}
@@ -393,25 +393,25 @@ public class CFIntRamMimeTypeTable
 	public void deleteMimeTypeByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMimeTypeByUNameIdxKey argKey )
 	{
-		ICFIntMimeType cur;
+		CFIntBuffMimeType cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFIntMimeType> matchSet = new LinkedList<ICFIntMimeType>();
-		Iterator<ICFIntMimeType> values = dictByPKey.values().iterator();
+		LinkedList<CFIntBuffMimeType> matchSet = new LinkedList<CFIntBuffMimeType>();
+		Iterator<CFIntBuffMimeType> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFIntMimeType> iterMatch = matchSet.iterator();
+		Iterator<CFIntBuffMimeType> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableMimeType().readDerivedByIdIdx( Authorization,
-				cur.getRequiredMimeTypeId() );
+			cur = (CFIntBuffMimeType)(schema.getTableMimeType().readDerivedByIdIdx( Authorization,
+				cur.getRequiredMimeTypeId() ));
 			deleteMimeType( Authorization, cur );
 		}
 	}

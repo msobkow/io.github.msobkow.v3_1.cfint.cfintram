@@ -783,20 +783,20 @@ public class CFIntRamTSecGrpIncTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		ICFSecTSecGrpInc cur;
-		LinkedList<ICFSecTSecGrpInc> matchSet = new LinkedList<ICFSecTSecGrpInc>();
-		Iterator<ICFSecTSecGrpInc> values = dictByPKey.values().iterator();
+		CFSecBuffTSecGrpInc cur;
+		LinkedList<CFSecBuffTSecGrpInc> matchSet = new LinkedList<CFSecBuffTSecGrpInc>();
+		Iterator<CFSecBuffTSecGrpInc> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecTSecGrpInc> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffTSecGrpInc> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
-				cur.getRequiredTSecGrpIncId() );
+			cur = (CFSecBuffTSecGrpInc)(schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
+				cur.getRequiredTSecGrpIncId() ));
 			deleteTSecGrpInc( Authorization, cur );
 		}
 	}
@@ -812,25 +812,25 @@ public class CFIntRamTSecGrpIncTable
 	public void deleteTSecGrpIncByTenantIdx( ICFSecAuthorization Authorization,
 		ICFSecTSecGrpIncByTenantIdxKey argKey )
 	{
-		ICFSecTSecGrpInc cur;
+		CFSecBuffTSecGrpInc cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecTSecGrpInc> matchSet = new LinkedList<ICFSecTSecGrpInc>();
-		Iterator<ICFSecTSecGrpInc> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffTSecGrpInc> matchSet = new LinkedList<CFSecBuffTSecGrpInc>();
+		Iterator<CFSecBuffTSecGrpInc> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecTSecGrpInc> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffTSecGrpInc> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
-				cur.getRequiredTSecGrpIncId() );
+			cur = (CFSecBuffTSecGrpInc)(schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
+				cur.getRequiredTSecGrpIncId() ));
 			deleteTSecGrpInc( Authorization, cur );
 		}
 	}
@@ -846,25 +846,25 @@ public class CFIntRamTSecGrpIncTable
 	public void deleteTSecGrpIncByGroupIdx( ICFSecAuthorization Authorization,
 		ICFSecTSecGrpIncByGroupIdxKey argKey )
 	{
-		ICFSecTSecGrpInc cur;
+		CFSecBuffTSecGrpInc cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecTSecGrpInc> matchSet = new LinkedList<ICFSecTSecGrpInc>();
-		Iterator<ICFSecTSecGrpInc> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffTSecGrpInc> matchSet = new LinkedList<CFSecBuffTSecGrpInc>();
+		Iterator<CFSecBuffTSecGrpInc> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecTSecGrpInc> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffTSecGrpInc> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
-				cur.getRequiredTSecGrpIncId() );
+			cur = (CFSecBuffTSecGrpInc)(schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
+				cur.getRequiredTSecGrpIncId() ));
 			deleteTSecGrpInc( Authorization, cur );
 		}
 	}
@@ -880,25 +880,25 @@ public class CFIntRamTSecGrpIncTable
 	public void deleteTSecGrpIncByIncludeIdx( ICFSecAuthorization Authorization,
 		ICFSecTSecGrpIncByIncludeIdxKey argKey )
 	{
-		ICFSecTSecGrpInc cur;
+		CFSecBuffTSecGrpInc cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecTSecGrpInc> matchSet = new LinkedList<ICFSecTSecGrpInc>();
-		Iterator<ICFSecTSecGrpInc> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffTSecGrpInc> matchSet = new LinkedList<CFSecBuffTSecGrpInc>();
+		Iterator<CFSecBuffTSecGrpInc> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecTSecGrpInc> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffTSecGrpInc> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
-				cur.getRequiredTSecGrpIncId() );
+			cur = (CFSecBuffTSecGrpInc)(schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
+				cur.getRequiredTSecGrpIncId() ));
 			deleteTSecGrpInc( Authorization, cur );
 		}
 	}
@@ -918,7 +918,7 @@ public class CFIntRamTSecGrpIncTable
 	public void deleteTSecGrpIncByUIncludeIdx( ICFSecAuthorization Authorization,
 		ICFSecTSecGrpIncByUIncludeIdxKey argKey )
 	{
-		ICFSecTSecGrpInc cur;
+		CFSecBuffTSecGrpInc cur;
 		boolean anyNotNull = false;
 		anyNotNull = true;
 		anyNotNull = true;
@@ -926,19 +926,19 @@ public class CFIntRamTSecGrpIncTable
 		if( ! anyNotNull ) {
 			return;
 		}
-		LinkedList<ICFSecTSecGrpInc> matchSet = new LinkedList<ICFSecTSecGrpInc>();
-		Iterator<ICFSecTSecGrpInc> values = dictByPKey.values().iterator();
+		LinkedList<CFSecBuffTSecGrpInc> matchSet = new LinkedList<CFSecBuffTSecGrpInc>();
+		Iterator<CFSecBuffTSecGrpInc> values = dictByPKey.values().iterator();
 		while( values.hasNext() ) {
 			cur = values.next();
 			if( argKey.equals( cur ) ) {
 				matchSet.add( cur );
 			}
 		}
-		Iterator<ICFSecTSecGrpInc> iterMatch = matchSet.iterator();
+		Iterator<CFSecBuffTSecGrpInc> iterMatch = matchSet.iterator();
 		while( iterMatch.hasNext() ) {
 			cur = iterMatch.next();
-			cur = schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
-				cur.getRequiredTSecGrpIncId() );
+			cur = (CFSecBuffTSecGrpInc)(schema.getTableTSecGrpInc().readDerivedByIdIdx( Authorization,
+				cur.getRequiredTSecGrpIncId() ));
 			deleteTSecGrpInc( Authorization, cur );
 		}
 	}
