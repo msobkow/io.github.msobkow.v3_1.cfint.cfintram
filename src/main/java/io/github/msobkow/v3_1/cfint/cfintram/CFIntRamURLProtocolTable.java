@@ -173,7 +173,7 @@ public class CFIntRamURLProtocolTable
 	public ICFIntURLProtocol lockDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
-		final String S_ProcName = "CFIntRamURLProtocol.readDerived";
+		final String S_ProcName = "CFIntRamURLProtocol.lockDerived";
 		ICFIntURLProtocol buff;
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
@@ -200,8 +200,8 @@ public class CFIntRamURLProtocolTable
 	{
 		final String S_ProcName = "CFIntRamURLProtocol.readDerivedByUNameIdx";
 		CFIntBuffURLProtocolByUNameIdxKey key = (CFIntBuffURLProtocolByUNameIdxKey)schema.getFactoryURLProtocol().newByUNameIdxKey();
-		key.setRequiredName( Name );
 
+		key.setRequiredName( Name );
 		ICFIntURLProtocol buff;
 		if( dictByUNameIdx.containsKey( key ) ) {
 			buff = dictByUNameIdx.get( key );
@@ -217,8 +217,8 @@ public class CFIntRamURLProtocolTable
 	{
 		final String S_ProcName = "CFIntRamURLProtocol.readDerivedByIsSecureIdx";
 		CFIntBuffURLProtocolByIsSecureIdxKey key = (CFIntBuffURLProtocolByIsSecureIdxKey)schema.getFactoryURLProtocol().newByIsSecureIdxKey();
-		key.setRequiredIsSecure( IsSecure );
 
+		key.setRequiredIsSecure( IsSecure );
 		ICFIntURLProtocol[] recArray;
 		if( dictByIsSecureIdx.containsKey( key ) ) {
 			Map< Integer, CFIntBuffURLProtocol > subdictIsSecureIdx

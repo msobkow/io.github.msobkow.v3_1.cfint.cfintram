@@ -214,7 +214,7 @@ public class CFIntRamTSecGroupTable
 	public ICFSecTSecGroup lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamTSecGroup.readDerived";
+		final String S_ProcName = "CFIntRamTSecGroup.lockDerived";
 		ICFSecTSecGroup buff;
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
@@ -241,8 +241,8 @@ public class CFIntRamTSecGroupTable
 	{
 		final String S_ProcName = "CFIntRamTSecGroup.readDerivedByTenantIdx";
 		CFSecBuffTSecGroupByTenantIdxKey key = (CFSecBuffTSecGroupByTenantIdxKey)schema.getFactoryTSecGroup().newByTenantIdxKey();
-		key.setRequiredTenantId( TenantId );
 
+		key.setRequiredTenantId( TenantId );
 		ICFSecTSecGroup[] recArray;
 		if( dictByTenantIdx.containsKey( key ) ) {
 			Map< CFLibDbKeyHash256, CFSecBuffTSecGroup > subdictTenantIdx
@@ -269,9 +269,9 @@ public class CFIntRamTSecGroupTable
 	{
 		final String S_ProcName = "CFIntRamTSecGroup.readDerivedByTenantVisIdx";
 		CFSecBuffTSecGroupByTenantVisIdxKey key = (CFSecBuffTSecGroupByTenantVisIdxKey)schema.getFactoryTSecGroup().newByTenantVisIdxKey();
+
 		key.setRequiredTenantId( TenantId );
 		key.setRequiredIsVisible( IsVisible );
-
 		ICFSecTSecGroup[] recArray;
 		if( dictByTenantVisIdx.containsKey( key ) ) {
 			Map< CFLibDbKeyHash256, CFSecBuffTSecGroup > subdictTenantVisIdx
@@ -298,9 +298,9 @@ public class CFIntRamTSecGroupTable
 	{
 		final String S_ProcName = "CFIntRamTSecGroup.readDerivedByUNameIdx";
 		CFSecBuffTSecGroupByUNameIdxKey key = (CFSecBuffTSecGroupByUNameIdxKey)schema.getFactoryTSecGroup().newByUNameIdxKey();
+
 		key.setRequiredTenantId( TenantId );
 		key.setRequiredName( Name );
-
 		ICFSecTSecGroup buff;
 		if( dictByUNameIdx.containsKey( key ) ) {
 			buff = dictByUNameIdx.get( key );

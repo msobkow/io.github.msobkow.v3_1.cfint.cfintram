@@ -154,7 +154,7 @@ public class CFIntRamMimeTypeTable
 	public ICFIntMimeType lockDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
-		final String S_ProcName = "CFIntRamMimeType.readDerived";
+		final String S_ProcName = "CFIntRamMimeType.lockDerived";
 		ICFIntMimeType buff;
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
@@ -181,8 +181,8 @@ public class CFIntRamMimeTypeTable
 	{
 		final String S_ProcName = "CFIntRamMimeType.readDerivedByUNameIdx";
 		CFIntBuffMimeTypeByUNameIdxKey key = (CFIntBuffMimeTypeByUNameIdxKey)schema.getFactoryMimeType().newByUNameIdxKey();
-		key.setRequiredName( Name );
 
+		key.setRequiredName( Name );
 		ICFIntMimeType buff;
 		if( dictByUNameIdx.containsKey( key ) ) {
 			buff = dictByUNameIdx.get( key );

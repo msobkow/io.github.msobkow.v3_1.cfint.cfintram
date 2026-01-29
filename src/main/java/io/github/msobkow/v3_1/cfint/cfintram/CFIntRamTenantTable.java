@@ -194,7 +194,7 @@ public class CFIntRamTenantTable
 	public ICFSecTenant lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamTenant.readDerived";
+		final String S_ProcName = "CFIntRamTenant.lockDerived";
 		ICFSecTenant buff;
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
@@ -221,8 +221,8 @@ public class CFIntRamTenantTable
 	{
 		final String S_ProcName = "CFIntRamTenant.readDerivedByClusterIdx";
 		CFSecBuffTenantByClusterIdxKey key = (CFSecBuffTenantByClusterIdxKey)schema.getFactoryTenant().newByClusterIdxKey();
-		key.setRequiredClusterId( ClusterId );
 
+		key.setRequiredClusterId( ClusterId );
 		ICFSecTenant[] recArray;
 		if( dictByClusterIdx.containsKey( key ) ) {
 			Map< CFLibDbKeyHash256, CFSecBuffTenant > subdictClusterIdx
@@ -249,9 +249,9 @@ public class CFIntRamTenantTable
 	{
 		final String S_ProcName = "CFIntRamTenant.readDerivedByUNameIdx";
 		CFSecBuffTenantByUNameIdxKey key = (CFSecBuffTenantByUNameIdxKey)schema.getFactoryTenant().newByUNameIdxKey();
+
 		key.setRequiredClusterId( ClusterId );
 		key.setRequiredTenantName( TenantName );
-
 		ICFSecTenant buff;
 		if( dictByUNameIdx.containsKey( key ) ) {
 			buff = dictByUNameIdx.get( key );

@@ -233,7 +233,7 @@ public class CFIntRamLicenseTable
 	public ICFIntLicense lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamLicense.readDerived";
+		final String S_ProcName = "CFIntRamLicense.lockDerived";
 		ICFIntLicense buff;
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
@@ -260,8 +260,8 @@ public class CFIntRamLicenseTable
 	{
 		final String S_ProcName = "CFIntRamLicense.readDerivedByLicnTenantIdx";
 		CFIntBuffLicenseByLicnTenantIdxKey key = (CFIntBuffLicenseByLicnTenantIdxKey)schema.getFactoryLicense().newByLicnTenantIdxKey();
-		key.setRequiredTenantId( TenantId );
 
+		key.setRequiredTenantId( TenantId );
 		ICFIntLicense[] recArray;
 		if( dictByLicnTenantIdx.containsKey( key ) ) {
 			Map< CFLibDbKeyHash256, CFIntBuffLicense > subdictLicnTenantIdx
@@ -287,8 +287,8 @@ public class CFIntRamLicenseTable
 	{
 		final String S_ProcName = "CFIntRamLicense.readDerivedByDomainIdx";
 		CFIntBuffLicenseByDomainIdxKey key = (CFIntBuffLicenseByDomainIdxKey)schema.getFactoryLicense().newByDomainIdxKey();
-		key.setRequiredTopDomainId( TopDomainId );
 
+		key.setRequiredTopDomainId( TopDomainId );
 		ICFIntLicense[] recArray;
 		if( dictByDomainIdx.containsKey( key ) ) {
 			Map< CFLibDbKeyHash256, CFIntBuffLicense > subdictDomainIdx
@@ -315,9 +315,9 @@ public class CFIntRamLicenseTable
 	{
 		final String S_ProcName = "CFIntRamLicense.readDerivedByUNameIdx";
 		CFIntBuffLicenseByUNameIdxKey key = (CFIntBuffLicenseByUNameIdxKey)schema.getFactoryLicense().newByUNameIdxKey();
+
 		key.setRequiredTopDomainId( TopDomainId );
 		key.setRequiredName( Name );
-
 		ICFIntLicense buff;
 		if( dictByUNameIdx.containsKey( key ) ) {
 			buff = dictByUNameIdx.get( key );

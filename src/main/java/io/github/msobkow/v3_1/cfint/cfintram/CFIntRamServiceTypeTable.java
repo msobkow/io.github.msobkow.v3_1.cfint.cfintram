@@ -154,7 +154,7 @@ public class CFIntRamServiceTypeTable
 	public ICFSecServiceType lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		final String S_ProcName = "CFIntRamServiceType.readDerived";
+		final String S_ProcName = "CFIntRamServiceType.lockDerived";
 		ICFSecServiceType buff;
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
@@ -181,8 +181,8 @@ public class CFIntRamServiceTypeTable
 	{
 		final String S_ProcName = "CFIntRamServiceType.readDerivedByUDescrIdx";
 		CFSecBuffServiceTypeByUDescrIdxKey key = (CFSecBuffServiceTypeByUDescrIdxKey)schema.getFactoryServiceType().newByUDescrIdxKey();
-		key.setRequiredDescription( Description );
 
+		key.setRequiredDescription( Description );
 		ICFSecServiceType buff;
 		if( dictByUDescrIdx.containsKey( key ) ) {
 			buff = dictByUDescrIdx.get( key );
