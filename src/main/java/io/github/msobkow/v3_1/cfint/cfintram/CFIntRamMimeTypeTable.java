@@ -92,7 +92,7 @@ public class CFIntRamMimeTypeTable
 	{
 		final String S_ProcName = "createMimeType";
 		
-		CFIntBuffMimeType Buff = ensureRec(iBuff);
+		CFIntBuffMimeType Buff = (CFIntBuffMimeType)ensureRec(iBuff);
 		Integer pkey;
 		pkey = schema.nextMimeTypeIdGen();
 		Buff.setRequiredMimeTypeId( pkey );
@@ -275,7 +275,7 @@ public class CFIntRamMimeTypeTable
 	public ICFIntMimeType updateMimeType( ICFSecAuthorization Authorization,
 		ICFIntMimeType iBuff )
 	{
-		CFIntBuffMimeType Buff = ensureRec(iBuff);
+		CFIntBuffMimeType Buff = (CFIntBuffMimeType)ensureRec(iBuff);
 		Integer pkey = Buff.getPKey();
 		CFIntBuffMimeType existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -330,7 +330,7 @@ public class CFIntRamMimeTypeTable
 		ICFIntMimeType iBuff )
 	{
 		final String S_ProcName = "CFIntRamMimeTypeTable.deleteMimeType() ";
-		CFIntBuffMimeType Buff = ensureRec(iBuff);
+		CFIntBuffMimeType Buff = (CFIntBuffMimeType)ensureRec(iBuff);
 		int classCode;
 		Integer pkey = (Integer)(Buff.getPKey());
 		CFIntBuffMimeType existing = dictByPKey.get( pkey );

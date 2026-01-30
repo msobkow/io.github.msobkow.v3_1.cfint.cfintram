@@ -104,7 +104,7 @@ public class CFIntRamSubProjectTable
 	{
 		final String S_ProcName = "createSubProject";
 		
-		CFIntBuffSubProject Buff = ensureRec(iBuff);
+		CFIntBuffSubProject Buff = (CFIntBuffSubProject)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextSubProjectIdGen();
 		Buff.setRequiredId( pkey );
@@ -446,7 +446,7 @@ public class CFIntRamSubProjectTable
 	public ICFIntSubProject updateSubProject( ICFSecAuthorization Authorization,
 		ICFIntSubProject iBuff )
 	{
-		CFIntBuffSubProject Buff = ensureRec(iBuff);
+		CFIntBuffSubProject Buff = (CFIntBuffSubProject)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		CFIntBuffSubProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -581,7 +581,7 @@ public class CFIntRamSubProjectTable
 		ICFIntSubProject iBuff )
 	{
 		final String S_ProcName = "CFIntRamSubProjectTable.deleteSubProject() ";
-		CFIntBuffSubProject Buff = ensureRec(iBuff);
+		CFIntBuffSubProject Buff = (CFIntBuffSubProject)ensureRec(iBuff);
 		int classCode;
 		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
 		CFIntBuffSubProject existing = dictByPKey.get( pkey );

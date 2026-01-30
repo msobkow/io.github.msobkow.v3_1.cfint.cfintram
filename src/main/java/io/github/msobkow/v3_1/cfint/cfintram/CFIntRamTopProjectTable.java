@@ -104,7 +104,7 @@ public class CFIntRamTopProjectTable
 	{
 		final String S_ProcName = "createTopProject";
 		
-		CFIntBuffTopProject Buff = ensureRec(iBuff);
+		CFIntBuffTopProject Buff = (CFIntBuffTopProject)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextTopProjectIdGen();
 		Buff.setRequiredId( pkey );
@@ -446,7 +446,7 @@ public class CFIntRamTopProjectTable
 	public ICFIntTopProject updateTopProject( ICFSecAuthorization Authorization,
 		ICFIntTopProject iBuff )
 	{
-		CFIntBuffTopProject Buff = ensureRec(iBuff);
+		CFIntBuffTopProject Buff = (CFIntBuffTopProject)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		CFIntBuffTopProject existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -581,7 +581,7 @@ public class CFIntRamTopProjectTable
 		ICFIntTopProject iBuff )
 	{
 		final String S_ProcName = "CFIntRamTopProjectTable.deleteTopProject() ";
-		CFIntBuffTopProject Buff = ensureRec(iBuff);
+		CFIntBuffTopProject Buff = (CFIntBuffTopProject)ensureRec(iBuff);
 		int classCode;
 		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
 		CFIntBuffTopProject existing = dictByPKey.get( pkey );

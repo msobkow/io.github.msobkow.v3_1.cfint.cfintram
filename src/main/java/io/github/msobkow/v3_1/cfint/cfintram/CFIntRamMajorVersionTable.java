@@ -104,7 +104,7 @@ public class CFIntRamMajorVersionTable
 	{
 		final String S_ProcName = "createMajorVersion";
 		
-		CFIntBuffMajorVersion Buff = ensureRec(iBuff);
+		CFIntBuffMajorVersion Buff = (CFIntBuffMajorVersion)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextMajorVersionIdGen();
 		Buff.setRequiredId( pkey );
@@ -446,7 +446,7 @@ public class CFIntRamMajorVersionTable
 	public ICFIntMajorVersion updateMajorVersion( ICFSecAuthorization Authorization,
 		ICFIntMajorVersion iBuff )
 	{
-		CFIntBuffMajorVersion Buff = ensureRec(iBuff);
+		CFIntBuffMajorVersion Buff = (CFIntBuffMajorVersion)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		CFIntBuffMajorVersion existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -581,7 +581,7 @@ public class CFIntRamMajorVersionTable
 		ICFIntMajorVersion iBuff )
 	{
 		final String S_ProcName = "CFIntRamMajorVersionTable.deleteMajorVersion() ";
-		CFIntBuffMajorVersion Buff = ensureRec(iBuff);
+		CFIntBuffMajorVersion Buff = (CFIntBuffMajorVersion)ensureRec(iBuff);
 		int classCode;
 		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
 		CFIntBuffMajorVersion existing = dictByPKey.get( pkey );

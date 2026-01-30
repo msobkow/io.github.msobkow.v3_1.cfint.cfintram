@@ -54,43 +54,17 @@ public class CFIntRamSchema
 	extends CFIntBuffSchema
 	implements ICFIntSchema
 {
-	protected short nextISOCcyIdGenValue = 1;
-	protected short nextISOCtryIdGenValue = 1;
-	protected short nextISOLangIdGenValue = 1;
-	protected short nextISOTZoneIdGenValue = 1;
 	protected int nextMimeTypeIdGenValue = 1;
 	protected int nextURLProtocolIdGenValue = 1;
-	protected long nextClusterIdGenValue = 1;
 
 
 	public CFIntRamSchema() {
 		super();
-		tableCluster = new CFIntRamClusterTable( this );
-		tableHostNode = new CFIntRamHostNodeTable( this );
-		tableISOCcy = new CFIntRamISOCcyTable( this );
-		tableISOCtry = new CFIntRamISOCtryTable( this );
-		tableISOCtryCcy = new CFIntRamISOCtryCcyTable( this );
-		tableISOCtryLang = new CFIntRamISOCtryLangTable( this );
-		tableISOLang = new CFIntRamISOLangTable( this );
-		tableISOTZone = new CFIntRamISOTZoneTable( this );
 		tableLicense = new CFIntRamLicenseTable( this );
 		tableMajorVersion = new CFIntRamMajorVersionTable( this );
 		tableMimeType = new CFIntRamMimeTypeTable( this );
 		tableMinorVersion = new CFIntRamMinorVersionTable( this );
-		tableSecDevice = new CFIntRamSecDeviceTable( this );
-		tableSecGroup = new CFIntRamSecGroupTable( this );
-		tableSecGrpInc = new CFIntRamSecGrpIncTable( this );
-		tableSecGrpMemb = new CFIntRamSecGrpMembTable( this );
-		tableSecSession = new CFIntRamSecSessionTable( this );
-		tableSecUser = new CFIntRamSecUserTable( this );
-		tableService = new CFIntRamServiceTable( this );
-		tableServiceType = new CFIntRamServiceTypeTable( this );
 		tableSubProject = new CFIntRamSubProjectTable( this );
-		tableSysCluster = new CFIntRamSysClusterTable( this );
-		tableTSecGroup = new CFIntRamTSecGroupTable( this );
-		tableTSecGrpInc = new CFIntRamTSecGrpIncTable( this );
-		tableTSecGrpMemb = new CFIntRamTSecGrpMembTable( this );
-		tableTenant = new CFIntRamTenantTable( this );
 		tableTld = new CFIntRamTldTable( this );
 		tableTopDomain = new CFIntRamTopDomainTable( this );
 		tableTopProject = new CFIntRamTopProjectTable( this );
@@ -101,26 +75,6 @@ public class CFIntRamSchema
 		throw new CFLibMustOverrideException( getClass(), "newSchema" );
 	}
 
-	public short nextISOCcyIdGen() {
-		short next = nextISOCcyIdGenValue++;
-		return( next );
-	}
-
-	public short nextISOCtryIdGen() {
-		short next = nextISOCtryIdGenValue++;
-		return( next );
-	}
-
-	public short nextISOLangIdGen() {
-		short next = nextISOLangIdGenValue++;
-		return( next );
-	}
-
-	public short nextISOTZoneIdGen() {
-		short next = nextISOTZoneIdGenValue++;
-		return( next );
-	}
-
 	public int nextMimeTypeIdGen() {
 		int next = nextMimeTypeIdGenValue++;
 		return( next );
@@ -128,11 +82,6 @@ public class CFIntRamSchema
 
 	public int nextURLProtocolIdGen() {
 		int next = nextURLProtocolIdGenValue++;
-		return( next );
-	}
-
-	public long nextClusterIdGen() {
-		long next = nextClusterIdGenValue++;
 		return( next );
 	}
 

@@ -104,7 +104,7 @@ public class CFIntRamMinorVersionTable
 	{
 		final String S_ProcName = "createMinorVersion";
 		
-		CFIntBuffMinorVersion Buff = ensureRec(iBuff);
+		CFIntBuffMinorVersion Buff = (CFIntBuffMinorVersion)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextMinorVersionIdGen();
 		Buff.setRequiredId( pkey );
@@ -446,7 +446,7 @@ public class CFIntRamMinorVersionTable
 	public ICFIntMinorVersion updateMinorVersion( ICFSecAuthorization Authorization,
 		ICFIntMinorVersion iBuff )
 	{
-		CFIntBuffMinorVersion Buff = ensureRec(iBuff);
+		CFIntBuffMinorVersion Buff = (CFIntBuffMinorVersion)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		CFIntBuffMinorVersion existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -581,7 +581,7 @@ public class CFIntRamMinorVersionTable
 		ICFIntMinorVersion iBuff )
 	{
 		final String S_ProcName = "CFIntRamMinorVersionTable.deleteMinorVersion() ";
-		CFIntBuffMinorVersion Buff = ensureRec(iBuff);
+		CFIntBuffMinorVersion Buff = (CFIntBuffMinorVersion)ensureRec(iBuff);
 		int classCode;
 		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
 		CFIntBuffMinorVersion existing = dictByPKey.get( pkey );

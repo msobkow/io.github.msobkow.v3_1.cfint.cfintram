@@ -98,7 +98,7 @@ public class CFIntRamTldTable
 	{
 		final String S_ProcName = "createTld";
 		
-		CFIntBuffTld Buff = ensureRec(iBuff);
+		CFIntBuffTld Buff = (CFIntBuffTld)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextTldIdGen();
 		Buff.setRequiredId( pkey );
@@ -358,7 +358,7 @@ public class CFIntRamTldTable
 	public ICFIntTld updateTld( ICFSecAuthorization Authorization,
 		ICFIntTld iBuff )
 	{
-		CFIntBuffTld Buff = ensureRec(iBuff);
+		CFIntBuffTld Buff = (CFIntBuffTld)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		CFIntBuffTld existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -452,7 +452,7 @@ public class CFIntRamTldTable
 		ICFIntTld iBuff )
 	{
 		final String S_ProcName = "CFIntRamTldTable.deleteTld() ";
-		CFIntBuffTld Buff = ensureRec(iBuff);
+		CFIntBuffTld Buff = (CFIntBuffTld)ensureRec(iBuff);
 		int classCode;
 		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
 		CFIntBuffTld existing = dictByPKey.get( pkey );

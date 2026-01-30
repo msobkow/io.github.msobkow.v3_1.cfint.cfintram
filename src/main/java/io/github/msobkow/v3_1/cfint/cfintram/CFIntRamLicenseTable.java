@@ -104,7 +104,7 @@ public class CFIntRamLicenseTable
 	{
 		final String S_ProcName = "createLicense";
 		
-		CFIntBuffLicense Buff = ensureRec(iBuff);
+		CFIntBuffLicense Buff = (CFIntBuffLicense)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextLicenseIdGen();
 		Buff.setRequiredId( pkey );
@@ -446,7 +446,7 @@ public class CFIntRamLicenseTable
 	public ICFIntLicense updateLicense( ICFSecAuthorization Authorization,
 		ICFIntLicense iBuff )
 	{
-		CFIntBuffLicense Buff = ensureRec(iBuff);
+		CFIntBuffLicense Buff = (CFIntBuffLicense)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		CFIntBuffLicense existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -581,7 +581,7 @@ public class CFIntRamLicenseTable
 		ICFIntLicense iBuff )
 	{
 		final String S_ProcName = "CFIntRamLicenseTable.deleteLicense() ";
-		CFIntBuffLicense Buff = ensureRec(iBuff);
+		CFIntBuffLicense Buff = (CFIntBuffLicense)ensureRec(iBuff);
 		int classCode;
 		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
 		CFIntBuffLicense existing = dictByPKey.get( pkey );

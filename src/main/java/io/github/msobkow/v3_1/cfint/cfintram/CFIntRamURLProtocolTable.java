@@ -98,7 +98,7 @@ public class CFIntRamURLProtocolTable
 	{
 		final String S_ProcName = "createURLProtocol";
 		
-		CFIntBuffURLProtocol Buff = ensureRec(iBuff);
+		CFIntBuffURLProtocol Buff = (CFIntBuffURLProtocol)ensureRec(iBuff);
 		Integer pkey;
 		pkey = schema.nextURLProtocolIdGen();
 		Buff.setRequiredURLProtocolId( pkey );
@@ -338,7 +338,7 @@ public class CFIntRamURLProtocolTable
 	public ICFIntURLProtocol updateURLProtocol( ICFSecAuthorization Authorization,
 		ICFIntURLProtocol iBuff )
 	{
-		CFIntBuffURLProtocol Buff = ensureRec(iBuff);
+		CFIntBuffURLProtocol Buff = (CFIntBuffURLProtocol)ensureRec(iBuff);
 		Integer pkey = Buff.getPKey();
 		CFIntBuffURLProtocol existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -412,7 +412,7 @@ public class CFIntRamURLProtocolTable
 		ICFIntURLProtocol iBuff )
 	{
 		final String S_ProcName = "CFIntRamURLProtocolTable.deleteURLProtocol() ";
-		CFIntBuffURLProtocol Buff = ensureRec(iBuff);
+		CFIntBuffURLProtocol Buff = (CFIntBuffURLProtocol)ensureRec(iBuff);
 		int classCode;
 		Integer pkey = (Integer)(Buff.getPKey());
 		CFIntBuffURLProtocol existing = dictByPKey.get( pkey );

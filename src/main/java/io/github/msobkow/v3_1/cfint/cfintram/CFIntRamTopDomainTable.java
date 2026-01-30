@@ -104,7 +104,7 @@ public class CFIntRamTopDomainTable
 	{
 		final String S_ProcName = "createTopDomain";
 		
-		CFIntBuffTopDomain Buff = ensureRec(iBuff);
+		CFIntBuffTopDomain Buff = (CFIntBuffTopDomain)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey;
 		pkey = schema.nextTopDomainIdGen();
 		Buff.setRequiredId( pkey );
@@ -446,7 +446,7 @@ public class CFIntRamTopDomainTable
 	public ICFIntTopDomain updateTopDomain( ICFSecAuthorization Authorization,
 		ICFIntTopDomain iBuff )
 	{
-		CFIntBuffTopDomain Buff = ensureRec(iBuff);
+		CFIntBuffTopDomain Buff = (CFIntBuffTopDomain)ensureRec(iBuff);
 		CFLibDbKeyHash256 pkey = Buff.getPKey();
 		CFIntBuffTopDomain existing = dictByPKey.get( pkey );
 		if( existing == null ) {
@@ -581,7 +581,7 @@ public class CFIntRamTopDomainTable
 		ICFIntTopDomain iBuff )
 	{
 		final String S_ProcName = "CFIntRamTopDomainTable.deleteTopDomain() ";
-		CFIntBuffTopDomain Buff = ensureRec(iBuff);
+		CFIntBuffTopDomain Buff = (CFIntBuffTopDomain)ensureRec(iBuff);
 		int classCode;
 		CFLibDbKeyHash256 pkey = (CFLibDbKeyHash256)(Buff.getPKey());
 		CFIntBuffTopDomain existing = dictByPKey.get( pkey );
