@@ -85,7 +85,7 @@ public class CFIntRamURLProtocolTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntURLProtocol.CLASS_CODE) {
-				return( ((CFIntBuffURLProtocolDefaultFactory)(schema.getFactoryURLProtocol())).ensureRec(rec) );
+				return( ((CFIntBuffURLProtocolDefaultFactory)(schema.getFactoryURLProtocol())).ensureRec((ICFIntURLProtocol)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));

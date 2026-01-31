@@ -85,7 +85,7 @@ public class CFIntRamTldTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntTld.CLASS_CODE) {
-				return( ((CFIntBuffTldDefaultFactory)(schema.getFactoryTld())).ensureRec(rec) );
+				return( ((CFIntBuffTldDefaultFactory)(schema.getFactoryTld())).ensureRec((ICFIntTld)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));

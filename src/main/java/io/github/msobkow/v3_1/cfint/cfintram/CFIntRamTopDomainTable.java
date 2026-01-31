@@ -91,7 +91,7 @@ public class CFIntRamTopDomainTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntTopDomain.CLASS_CODE) {
-				return( ((CFIntBuffTopDomainDefaultFactory)(schema.getFactoryTopDomain())).ensureRec(rec) );
+				return( ((CFIntBuffTopDomainDefaultFactory)(schema.getFactoryTopDomain())).ensureRec((ICFIntTopDomain)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));

@@ -91,7 +91,7 @@ public class CFIntRamMajorVersionTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntMajorVersion.CLASS_CODE) {
-				return( ((CFIntBuffMajorVersionDefaultFactory)(schema.getFactoryMajorVersion())).ensureRec(rec) );
+				return( ((CFIntBuffMajorVersionDefaultFactory)(schema.getFactoryMajorVersion())).ensureRec((ICFIntMajorVersion)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));

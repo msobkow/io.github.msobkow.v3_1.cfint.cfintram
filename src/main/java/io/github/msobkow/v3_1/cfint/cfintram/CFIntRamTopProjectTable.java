@@ -91,7 +91,7 @@ public class CFIntRamTopProjectTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntTopProject.CLASS_CODE) {
-				return( ((CFIntBuffTopProjectDefaultFactory)(schema.getFactoryTopProject())).ensureRec(rec) );
+				return( ((CFIntBuffTopProjectDefaultFactory)(schema.getFactoryTopProject())).ensureRec((ICFIntTopProject)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));

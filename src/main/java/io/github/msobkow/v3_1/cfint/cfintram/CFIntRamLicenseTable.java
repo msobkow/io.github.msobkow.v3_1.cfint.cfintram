@@ -91,7 +91,7 @@ public class CFIntRamLicenseTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntLicense.CLASS_CODE) {
-				return( ((CFIntBuffLicenseDefaultFactory)(schema.getFactoryLicense())).ensureRec(rec) );
+				return( ((CFIntBuffLicenseDefaultFactory)(schema.getFactoryLicense())).ensureRec((ICFIntLicense)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));

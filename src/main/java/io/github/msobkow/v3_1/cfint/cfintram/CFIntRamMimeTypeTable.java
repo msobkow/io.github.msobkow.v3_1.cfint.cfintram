@@ -79,7 +79,7 @@ public class CFIntRamMimeTypeTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntMimeType.CLASS_CODE) {
-				return( ((CFIntBuffMimeTypeDefaultFactory)(schema.getFactoryMimeType())).ensureRec(rec) );
+				return( ((CFIntBuffMimeTypeDefaultFactory)(schema.getFactoryMimeType())).ensureRec((ICFIntMimeType)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));

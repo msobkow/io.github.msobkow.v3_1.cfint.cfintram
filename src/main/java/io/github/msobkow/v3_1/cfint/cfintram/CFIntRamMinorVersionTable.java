@@ -91,7 +91,7 @@ public class CFIntRamMinorVersionTable
 		else {
 			int classCode = rec.getClassCode();
 			if (classCode == ICFIntMinorVersion.CLASS_CODE) {
-				return( ((CFIntBuffMinorVersionDefaultFactory)(schema.getFactoryMinorVersion())).ensureRec(rec) );
+				return( ((CFIntBuffMinorVersionDefaultFactory)(schema.getFactoryMinorVersion())).ensureRec((ICFIntMinorVersion)rec) );
 			}
 			else {
 				throw new CFLibUnsupportedClassException(getClass(), "ensureRec", "rec", (Integer)classCode, "Classcode not recognized: " + Integer.toString(classCode));
