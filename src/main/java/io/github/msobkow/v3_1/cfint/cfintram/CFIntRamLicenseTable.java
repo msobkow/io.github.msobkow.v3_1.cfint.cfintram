@@ -99,6 +99,7 @@ public class CFIntRamLicenseTable
 		}
 	}
 
+	@Override
 	public ICFIntLicense createLicense( ICFSecAuthorization Authorization,
 		ICFIntLicense iBuff )
 	{
@@ -216,6 +217,7 @@ public class CFIntRamLicenseTable
 		}
 	}
 
+	@Override
 	public ICFIntLicense readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -230,6 +232,7 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntLicense lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -244,6 +247,7 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntLicense[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamLicense.readAllDerived";
 		ICFIntLicense[] retList = new ICFIntLicense[ dictByPKey.values().size() ];
@@ -255,6 +259,7 @@ public class CFIntRamLicenseTable
 		return( retList );
 	}
 
+	@Override
 	public ICFIntLicense[] readDerivedByLicnTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
@@ -282,6 +287,7 @@ public class CFIntRamLicenseTable
 		return( recArray );
 	}
 
+	@Override
 	public ICFIntLicense[] readDerivedByDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId )
 	{
@@ -309,6 +315,7 @@ public class CFIntRamLicenseTable
 		return( recArray );
 	}
 
+	@Override
 	public ICFIntLicense readDerivedByUNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId,
 		String Name )
@@ -328,6 +335,7 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntLicense readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
@@ -342,6 +350,7 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntLicense readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -353,6 +362,7 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntLicense lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -364,6 +374,7 @@ public class CFIntRamLicenseTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntLicense[] readAllRec( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamLicense.readAllRec";
@@ -379,6 +390,7 @@ public class CFIntRamLicenseTable
 		return( filteredList.toArray( new ICFIntLicense[0] ) );
 	}
 
+	@Override
 	public ICFIntLicense readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
@@ -393,6 +405,7 @@ public class CFIntRamLicenseTable
 		}
 	}
 
+	@Override
 	public ICFIntLicense[] readRecByLicnTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
@@ -410,6 +423,7 @@ public class CFIntRamLicenseTable
 		return( filteredList.toArray( new ICFIntLicense[0] ) );
 	}
 
+	@Override
 	public ICFIntLicense[] readRecByDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId )
 	{
@@ -427,6 +441,7 @@ public class CFIntRamLicenseTable
 		return( filteredList.toArray( new ICFIntLicense[0] ) );
 	}
 
+	@Override
 	public ICFIntLicense readRecByUNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TopDomainId,
 		String Name )
@@ -577,6 +592,7 @@ public class CFIntRamLicenseTable
 		return(Buff);
 	}
 
+	@Override
 	public void deleteLicense( ICFSecAuthorization Authorization,
 		ICFIntLicense iBuff )
 	{
@@ -620,6 +636,7 @@ public class CFIntRamLicenseTable
 		dictByUNameIdx.remove( keyUNameIdx );
 
 	}
+	@Override
 	public void deleteLicenseByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
@@ -646,6 +663,7 @@ public class CFIntRamLicenseTable
 		}
 	}
 
+	@Override
 	public void deleteLicenseByLicnTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
@@ -654,6 +672,7 @@ public class CFIntRamLicenseTable
 		deleteLicenseByLicnTenantIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteLicenseByLicnTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByLicnTenantIdxKey argKey )
 	{
@@ -680,6 +699,7 @@ public class CFIntRamLicenseTable
 		}
 	}
 
+	@Override
 	public void deleteLicenseByDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId )
 	{
@@ -688,6 +708,7 @@ public class CFIntRamLicenseTable
 		deleteLicenseByDomainIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteLicenseByDomainIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByDomainIdxKey argKey )
 	{
@@ -714,6 +735,7 @@ public class CFIntRamLicenseTable
 		}
 	}
 
+	@Override
 	public void deleteLicenseByUNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId,
 		String argName )
@@ -724,6 +746,7 @@ public class CFIntRamLicenseTable
 		deleteLicenseByUNameIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteLicenseByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByUNameIdxKey argKey )
 	{

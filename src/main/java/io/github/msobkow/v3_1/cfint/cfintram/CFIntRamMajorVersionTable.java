@@ -99,6 +99,7 @@ public class CFIntRamMajorVersionTable
 		}
 	}
 
+	@Override
 	public ICFIntMajorVersion createMajorVersion( ICFSecAuthorization Authorization,
 		ICFIntMajorVersion iBuff )
 	{
@@ -216,6 +217,7 @@ public class CFIntRamMajorVersionTable
 		}
 	}
 
+	@Override
 	public ICFIntMajorVersion readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -230,6 +232,7 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMajorVersion lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -244,6 +247,7 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMajorVersion[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamMajorVersion.readAllDerived";
 		ICFIntMajorVersion[] retList = new ICFIntMajorVersion[ dictByPKey.values().size() ];
@@ -255,6 +259,7 @@ public class CFIntRamMajorVersionTable
 		return( retList );
 	}
 
+	@Override
 	public ICFIntMajorVersion[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
@@ -282,6 +287,7 @@ public class CFIntRamMajorVersionTable
 		return( recArray );
 	}
 
+	@Override
 	public ICFIntMajorVersion[] readDerivedBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SubProjectId )
 	{
@@ -309,6 +315,7 @@ public class CFIntRamMajorVersionTable
 		return( recArray );
 	}
 
+	@Override
 	public ICFIntMajorVersion readDerivedByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SubProjectId,
 		String Name )
@@ -328,6 +335,7 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMajorVersion readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
@@ -342,6 +350,7 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMajorVersion readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -353,6 +362,7 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMajorVersion lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -364,6 +374,7 @@ public class CFIntRamMajorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMajorVersion[] readAllRec( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamMajorVersion.readAllRec";
@@ -379,6 +390,7 @@ public class CFIntRamMajorVersionTable
 		return( filteredList.toArray( new ICFIntMajorVersion[0] ) );
 	}
 
+	@Override
 	public ICFIntMajorVersion readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
@@ -393,6 +405,7 @@ public class CFIntRamMajorVersionTable
 		}
 	}
 
+	@Override
 	public ICFIntMajorVersion[] readRecByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
@@ -410,6 +423,7 @@ public class CFIntRamMajorVersionTable
 		return( filteredList.toArray( new ICFIntMajorVersion[0] ) );
 	}
 
+	@Override
 	public ICFIntMajorVersion[] readRecBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SubProjectId )
 	{
@@ -427,6 +441,7 @@ public class CFIntRamMajorVersionTable
 		return( filteredList.toArray( new ICFIntMajorVersion[0] ) );
 	}
 
+	@Override
 	public ICFIntMajorVersion readRecByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 SubProjectId,
 		String Name )
@@ -577,6 +592,7 @@ public class CFIntRamMajorVersionTable
 		return(Buff);
 	}
 
+	@Override
 	public void deleteMajorVersion( ICFSecAuthorization Authorization,
 		ICFIntMajorVersion iBuff )
 	{
@@ -622,6 +638,7 @@ public class CFIntRamMajorVersionTable
 		dictByNameIdx.remove( keyNameIdx );
 
 	}
+	@Override
 	public void deleteMajorVersionByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
@@ -648,6 +665,7 @@ public class CFIntRamMajorVersionTable
 		}
 	}
 
+	@Override
 	public void deleteMajorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
@@ -656,6 +674,7 @@ public class CFIntRamMajorVersionTable
 		deleteMajorVersionByTenantIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteMajorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionByTenantIdxKey argKey )
 	{
@@ -682,6 +701,7 @@ public class CFIntRamMajorVersionTable
 		}
 	}
 
+	@Override
 	public void deleteMajorVersionBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSubProjectId )
 	{
@@ -690,6 +710,7 @@ public class CFIntRamMajorVersionTable
 		deleteMajorVersionBySubProjectIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteMajorVersionBySubProjectIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionBySubProjectIdxKey argKey )
 	{
@@ -716,6 +737,7 @@ public class CFIntRamMajorVersionTable
 		}
 	}
 
+	@Override
 	public void deleteMajorVersionByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSubProjectId,
 		String argName )
@@ -726,6 +748,7 @@ public class CFIntRamMajorVersionTable
 		deleteMajorVersionByNameIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteMajorVersionByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionByNameIdxKey argKey )
 	{

@@ -99,6 +99,7 @@ public class CFIntRamMinorVersionTable
 		}
 	}
 
+	@Override
 	public ICFIntMinorVersion createMinorVersion( ICFSecAuthorization Authorization,
 		ICFIntMinorVersion iBuff )
 	{
@@ -216,6 +217,7 @@ public class CFIntRamMinorVersionTable
 		}
 	}
 
+	@Override
 	public ICFIntMinorVersion readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -230,6 +232,7 @@ public class CFIntRamMinorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMinorVersion lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -244,6 +247,7 @@ public class CFIntRamMinorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMinorVersion[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamMinorVersion.readAllDerived";
 		ICFIntMinorVersion[] retList = new ICFIntMinorVersion[ dictByPKey.values().size() ];
@@ -255,6 +259,7 @@ public class CFIntRamMinorVersionTable
 		return( retList );
 	}
 
+	@Override
 	public ICFIntMinorVersion[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
@@ -282,6 +287,7 @@ public class CFIntRamMinorVersionTable
 		return( recArray );
 	}
 
+	@Override
 	public ICFIntMinorVersion[] readDerivedByMajorVerIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 MajorVersionId )
 	{
@@ -309,6 +315,7 @@ public class CFIntRamMinorVersionTable
 		return( recArray );
 	}
 
+	@Override
 	public ICFIntMinorVersion readDerivedByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 MajorVersionId,
 		String Name )
@@ -328,6 +335,7 @@ public class CFIntRamMinorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMinorVersion readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
@@ -342,6 +350,7 @@ public class CFIntRamMinorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMinorVersion readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -353,6 +362,7 @@ public class CFIntRamMinorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMinorVersion lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
@@ -364,6 +374,7 @@ public class CFIntRamMinorVersionTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMinorVersion[] readAllRec( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamMinorVersion.readAllRec";
@@ -379,6 +390,7 @@ public class CFIntRamMinorVersionTable
 		return( filteredList.toArray( new ICFIntMinorVersion[0] ) );
 	}
 
+	@Override
 	public ICFIntMinorVersion readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 Id )
 	{
@@ -393,6 +405,7 @@ public class CFIntRamMinorVersionTable
 		}
 	}
 
+	@Override
 	public ICFIntMinorVersion[] readRecByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 TenantId )
 	{
@@ -410,6 +423,7 @@ public class CFIntRamMinorVersionTable
 		return( filteredList.toArray( new ICFIntMinorVersion[0] ) );
 	}
 
+	@Override
 	public ICFIntMinorVersion[] readRecByMajorVerIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 MajorVersionId )
 	{
@@ -427,6 +441,7 @@ public class CFIntRamMinorVersionTable
 		return( filteredList.toArray( new ICFIntMinorVersion[0] ) );
 	}
 
+	@Override
 	public ICFIntMinorVersion readRecByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 MajorVersionId,
 		String Name )
@@ -577,6 +592,7 @@ public class CFIntRamMinorVersionTable
 		return(Buff);
 	}
 
+	@Override
 	public void deleteMinorVersion( ICFSecAuthorization Authorization,
 		ICFIntMinorVersion iBuff )
 	{
@@ -620,6 +636,7 @@ public class CFIntRamMinorVersionTable
 		dictByNameIdx.remove( keyNameIdx );
 
 	}
+	@Override
 	public void deleteMinorVersionByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
@@ -646,6 +663,7 @@ public class CFIntRamMinorVersionTable
 		}
 	}
 
+	@Override
 	public void deleteMinorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
@@ -654,6 +672,7 @@ public class CFIntRamMinorVersionTable
 		deleteMinorVersionByTenantIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteMinorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByTenantIdxKey argKey )
 	{
@@ -680,6 +699,7 @@ public class CFIntRamMinorVersionTable
 		}
 	}
 
+	@Override
 	public void deleteMinorVersionByMajorVerIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argMajorVersionId )
 	{
@@ -688,6 +708,7 @@ public class CFIntRamMinorVersionTable
 		deleteMinorVersionByMajorVerIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteMinorVersionByMajorVerIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByMajorVerIdxKey argKey )
 	{
@@ -714,6 +735,7 @@ public class CFIntRamMinorVersionTable
 		}
 	}
 
+	@Override
 	public void deleteMinorVersionByNameIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argMajorVersionId,
 		String argName )
@@ -724,6 +746,7 @@ public class CFIntRamMinorVersionTable
 		deleteMinorVersionByNameIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteMinorVersionByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByNameIdxKey argKey )
 	{

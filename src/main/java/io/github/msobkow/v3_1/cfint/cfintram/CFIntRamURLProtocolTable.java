@@ -93,6 +93,7 @@ public class CFIntRamURLProtocolTable
 		}
 	}
 
+	@Override
 	public ICFIntURLProtocol createURLProtocol( ICFSecAuthorization Authorization,
 		ICFIntURLProtocol iBuff )
 	{
@@ -156,6 +157,7 @@ public class CFIntRamURLProtocolTable
 		}
 	}
 
+	@Override
 	public ICFIntURLProtocol readDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -170,6 +172,7 @@ public class CFIntRamURLProtocolTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntURLProtocol lockDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -184,6 +187,7 @@ public class CFIntRamURLProtocolTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntURLProtocol[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamURLProtocol.readAllDerived";
 		ICFIntURLProtocol[] retList = new ICFIntURLProtocol[ dictByPKey.values().size() ];
@@ -195,6 +199,7 @@ public class CFIntRamURLProtocolTable
 		return( retList );
 	}
 
+	@Override
 	public ICFIntURLProtocol readDerivedByUNameIdx( ICFSecAuthorization Authorization,
 		String Name )
 	{
@@ -212,6 +217,7 @@ public class CFIntRamURLProtocolTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntURLProtocol[] readDerivedByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean IsSecure )
 	{
@@ -239,6 +245,7 @@ public class CFIntRamURLProtocolTable
 		return( recArray );
 	}
 
+	@Override
 	public ICFIntURLProtocol readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		int URLProtocolId )
 	{
@@ -253,6 +260,7 @@ public class CFIntRamURLProtocolTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntURLProtocol readRec( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -264,6 +272,7 @@ public class CFIntRamURLProtocolTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntURLProtocol lockRec( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -275,6 +284,7 @@ public class CFIntRamURLProtocolTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntURLProtocol[] readAllRec( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamURLProtocol.readAllRec";
@@ -290,6 +300,7 @@ public class CFIntRamURLProtocolTable
 		return( filteredList.toArray( new ICFIntURLProtocol[0] ) );
 	}
 
+	@Override
 	public ICFIntURLProtocol readRecByIdIdx( ICFSecAuthorization Authorization,
 		int URLProtocolId )
 	{
@@ -304,6 +315,7 @@ public class CFIntRamURLProtocolTable
 		}
 	}
 
+	@Override
 	public ICFIntURLProtocol readRecByUNameIdx( ICFSecAuthorization Authorization,
 		String Name )
 	{
@@ -318,6 +330,7 @@ public class CFIntRamURLProtocolTable
 		}
 	}
 
+	@Override
 	public ICFIntURLProtocol[] readRecByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean IsSecure )
 	{
@@ -408,6 +421,7 @@ public class CFIntRamURLProtocolTable
 		return(Buff);
 	}
 
+	@Override
 	public void deleteURLProtocol( ICFSecAuthorization Authorization,
 		ICFIntURLProtocol iBuff )
 	{
@@ -444,6 +458,7 @@ public class CFIntRamURLProtocolTable
 		subdict.remove( pkey );
 
 	}
+	@Override
 	public void deleteURLProtocolByIdIdx( ICFSecAuthorization Authorization,
 		Integer argKey )
 	{
@@ -470,6 +485,7 @@ public class CFIntRamURLProtocolTable
 		}
 	}
 
+	@Override
 	public void deleteURLProtocolByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
@@ -478,6 +494,7 @@ public class CFIntRamURLProtocolTable
 		deleteURLProtocolByUNameIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteURLProtocolByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByUNameIdxKey argKey )
 	{
@@ -504,6 +521,7 @@ public class CFIntRamURLProtocolTable
 		}
 	}
 
+	@Override
 	public void deleteURLProtocolByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean argIsSecure )
 	{
@@ -512,6 +530,7 @@ public class CFIntRamURLProtocolTable
 		deleteURLProtocolByIsSecureIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteURLProtocolByIsSecureIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByIsSecureIdxKey argKey )
 	{

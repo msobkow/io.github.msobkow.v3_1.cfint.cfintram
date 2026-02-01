@@ -71,18 +71,63 @@ public class CFIntRamSchema
 		tableURLProtocol = new CFIntRamURLProtocolTable( this );
 	}
 
+	@Override
 	public ICFIntSchema newSchema() {
 		throw new CFLibMustOverrideException( getClass(), "newSchema" );
 	}
 
+	@Override
 	public int nextMimeTypeIdGen() {
 		int next = nextMimeTypeIdGenValue++;
 		return( next );
 	}
 
+	@Override
 	public int nextURLProtocolIdGen() {
 		int next = nextURLProtocolIdGenValue++;
 		return( next );
+	}
+
+	@Override
+	public CFLibDbKeyHash256 nextMajorVersionIdGen() {
+		CFLibDbKeyHash256 retval = new CFLibDbKeyHash256(0);
+		return( retval );
+	}
+
+	@Override
+	public CFLibDbKeyHash256 nextMinorVersionIdGen() {
+		CFLibDbKeyHash256 retval = new CFLibDbKeyHash256(0);
+		return( retval );
+	}
+
+	@Override
+	public CFLibDbKeyHash256 nextSubProjectIdGen() {
+		CFLibDbKeyHash256 retval = new CFLibDbKeyHash256(0);
+		return( retval );
+	}
+
+	@Override
+	public CFLibDbKeyHash256 nextTldIdGen() {
+		CFLibDbKeyHash256 retval = new CFLibDbKeyHash256(0);
+		return( retval );
+	}
+
+	@Override
+	public CFLibDbKeyHash256 nextTopDomainIdGen() {
+		CFLibDbKeyHash256 retval = new CFLibDbKeyHash256(0);
+		return( retval );
+	}
+
+	@Override
+	public CFLibDbKeyHash256 nextTopProjectIdGen() {
+		CFLibDbKeyHash256 retval = new CFLibDbKeyHash256(0);
+		return( retval );
+	}
+
+	@Override
+	public CFLibDbKeyHash256 nextLicenseIdGen() {
+		CFLibDbKeyHash256 retval = new CFLibDbKeyHash256(0);
+		return( retval );
 	}
 
 	public String fileImport( CFSecAuthorization Authorization,
@@ -120,5 +165,37 @@ public class CFIntRamSchema
 		}
 
 		return( logFileContent );
+	}
+
+		
+	@Override
+	public void wireTableTableInstances() {
+		if (tableLicense == null || !(tableLicense instanceof CFIntRamLicenseTable)) {
+			tableLicense = new CFIntRamLicenseTable(this);
+		}
+		if (tableMajorVersion == null || !(tableMajorVersion instanceof CFIntRamMajorVersionTable)) {
+			tableMajorVersion = new CFIntRamMajorVersionTable(this);
+		}
+		if (tableMimeType == null || !(tableMimeType instanceof CFIntRamMimeTypeTable)) {
+			tableMimeType = new CFIntRamMimeTypeTable(this);
+		}
+		if (tableMinorVersion == null || !(tableMinorVersion instanceof CFIntRamMinorVersionTable)) {
+			tableMinorVersion = new CFIntRamMinorVersionTable(this);
+		}
+		if (tableSubProject == null || !(tableSubProject instanceof CFIntRamSubProjectTable)) {
+			tableSubProject = new CFIntRamSubProjectTable(this);
+		}
+		if (tableTld == null || !(tableTld instanceof CFIntRamTldTable)) {
+			tableTld = new CFIntRamTldTable(this);
+		}
+		if (tableTopDomain == null || !(tableTopDomain instanceof CFIntRamTopDomainTable)) {
+			tableTopDomain = new CFIntRamTopDomainTable(this);
+		}
+		if (tableTopProject == null || !(tableTopProject instanceof CFIntRamTopProjectTable)) {
+			tableTopProject = new CFIntRamTopProjectTable(this);
+		}
+		if (tableURLProtocol == null || !(tableURLProtocol instanceof CFIntRamURLProtocolTable)) {
+			tableURLProtocol = new CFIntRamURLProtocolTable(this);
+		}
 	}
 }

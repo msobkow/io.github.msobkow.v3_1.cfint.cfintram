@@ -87,6 +87,7 @@ public class CFIntRamMimeTypeTable
 		}
 	}
 
+	@Override
 	public ICFIntMimeType createMimeType( ICFSecAuthorization Authorization,
 		ICFIntMimeType iBuff )
 	{
@@ -137,6 +138,7 @@ public class CFIntRamMimeTypeTable
 		}
 	}
 
+	@Override
 	public ICFIntMimeType readDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -151,6 +153,7 @@ public class CFIntRamMimeTypeTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMimeType lockDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -165,6 +168,7 @@ public class CFIntRamMimeTypeTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMimeType[] readAllDerived( ICFSecAuthorization Authorization ) {
 		final String S_ProcName = "CFIntRamMimeType.readAllDerived";
 		ICFIntMimeType[] retList = new ICFIntMimeType[ dictByPKey.values().size() ];
@@ -176,6 +180,7 @@ public class CFIntRamMimeTypeTable
 		return( retList );
 	}
 
+	@Override
 	public ICFIntMimeType readDerivedByUNameIdx( ICFSecAuthorization Authorization,
 		String Name )
 	{
@@ -193,6 +198,7 @@ public class CFIntRamMimeTypeTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMimeType readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		int MimeTypeId )
 	{
@@ -207,6 +213,7 @@ public class CFIntRamMimeTypeTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMimeType readRec( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -218,6 +225,7 @@ public class CFIntRamMimeTypeTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMimeType lockRec( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
@@ -229,6 +237,7 @@ public class CFIntRamMimeTypeTable
 		return( buff );
 	}
 
+	@Override
 	public ICFIntMimeType[] readAllRec( ICFSecAuthorization Authorization )
 	{
 		final String S_ProcName = "CFIntRamMimeType.readAllRec";
@@ -244,6 +253,7 @@ public class CFIntRamMimeTypeTable
 		return( filteredList.toArray( new ICFIntMimeType[0] ) );
 	}
 
+	@Override
 	public ICFIntMimeType readRecByIdIdx( ICFSecAuthorization Authorization,
 		int MimeTypeId )
 	{
@@ -258,6 +268,7 @@ public class CFIntRamMimeTypeTable
 		}
 	}
 
+	@Override
 	public ICFIntMimeType readRecByUNameIdx( ICFSecAuthorization Authorization,
 		String Name )
 	{
@@ -326,6 +337,7 @@ public class CFIntRamMimeTypeTable
 		return(Buff);
 	}
 
+	@Override
 	public void deleteMimeType( ICFSecAuthorization Authorization,
 		ICFIntMimeType iBuff )
 	{
@@ -356,6 +368,7 @@ public class CFIntRamMimeTypeTable
 		dictByUNameIdx.remove( keyUNameIdx );
 
 	}
+	@Override
 	public void deleteMimeTypeByIdIdx( ICFSecAuthorization Authorization,
 		Integer argKey )
 	{
@@ -382,6 +395,7 @@ public class CFIntRamMimeTypeTable
 		}
 	}
 
+	@Override
 	public void deleteMimeTypeByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
@@ -390,6 +404,7 @@ public class CFIntRamMimeTypeTable
 		deleteMimeTypeByUNameIdx( Authorization, key );
 	}
 
+	@Override
 	public void deleteMimeTypeByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMimeTypeByUNameIdxKey argKey )
 	{
