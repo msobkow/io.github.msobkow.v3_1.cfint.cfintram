@@ -144,6 +144,9 @@ public class CFIntRamMimeTypeTable
 	{
 		final String S_ProcName = "CFIntRamMimeType.readDerived";
 		ICFIntMimeType buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}

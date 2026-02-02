@@ -223,6 +223,9 @@ public class CFIntRamLicenseTable
 	{
 		final String S_ProcName = "CFIntRamLicense.readDerived";
 		ICFIntLicense buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}

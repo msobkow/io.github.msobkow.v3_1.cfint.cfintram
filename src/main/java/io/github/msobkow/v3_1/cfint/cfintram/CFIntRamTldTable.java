@@ -183,6 +183,9 @@ public class CFIntRamTldTable
 	{
 		final String S_ProcName = "CFIntRamTld.readDerived";
 		ICFIntTld buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}

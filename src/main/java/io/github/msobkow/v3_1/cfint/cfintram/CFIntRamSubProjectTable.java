@@ -223,6 +223,9 @@ public class CFIntRamSubProjectTable
 	{
 		final String S_ProcName = "CFIntRamSubProject.readDerived";
 		ICFIntSubProject buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}

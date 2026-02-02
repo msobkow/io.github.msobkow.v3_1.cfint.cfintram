@@ -163,6 +163,9 @@ public class CFIntRamURLProtocolTable
 	{
 		final String S_ProcName = "CFIntRamURLProtocol.readDerived";
 		ICFIntURLProtocol buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}

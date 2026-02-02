@@ -223,6 +223,9 @@ public class CFIntRamTopDomainTable
 	{
 		final String S_ProcName = "CFIntRamTopDomain.readDerived";
 		ICFIntTopDomain buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}

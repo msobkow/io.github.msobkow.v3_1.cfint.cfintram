@@ -223,6 +223,9 @@ public class CFIntRamMinorVersionTable
 	{
 		final String S_ProcName = "CFIntRamMinorVersion.readDerived";
 		ICFIntMinorVersion buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}

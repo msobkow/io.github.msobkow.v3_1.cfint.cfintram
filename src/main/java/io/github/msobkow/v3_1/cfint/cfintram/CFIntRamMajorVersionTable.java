@@ -223,6 +223,9 @@ public class CFIntRamMajorVersionTable
 	{
 		final String S_ProcName = "CFIntRamMajorVersion.readDerived";
 		ICFIntMajorVersion buff;
+		if( PKey == null ) {
+			return( null );
+		}
 		if( dictByPKey.containsKey( PKey ) ) {
 			buff = dictByPKey.get( PKey );
 		}
